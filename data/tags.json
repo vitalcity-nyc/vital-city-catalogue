@@ -1,0 +1,802 @@
+[
+  {
+    "name": "Crime",
+    "post_count": 140
+  },
+  {
+    "name": "History",
+    "post_count": 134
+  },
+  {
+    "name": "Government Operations",
+    "post_count": 118
+  },
+  {
+    "name": "City Government",
+    "post_count": 110
+  },
+  {
+    "name": "City Planning",
+    "post_count": 101
+  },
+  {
+    "name": "Justice",
+    "post_count": 78
+  },
+  {
+    "name": "culture",
+    "post_count": 69
+  },
+  {
+    "name": "Housing",
+    "post_count": 66
+  },
+  {
+    "name": "Gun Violence",
+    "post_count": 66
+  },
+  {
+    "name": "Politics",
+    "post_count": 51
+  },
+  {
+    "name": "Police Reform",
+    "post_count": 50
+  },
+  {
+    "name": "Jails",
+    "post_count": 48
+  },
+  {
+    "name": "Social Science",
+    "post_count": 42
+  },
+  {
+    "name": "Public Health",
+    "post_count": 32
+  },
+  {
+    "name": "data",
+    "post_count": 29
+  },
+  {
+    "name": "Education",
+    "post_count": 28
+  },
+  {
+    "name": "Transit",
+    "post_count": 28
+  },
+  {
+    "name": "Technology",
+    "post_count": 27
+  },
+  {
+    "name": "Economics",
+    "post_count": 27
+  },
+  {
+    "name": "Setting the Stage",
+    "post_count": 26
+  },
+  {
+    "name": "Quality of Life",
+    "post_count": 24
+  },
+  {
+    "name": "Podcast",
+    "post_count": 24
+  },
+  {
+    "name": "interview",
+    "post_count": 24
+  },
+  {
+    "name": "Budget",
+    "post_count": 23
+  },
+  {
+    "name": "Infrastructure",
+    "post_count": 21
+  },
+  {
+    "name": "Incarceration",
+    "post_count": 21
+  },
+  {
+    "name": "Corruption",
+    "post_count": 21
+  },
+  {
+    "name": "Drugs",
+    "post_count": 21
+  },
+  {
+    "name": "Subway Crime",
+    "post_count": 19
+  },
+  {
+    "name": "Neighborhood Life",
+    "post_count": 17
+  },
+  {
+    "name": "Data Stories",
+    "post_count": 17
+  },
+  {
+    "name": "Mental Health",
+    "post_count": 16
+  },
+  {
+    "name": "Journalism",
+    "post_count": 16
+  },
+  {
+    "name": "If I Had a Hammer...",
+    "post_count": 16
+  },
+  {
+    "name": "Where Do We Go From Here?",
+    "post_count": 16
+  },
+  {
+    "name": "Transportation",
+    "post_count": 15
+  },
+  {
+    "name": "Race",
+    "post_count": 15
+  },
+  {
+    "name": "The Way Forward",
+    "post_count": 14
+  },
+  {
+    "name": "Homelessness",
+    "post_count": 13
+  },
+  {
+    "name": "State Government",
+    "post_count": 12
+  },
+  {
+    "name": "Events",
+    "post_count": 12
+  },
+  {
+    "name": "Inequality",
+    "post_count": 12
+  },
+  {
+    "name": "What to Do Now",
+    "post_count": 12
+  },
+  {
+    "name": "policy",
+    "post_count": 11
+  },
+  {
+    "name": "Building Blocks",
+    "post_count": 11
+  },
+  {
+    "name": "Climate Change",
+    "post_count": 10
+  },
+  {
+    "name": "Why the Trains Matter",
+    "post_count": 10
+  },
+  {
+    "name": "Federal Government",
+    "post_count": 9
+  },
+  {
+    "name": "Police-Community Relations",
+    "post_count": 9
+  },
+  {
+    "name": "Safety",
+    "post_count": 9
+  },
+  {
+    "name": "Mamdani",
+    "post_count": 9
+  },
+  {
+    "name": "The Great Debate",
+    "post_count": 9
+  },
+  {
+    "name": "Some Policy Solutions",
+    "post_count": 9
+  },
+  {
+    "name": "Looking Back",
+    "post_count": 9
+  },
+  {
+    "name": "Youth",
+    "post_count": 8
+  },
+  {
+    "name": "Immigration",
+    "post_count": 8
+  },
+  {
+    "name": "Prosecution",
+    "post_count": 8
+  },
+  {
+    "name": "Pouring the Foundation",
+    "post_count": 8
+  },
+  {
+    "name": "What Can Be Done?",
+    "post_count": 8
+  },
+  {
+    "name": "Sights and Sounds",
+    "post_count": 8
+  },
+  {
+    "name": "Toward Solutions",
+    "post_count": 8
+  },
+  {
+    "name": "Street Lighting",
+    "post_count": 7
+  },
+  {
+    "name": "Streets",
+    "post_count": 7
+  },
+  {
+    "name": "Governance",
+    "post_count": 7
+  },
+  {
+    "name": "Mugged by Reality",
+    "post_count": 7
+  },
+  {
+    "name": "Decisions, Decisions, Decisions",
+    "post_count": 7
+  },
+  {
+    "name": "Currents",
+    "post_count": 7
+  },
+  {
+    "name": "Persistent Problems Inside",
+    "post_count": 7
+  },
+  {
+    "name": "Etc.",
+    "post_count": 7
+  },
+  {
+    "name": "Museums",
+    "post_count": 6
+  },
+  {
+    "name": "Where We’re Headed",
+    "post_count": 6
+  },
+  {
+    "name": "The State of the City",
+    "post_count": 6
+  },
+  {
+    "name": "Modern Evolution: Marketing and Profits",
+    "post_count": 6
+  },
+  {
+    "name": "Where We Go From Here",
+    "post_count": 6
+  },
+  {
+    "name": "What Doesn’t Work",
+    "post_count": 6
+  },
+  {
+    "name": "What Does It All Mean?",
+    "post_count": 6
+  },
+  {
+    "name": "What Makes a Great City Work?",
+    "post_count": 6
+  },
+  {
+    "name": "Beyond False Simplicity",
+    "post_count": 6
+  },
+  {
+    "name": "The Policy Record",
+    "post_count": 6
+  },
+  {
+    "name": "Environment",
+    "post_count": 5
+  },
+  {
+    "name": "Reality Check",
+    "post_count": 5
+  },
+  {
+    "name": "Book Review",
+    "post_count": 5
+  },
+  {
+    "name": "Where We Are",
+    "post_count": 5
+  },
+  {
+    "name": "Historical Lessons",
+    "post_count": 5
+  },
+  {
+    "name": "Disorder",
+    "post_count": 5
+  },
+  {
+    "name": "What Do We Know?",
+    "post_count": 5
+  },
+  {
+    "name": "Broken Windows",
+    "post_count": 5
+  },
+  {
+    "name": "Corrections",
+    "post_count": 5
+  },
+  {
+    "name": "Film & TV",
+    "post_count": 5
+  },
+  {
+    "name": "Solutions for Today and Tomorrow",
+    "post_count": 5
+  },
+  {
+    "name": "What Opportunities Await?",
+    "post_count": 5
+  },
+  {
+    "name": "Projecting the Size of the Jail Population — More than Math",
+    "post_count": 5
+  },
+  {
+    "name": "Law",
+    "post_count": 4
+  },
+  {
+    "name": "Artifical Intelligence",
+    "post_count": 4
+  },
+  {
+    "name": "Sanitation",
+    "post_count": 4
+  },
+  {
+    "name": "Parks",
+    "post_count": 4
+  },
+  {
+    "name": "People in Crisis on Streets and Subways",
+    "post_count": 4
+  },
+  {
+    "name": "What We Can and Can't Afford",
+    "post_count": 4
+  },
+  {
+    "name": "Foundations: The Wild West and the Nation",
+    "post_count": 4
+  },
+  {
+    "name": "The State of Gotham",
+    "post_count": 4
+  },
+  {
+    "name": "Repercussions",
+    "post_count": 4
+  },
+  {
+    "name": "What It Looks Like Up Close",
+    "post_count": 4
+  },
+  {
+    "name": "Criminal Justice",
+    "post_count": 4
+  },
+  {
+    "name": "Place",
+    "post_count": 4
+  },
+  {
+    "name": "The Joy of Incrementalism",
+    "post_count": 4
+  },
+  {
+    "name": "What’s Driving Trends and What to Do About It",
+    "post_count": 4
+  },
+  {
+    "name": "Solving Cases: The System",
+    "post_count": 4
+  },
+  {
+    "name": "Solving Cases: The People",
+    "post_count": 4
+  },
+  {
+    "name": "Community",
+    "post_count": 4
+  },
+  {
+    "name": "New Solutions",
+    "post_count": 4
+  },
+  {
+    "name": "About This Project",
+    "post_count": 3
+  },
+  {
+    "name": "Just Fix It",
+    "post_count": 3
+  },
+  {
+    "name": "Crime Stories",
+    "post_count": 3
+  },
+  {
+    "name": "The Role of the Feds",
+    "post_count": 3
+  },
+  {
+    "name": "Subway Safety",
+    "post_count": 3
+  },
+  {
+    "name": "Nonprofits",
+    "post_count": 3
+  },
+  {
+    "name": "Two Sides of the Gun: Stories of Possession and Victimization",
+    "post_count": 3
+  },
+  {
+    "name": "Elections",
+    "post_count": 3
+  },
+  {
+    "name": "The Causes",
+    "post_count": 3
+  },
+  {
+    "name": "The Upside — Yes, Really",
+    "post_count": 3
+  },
+  {
+    "name": "Subway Safety Stories",
+    "post_count": 3
+  },
+  {
+    "name": "Incarceration Stories",
+    "post_count": 3
+  },
+  {
+    "name": "How Did It Get This Bad?",
+    "post_count": 3
+  },
+  {
+    "name": "What Are We Afraid Of?",
+    "post_count": 3
+  },
+  {
+    "name": "What Could Go Wrong?",
+    "post_count": 3
+  },
+  {
+    "name": "Defining the Challenge",
+    "post_count": 3
+  },
+  {
+    "name": "Public Perception and Statistical Realities",
+    "post_count": 3
+  },
+  {
+    "name": "Connecting Dots",
+    "post_count": 3
+  },
+  {
+    "name": "Press Releases",
+    "post_count": 3
+  },
+  {
+    "name": "Conversations",
+    "post_count": 3
+  },
+  {
+    "name": "Borrow and Steal",
+    "post_count": 2
+  },
+  {
+    "name": "Comings and Goings",
+    "post_count": 2
+  },
+  {
+    "name": "Civic Life",
+    "post_count": 2
+  },
+  {
+    "name": "Child Welfare",
+    "post_count": 2
+  },
+  {
+    "name": "Sports",
+    "post_count": 2
+  },
+  {
+    "name": "Community Services",
+    "post_count": 2
+  },
+  {
+    "name": "Urbanism",
+    "post_count": 2
+  },
+  {
+    "name": "Overview",
+    "post_count": 2
+  },
+  {
+    "name": "Religion",
+    "post_count": 2
+  },
+  {
+    "name": "Food and Drink",
+    "post_count": 2
+  },
+  {
+    "name": "Cleanup on Aisle 10",
+    "post_count": 2
+  },
+  {
+    "name": "Statistics",
+    "post_count": 2
+  },
+  {
+    "name": "Music & Entertainment",
+    "post_count": 2
+  },
+  {
+    "name": "Dreams of the Future",
+    "post_count": 2
+  },
+  {
+    "name": "Sociology",
+    "post_count": 2
+  },
+  {
+    "name": "Subways",
+    "post_count": 2
+  },
+  {
+    "name": "What's The Plan?",
+    "post_count": 2
+  },
+  {
+    "name": "What the Future Holds",
+    "post_count": 2
+  },
+  {
+    "name": "In Conversation With...",
+    "post_count": 2
+  },
+  {
+    "name": "Urban Planning",
+    "post_count": 2
+  },
+  {
+    "name": "Where We’ve Been",
+    "post_count": 2
+  },
+  {
+    "name": "Context: Politics and Data",
+    "post_count": 2
+  },
+  {
+    "name": "Gun Violence.",
+    "post_count": 2
+  },
+  {
+    "name": "Labor",
+    "post_count": 1
+  },
+  {
+    "name": "The Spirit of the City",
+    "post_count": 1
+  },
+  {
+    "name": "Jobs",
+    "post_count": 1
+  },
+  {
+    "name": "In Memoriam",
+    "post_count": 1
+  },
+  {
+    "name": "Social Services",
+    "post_count": 1
+  },
+  {
+    "name": "Foreign Policy",
+    "post_count": 1
+  },
+  {
+    "name": "Media",
+    "post_count": 1
+  },
+  {
+    "name": "Hello To All That",
+    "post_count": 1
+  },
+  {
+    "name": "Guns",
+    "post_count": 1
+  },
+  {
+    "name": "Leadership in Crisis",
+    "post_count": 1
+  },
+  {
+    "name": "Military",
+    "post_count": 1
+  },
+  {
+    "name": "Community Organizing",
+    "post_count": 1
+  },
+  {
+    "name": "Nonprofit Management.",
+    "post_count": 1
+  },
+  {
+    "name": "Nonprofit Sector",
+    "post_count": 1
+  },
+  {
+    "name": "Nonprofit Model",
+    "post_count": 1
+  },
+  {
+    "name": "Nonprofit Management",
+    "post_count": 1
+  },
+  {
+    "name": "Design",
+    "post_count": 1
+  },
+  {
+    "name": "Substance Abuse",
+    "post_count": 1
+  },
+  {
+    "name": "Reflections",
+    "post_count": 1
+  },
+  {
+    "name": "Policymakers",
+    "post_count": 1
+  },
+  {
+    "name": "Incarceration.",
+    "post_count": 1
+  },
+  {
+    "name": "History.",
+    "post_count": 1
+  },
+  {
+    "name": "The Best Connection I Ever Made",
+    "post_count": 1
+  },
+  {
+    "name": "Gender",
+    "post_count": 1
+  },
+  {
+    "name": "Prosecution.",
+    "post_count": 1
+  },
+  {
+    "name": "Quality of Life.",
+    "post_count": 1
+  },
+  {
+    "name": "Arts",
+    "post_count": 1
+  },
+  {
+    "name": "Traffic",
+    "post_count": 1
+  },
+  {
+    "name": "The Research That Changed My Thinking",
+    "post_count": 1
+  },
+  {
+    "name": "Philanthropy",
+    "post_count": 1
+  },
+  {
+    "name": "Legalization",
+    "post_count": 1
+  },
+  {
+    "name": "My Substance Story",
+    "post_count": 1
+  },
+  {
+    "name": "Health",
+    "post_count": 1
+  },
+  {
+    "name": "Alcohol",
+    "post_count": 1
+  },
+  {
+    "name": "What Else Can Be Done",
+    "post_count": 1
+  },
+  {
+    "name": "Libraries",
+    "post_count": 1
+  },
+  {
+    "name": "Social Science.",
+    "post_count": 1
+  },
+  {
+    "name": "Architecture",
+    "post_count": 1
+  },
+  {
+    "name": "Social Change",
+    "post_count": 1
+  },
+  {
+    "name": "Community Development",
+    "post_count": 1
+  },
+  {
+    "name": "Poverty",
+    "post_count": 1
+  },
+  {
+    "name": "Photography",
+    "post_count": 1
+  },
+  {
+    "name": "Theater",
+    "post_count": 1
+  },
+  {
+    "name": "The Long View",
+    "post_count": 1
+  },
+  {
+    "name": "Sweating the Small Stuff",
+    "post_count": 1
+  },
+  {
+    "name": "Public Housing",
+    "post_count": 1
+  },
+  {
+    "name": "Report",
+    "post_count": 1
+  }
+]

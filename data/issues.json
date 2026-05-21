@@ -1,0 +1,838 @@
+[
+  {
+    "name": "issue-15",
+    "post_count": 25,
+    "first_published": "2025-06-16",
+    "last_published": "2025-11-07",
+    "number": 15,
+    "display_name": "Issue 15",
+    "top_topics": [
+      [
+        "City Government",
+        12
+      ],
+      [
+        "What to Do Now",
+        12
+      ],
+      [
+        "Government Operations",
+        8
+      ],
+      [
+        "Mugged by Reality",
+        7
+      ],
+      [
+        "The State of the City",
+        6
+      ]
+    ]
+  },
+  {
+    "name": "issue-14",
+    "post_count": 29,
+    "first_published": "2025-07-22",
+    "last_published": "2025-09-17",
+    "number": 14,
+    "display_name": "Issue 14",
+    "top_topics": [
+      [
+        "Housing",
+        27
+      ],
+      [
+        "If I Had a Hammer...",
+        16
+      ],
+      [
+        "City Planning",
+        11
+      ],
+      [
+        "Pouring the Foundation",
+        8
+      ],
+      [
+        "City Government",
+        5
+      ]
+    ]
+  },
+  {
+    "name": "issue-13",
+    "post_count": 23,
+    "first_published": "2025-09-10",
+    "last_published": "2025-09-10",
+    "number": 13,
+    "display_name": "Issue 13",
+    "top_topics": [
+      [
+        "Gun Violence",
+        22
+      ],
+      [
+        "History",
+        11
+      ],
+      [
+        "What Can Be Done?",
+        8
+      ],
+      [
+        "Modern Evolution: Marketing and Profits",
+        6
+      ],
+      [
+        "Foundations: The Wild West and the Nation",
+        4
+      ]
+    ]
+  },
+  {
+    "name": "issue-11",
+    "post_count": 21,
+    "first_published": "2025-03-03",
+    "last_published": "2025-03-04",
+    "number": 11,
+    "display_name": "Issue 11",
+    "top_topics": [
+      [
+        "The Great Debate",
+        9
+      ],
+      [
+        "Currents",
+        7
+      ],
+      [
+        "Social Science",
+        6
+      ],
+      [
+        "culture",
+        6
+      ],
+      [
+        "Historical Lessons",
+        5
+      ]
+    ]
+  },
+  {
+    "name": "issue-10",
+    "post_count": 13,
+    "first_published": "2025-02-10",
+    "last_published": "2025-02-11",
+    "number": 10,
+    "display_name": "Issue 10",
+    "top_topics": [
+      [
+        "Corruption",
+        9
+      ],
+      [
+        "Government Operations",
+        4
+      ],
+      [
+        "What It Looks Like Up Close",
+        4
+      ],
+      [
+        "The Causes",
+        3
+      ],
+      [
+        "History",
+        3
+      ]
+    ]
+  },
+  {
+    "name": "issue-9",
+    "post_count": 27,
+    "first_published": "2024-10-02",
+    "last_published": "2024-10-02",
+    "number": 9,
+    "display_name": "Issue 9",
+    "top_topics": [
+      [
+        "Why the Trains Matter",
+        10
+      ],
+      [
+        "culture",
+        8
+      ],
+      [
+        "City Planning",
+        8
+      ],
+      [
+        "Transit",
+        8
+      ],
+      [
+        "Subway Crime",
+        7
+      ]
+    ]
+  },
+  {
+    "name": "issue-8",
+    "post_count": 24,
+    "first_published": "2024-06-26",
+    "last_published": "2024-06-26",
+    "number": 8,
+    "display_name": "Issue 8",
+    "top_topics": [
+      [
+        "Where Do We Go From Here?",
+        9
+      ],
+      [
+        "History",
+        8
+      ],
+      [
+        "culture",
+        7
+      ],
+      [
+        "City Planning",
+        6
+      ],
+      [
+        "What Makes a Great City Work?",
+        6
+      ]
+    ]
+  },
+  {
+    "name": "issue-7",
+    "post_count": 26,
+    "first_published": "2024-03-27",
+    "last_published": "2024-03-27",
+    "number": 7,
+    "display_name": "Issue 7",
+    "top_topics": [
+      [
+        "Social Science",
+        9
+      ],
+      [
+        "The Way Forward",
+        8
+      ],
+      [
+        "Crime",
+        6
+      ],
+      [
+        "Beyond False Simplicity",
+        6
+      ],
+      [
+        "Setting the Stage",
+        5
+      ]
+    ]
+  },
+  {
+    "name": "issue-6",
+    "post_count": 25,
+    "first_published": "2023-12-13",
+    "last_published": "2023-12-13",
+    "number": 6,
+    "display_name": "Issue 6",
+    "top_topics": [
+      [
+        "Drugs",
+        18
+      ],
+      [
+        "Public Health",
+        9
+      ],
+      [
+        "Toward Solutions",
+        8
+      ],
+      [
+        "The Policy Record",
+        6
+      ],
+      [
+        "Setting the Stage",
+        5
+      ]
+    ]
+  },
+  {
+    "name": "issue-5",
+    "post_count": 16,
+    "first_published": "2023-09-27",
+    "last_published": "2023-09-27",
+    "number": 5,
+    "display_name": "Issue 5",
+    "top_topics": [
+      [
+        "Police Reform",
+        7
+      ],
+      [
+        "Gun Violence",
+        7
+      ],
+      [
+        "Crime",
+        7
+      ],
+      [
+        "Solving Cases: The System",
+        4
+      ],
+      [
+        "Solving Cases: The People",
+        4
+      ]
+    ]
+  },
+  {
+    "name": "issue-4",
+    "post_count": 13,
+    "first_published": "2023-06-28",
+    "last_published": "2023-06-28",
+    "number": 4,
+    "display_name": "Issue 4",
+    "top_topics": [
+      [
+        "Building Blocks",
+        5
+      ],
+      [
+        "City Planning",
+        3
+      ],
+      [
+        "History",
+        3
+      ],
+      [
+        "culture",
+        3
+      ],
+      [
+        "Setting the Stage",
+        3
+      ]
+    ]
+  },
+  {
+    "name": "issue-3",
+    "post_count": 20,
+    "first_published": "2023-03-28",
+    "last_published": "2023-03-28",
+    "number": 3,
+    "display_name": "Issue 3",
+    "top_topics": [
+      [
+        "History",
+        6
+      ],
+      [
+        "Building Blocks",
+        6
+      ],
+      [
+        "City Planning",
+        6
+      ],
+      [
+        "Setting the Stage",
+        5
+      ],
+      [
+        "Crime",
+        4
+      ]
+    ]
+  },
+  {
+    "name": "issue-2",
+    "post_count": 16,
+    "first_published": "2022-05-26",
+    "last_published": "2022-10-25",
+    "number": 2,
+    "display_name": "Issue 2",
+    "top_topics": [
+      [
+        "Crime",
+        7
+      ],
+      [
+        "History",
+        6
+      ],
+      [
+        "City Planning",
+        5
+      ],
+      [
+        "New Solutions",
+        4
+      ],
+      [
+        "Broken Windows",
+        4
+      ]
+    ]
+  },
+  {
+    "name": "issue-1",
+    "post_count": 14,
+    "first_published": "2022-01-15",
+    "last_published": "2022-02-08",
+    "number": 1,
+    "display_name": "Issue 1",
+    "top_topics": [
+      [
+        "Gun Violence",
+        14
+      ],
+      [
+        "Crime",
+        8
+      ],
+      [
+        "Police Reform",
+        3
+      ],
+      [
+        "Social Science",
+        3
+      ],
+      [
+        "History",
+        3
+      ]
+    ]
+  },
+  {
+    "name": "rubber-meets-road",
+    "post_count": 8,
+    "first_published": "2026-05-20",
+    "last_published": "2026-05-20",
+    "number": null,
+    "display_name": "Rubber Meets Road",
+    "top_topics": [
+      [
+        "Street Lighting",
+        7
+      ],
+      [
+        "Crime",
+        2
+      ],
+      [
+        "About This Project",
+        1
+      ],
+      [
+        "Quality of Life",
+        1
+      ]
+    ]
+  },
+  {
+    "name": "just-fix-it",
+    "post_count": 3,
+    "first_published": "2025-12-18",
+    "last_published": "2026-05-07",
+    "number": null,
+    "display_name": "Just Fix It",
+    "top_topics": [
+      [
+        "Just Fix It",
+        3
+      ],
+      [
+        "City Government",
+        2
+      ],
+      [
+        "Housing",
+        1
+      ],
+      [
+        "State Government",
+        1
+      ],
+      [
+        "policy",
+        1
+      ]
+    ]
+  },
+  {
+    "name": "crime-looking-back-at-2025-and-ahead-to-2026",
+    "post_count": 14,
+    "first_published": "2026-01-22",
+    "last_published": "2026-02-19",
+    "number": null,
+    "display_name": "Crime Looking Back At 2025 And Ahead To 2026",
+    "top_topics": [
+      [
+        "Crime",
+        8
+      ],
+      [
+        "Police Reform",
+        6
+      ],
+      [
+        "Where We’re Headed",
+        6
+      ],
+      [
+        "Where We Are",
+        5
+      ],
+      [
+        "Immigration",
+        5
+      ]
+    ]
+  },
+  {
+    "name": "what-to-do-and-not-to-do",
+    "post_count": 6,
+    "first_published": "2025-12-16",
+    "last_published": "2025-12-17",
+    "number": null,
+    "display_name": "What To Do And Not To Do",
+    "top_topics": [
+      [
+        "policy",
+        6
+      ],
+      [
+        "People in Crisis on Streets and Subways",
+        4
+      ],
+      [
+        "Homelessness",
+        4
+      ],
+      [
+        "Mental Health",
+        3
+      ],
+      [
+        "Subway Safety",
+        2
+      ]
+    ]
+  },
+  {
+    "name": "data-stories",
+    "post_count": 23,
+    "first_published": "2022-10-25",
+    "last_published": "2025-12-09",
+    "number": null,
+    "display_name": "Data Stories",
+    "top_topics": [
+      [
+        "Data Stories",
+        16
+      ],
+      [
+        "data",
+        9
+      ],
+      [
+        "Crime",
+        8
+      ],
+      [
+        "Jails",
+        5
+      ],
+      [
+        "Reality Check",
+        4
+      ]
+    ]
+  },
+  {
+    "name": "whither-new-york",
+    "post_count": 20,
+    "first_published": "2024-10-02",
+    "last_published": "2025-10-17",
+    "number": null,
+    "display_name": "Whither New York",
+    "top_topics": [
+      [
+        "Mamdani",
+        9
+      ],
+      [
+        "Government Operations",
+        8
+      ],
+      [
+        "Decisions, Decisions, Decisions",
+        7
+      ],
+      [
+        "Politics",
+        6
+      ],
+      [
+        "City Government",
+        5
+      ]
+    ]
+  },
+  {
+    "name": "trump-100-days-and-beyond",
+    "post_count": 6,
+    "first_published": "2025-04-03",
+    "last_published": "2025-04-29",
+    "number": null,
+    "display_name": "Trump 100 Days And Beyond",
+    "top_topics": [
+      [
+        "Repercussions",
+        4
+      ],
+      [
+        "Government Operations",
+        4
+      ],
+      [
+        "Politics",
+        3
+      ],
+      [
+        "Where Do We Go From Here?",
+        2
+      ],
+      [
+        "History",
+        1
+      ]
+    ]
+  },
+  {
+    "name": "what-makes-cities-tick",
+    "post_count": 20,
+    "first_published": "2023-03-02",
+    "last_published": "2025-04-17",
+    "number": null,
+    "display_name": "What Makes Cities Tick",
+    "top_topics": [
+      [
+        "Safety",
+        6
+      ],
+      [
+        "City Government",
+        5
+      ],
+      [
+        "Governance",
+        5
+      ],
+      [
+        "History",
+        5
+      ],
+      [
+        "culture",
+        4
+      ]
+    ]
+  },
+  {
+    "name": "crime-looking-back-at-2024-and-ahead-to-2025",
+    "post_count": 15,
+    "first_published": "2025-01-22",
+    "last_published": "2025-01-22",
+    "number": null,
+    "display_name": "Crime Looking Back At 2024 And Ahead To 2025",
+    "top_topics": [
+      [
+        "Crime",
+        10
+      ],
+      [
+        "Where We Go From Here",
+        6
+      ],
+      [
+        "What Do We Know?",
+        5
+      ],
+      [
+        "Gun Violence",
+        5
+      ],
+      [
+        "Disorder",
+        4
+      ]
+    ]
+  },
+  {
+    "name": "inside-rikers-jails-can-be-safer-and-more-humane",
+    "post_count": 16,
+    "first_published": "2024-10-16",
+    "last_published": "2024-10-16",
+    "number": null,
+    "display_name": "Inside Rikers Jails Can Be Safer And More Humane",
+    "top_topics": [
+      [
+        "Jails",
+        9
+      ],
+      [
+        "Persistent Problems Inside",
+        7
+      ],
+      [
+        "The Way Forward",
+        6
+      ],
+      [
+        "Justice",
+        4
+      ],
+      [
+        "Government Operations",
+        4
+      ]
+    ]
+  },
+  {
+    "name": "the-case-against-eric-adams-corruption-issue",
+    "post_count": 11,
+    "first_published": "2024-09-19",
+    "last_published": "2024-10-10",
+    "number": null,
+    "display_name": "The Case Against Eric Adams Corruption Issue",
+    "top_topics": [
+      [
+        "Government Operations",
+        8
+      ],
+      [
+        "What Does It All Mean?",
+        6
+      ],
+      [
+        "Where Do We Go From Here?",
+        5
+      ],
+      [
+        "Corruption",
+        5
+      ],
+      [
+        "interview",
+        3
+      ]
+    ]
+  },
+  {
+    "name": "congestion-pricing",
+    "post_count": 10,
+    "first_published": "2024-05-01",
+    "last_published": "2024-05-01",
+    "number": null,
+    "display_name": "Congestion Pricing",
+    "top_topics": [
+      [
+        "Transit",
+        5
+      ],
+      [
+        "City Planning",
+        5
+      ],
+      [
+        "What Opportunities Await?",
+        5
+      ],
+      [
+        "What Could Go Wrong?",
+        3
+      ],
+      [
+        "Infrastructure",
+        3
+      ]
+    ]
+  },
+  {
+    "name": "how-many-people-should-new-york-citys-jails-hold",
+    "post_count": 19,
+    "first_published": "2024-03-12",
+    "last_published": "2024-03-12",
+    "number": null,
+    "display_name": "How Many People Should New York Citys Jails Hold",
+    "top_topics": [
+      [
+        "Jails",
+        11
+      ],
+      [
+        "Some Policy Solutions",
+        9
+      ],
+      [
+        "Justice",
+        7
+      ],
+      [
+        "Projecting the Size of the Jail Population — More than Math",
+        5
+      ],
+      [
+        "Incarceration",
+        4
+      ]
+    ]
+  },
+  {
+    "name": "crime-in-2023-and-2024",
+    "post_count": 10,
+    "first_published": "2024-02-28",
+    "last_published": "2024-02-28",
+    "number": null,
+    "display_name": "Crime In 2023 And 2024",
+    "top_topics": [
+      [
+        "Crime",
+        9
+      ],
+      [
+        "What’s Driving Trends and What to Do About It",
+        4
+      ],
+      [
+        "Public Perception and Statistical Realities",
+        3
+      ],
+      [
+        "History",
+        3
+      ],
+      [
+        "What the Future Holds",
+        2
+      ]
+    ]
+  }
+]

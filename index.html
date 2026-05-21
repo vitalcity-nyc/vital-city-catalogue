@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vital City content catalogue</title>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
+<style>
+  @font-face {
+    font-family: "GascogneTS";
+    src: url("https://vital-city-nyc.github.io/vital-city-design-system/fonts/GascogneTS-Light.ttf") format("truetype");
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+  }
+  :root {
+    /* Vital City design tokens */
+    --vc-black: #050507;
+    --vc-white: #ffffff;
+    --vc-paper: #f7f7f4;
+    --vc-cloud: #dddddd;
+    --vc-charcoal: #707175;
+    --vc-orange: #ff7c53;
+    --vc-magenta: #e7466d;
+    --vc-cerulean: #217ebe;
+    --vc-sans: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif;
+    --vc-serif: "GascogneTS", "Source Serif 4", Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--vc-paper);
+    color: var(--vc-black);
+    font-family: var(--vc-sans);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.42;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- Masthead ---------- */
+  header.masthead {
+    border-bottom: 1px solid var(--vc-black);
+    padding: 26px 32px 20px;
+    background: var(--vc-white);
+  }
+  .wordmark {
+    font-family: var(--vc-sans);
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: var(--vc-sans);
+    font-weight: 900;
+    font-size: 30px;
+    line-height: 1.05;
+    margin: 8px 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .sub { color: var(--vc-charcoal); font-size: 14px; font-weight: 300; max-width: 640px; }
+
+  /* ---------- Stats strip ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-bottom: 1px solid var(--vc-black);
+    background: var(--vc-paper);
+  }
+  .stat { padding: 16px 20px; border-right: 1px solid var(--vc-cloud); }
+  .stat:last-child { border-right: none; }
+  .stat .num {
+    font-family: var(--vc-serif);
+    font-weight: 200;
+    font-synthesis: none;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.003em;
+  }
+  .stat .lbl {
+    font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--vc-charcoal); margin-top: 8px; font-weight: 700;
+  }
+
+  /* ---------- Controls ---------- */
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--vc-paper);
+    border-bottom: 1px solid var(--vc-black);
+    padding: 14px 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .controls input[type=search], .controls select {
+    font: inherit; font-size: 14px; padding: 9px 11px;
+    border: 1px solid var(--vc-black); background: var(--vc-white);
+    border-radius: 0; color: var(--vc-black);
+  }
+  .controls input[type=search] { flex: 1 1 260px; min-width: 200px; }
+  .controls input[type=search]::placeholder { color: var(--vc-charcoal); }
+  .controls select { max-width: 200px; cursor: pointer; }
+  .controls label.chk {
+    font-size: 12px; display: inline-flex; align-items: center; gap: 6px;
+    color: var(--vc-charcoal); cursor: pointer; text-transform: uppercase;
+    letter-spacing: 0.06em; font-weight: 700;
+  }
+  button.clear {
+    font: inherit; font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 9px 14px; border: 1px solid var(--vc-black);
+    background: var(--vc-black); color: var(--vc-white); cursor: pointer;
+  }
+  button.clear:hover { background: var(--vc-orange); border-color: var(--vc-orange); color: var(--vc-black); }
+
+  .resultbar {
+    padding: 12px 32px 0; font-size: 11px; color: var(--vc-charcoal);
+    text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;
+  }
+  .resultbar b { color: var(--vc-black); font-family: var(--vc-serif); font-weight: 200; font-size: 15px; }
+
+  /* ---------- Table ---------- */
+  .tablewrap { padding: 8px 32px 70px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead th {
+    text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.09em;
+    color: var(--vc-charcoal); font-weight: 700; padding: 10px 12px;
+    border-bottom: 1px solid var(--vc-black); cursor: pointer; user-select: none;
+    white-space: nowrap; position: sticky; top: var(--ctrlh, 64px); z-index: 10;
+    background: var(--vc-paper);
+  }
+  thead th:hover { color: var(--vc-black); }
+  thead th .arrow { color: var(--vc-orange); }
+  tbody td { padding: 13px 12px; border-bottom: 1px solid var(--vc-cloud); vertical-align: top; }
+  tbody tr:hover { background: var(--vc-white); }
+  td.date { white-space: nowrap; color: var(--vc-charcoal); font-variant-numeric: tabular-nums; font-size: 13px; }
+  td.title { max-width: 460px; }
+  td.title a.headline { font-weight: 700; }
+  td.title a.headline:hover { color: var(--vc-orange); }
+  td.title .summary {
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    font-weight: 300; font-size: 13px; color: var(--vc-charcoal); margin-top: 4px; line-height: 1.4;
+  }
+  a.author { font-weight: 300; cursor: pointer; border-bottom: 1px solid var(--vc-cloud); }
+  a.author:hover { color: var(--vc-orange); border-bottom-color: var(--vc-orange); }
+  td.words { text-align: right; font-variant-numeric: tabular-nums; color: var(--vc-charcoal); white-space: nowrap; font-size: 13px; }
+  .pill {
+    display: inline-block; font-size: 11px; padding: 2px 8px; margin: 1px 4px 1px 0;
+    border: 1px solid var(--vc-cloud); background: var(--vc-white); color: var(--vc-charcoal);
+    cursor: pointer; white-space: nowrap;
+  }
+  .pill:hover { border-color: var(--vc-black); color: var(--vc-black); }
+  .pill.issue { border-color: var(--vc-orange); color: var(--vc-orange); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; font-size: 10px; }
+  .pill.issue:hover { background: var(--vc-orange); color: var(--vc-black); }
+  .star { color: var(--vc-orange); }
+  .loading, .empty { padding: 70px 32px; text-align: center; color: var(--vc-charcoal); }
+  footer {
+    padding: 22px 32px 60px; font-size: 12px; color: var(--vc-charcoal);
+    border-top: 1px solid var(--vc-black); background: var(--vc-white); font-weight: 300;
+  }
+  footer .wm { font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; font-size: 11px; color: var(--vc-black); }
+  @media (max-width: 760px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .stat { border-bottom: 1px solid var(--vc-cloud); }
+    td.title { max-width: none; }
+    .controls select { flex: 1 1 45%; max-width: none; }
+    .stat .num { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wordmark">Vital City</div>
+  <h1>Content catalogue</h1>
+  <div class="sub">Every article published on vitalcitynyc.org, searchable by author, topic, issue and date.</div>
+</header>
+
+<div class="stats" id="stats"></div>
+
+<div class="controls">
+  <input type="search" id="q" placeholder="Search titles, summaries, authors, topics…" autocomplete="off">
+  <select id="fAuthor"><option value="">All authors</option></select>
+  <select id="fTopic"><option value="">All topics</option></select>
+  <select id="fIssue"><option value="">All issues</option></select>
+  <select id="fYear"><option value="">All years</option></select>
+  <label class="chk"><input type="checkbox" id="fFeatured"> Featured</label>
+  <button class="clear" id="clear">Clear</button>
+</div>
+
+<div class="resultbar" id="resultbar"></div>
+<div class="tablewrap">
+  <table id="tbl">
+    <thead><tr>
+      <th data-k="published_date">Date <span class="arrow"></span></th>
+      <th data-k="title">Title &amp; summary <span class="arrow"></span></th>
+      <th data-k="primary_author">Author <span class="arrow"></span></th>
+      <th data-k="topics">Topics <span class="arrow"></span></th>
+      <th data-k="issues">Issue <span class="arrow"></span></th>
+      <th data-k="word_count">Words <span class="arrow"></span></th>
+    </tr></thead>
+    <tbody id="rows"><tr><td colspan="6" class="loading">Loading catalogue…</td></tr></tbody>
+  </table>
+</div>
+
+<footer id="footer"></footer>
+
+<script>
+const $ = s => document.querySelector(s);
+let DATA = [], META = {}, ISSUES = [];
+let sortKey = "published_date", sortDir = -1;
+
+function fmtDate(d) {
+  if (!d) return "";
+  const [y, m, day] = d.split("-");
+  const mo = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m - 1];
+  return `${mo} ${+day}, ${y}`;
+}
+function issueLabel(name) {
+  const it = ISSUES.find(i => i.name === name);
+  return it ? it.display_name : name.replace(/-/g, " ");
+}
+
+async function load() {
+  const [cat, meta, issues] = await Promise.all([
+    fetch("data/catalogue.json").then(r => r.json()),
+    fetch("data/meta.json").then(r => r.json()),
+    fetch("data/issues.json").then(r => r.json()),
+  ]);
+  DATA = cat; META = meta; ISSUES = issues;
+  buildStats(); buildFilters(); bind(); render();
+}
+
+function buildStats() {
+  const span = META.date_range ? `${(META.date_range[0]||"").slice(0,4)}–${(META.date_range[1]||"").slice(0,4)}` : "";
+  const s = [
+    [META.total_posts, "articles"],
+    [META.total_authors, "contributors"],
+    [META.total_issues, "issues & series"],
+    [META.total_topics, "topics"],
+    [span, "span"],
+  ];
+  $("#stats").innerHTML = s.map(([n, l]) => `<div class="stat"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join("");
+}
+
+function buildFilters() {
+  const authors = {}, topics = {}, years = {};
+  DATA.forEach(r => {
+    (r.authors||[]).forEach(a => authors[a] = (authors[a]||0)+1);
+    (r.topics||[]).forEach(t => topics[t] = (topics[t]||0)+1);
+    if (r.published_date) years[r.published_date.slice(0,4)] = true;
+  });
+  const opt = (v, t) => `<option value="${v.replace(/"/g,'&quot;')}">${t}</option>`;
+  $("#fAuthor").innerHTML += Object.keys(authors).sort((a,b)=>authors[b]-authors[a])
+    .map(a => opt(a, `${a} (${authors[a]})`)).join("");
+  $("#fTopic").innerHTML += Object.keys(topics).sort((a,b)=>topics[b]-topics[a])
+    .map(t => opt(t, `${t} (${topics[t]})`)).join("");
+  $("#fIssue").innerHTML += ISSUES.map(i => opt(i.name, `${i.display_name} (${i.post_count})`)).join("");
+  $("#fYear").innerHTML += Object.keys(years).sort((a,b)=>b-a).map(y => opt(y, y)).join("");
+}
+
+function bind() {
+  ["#q","#fAuthor","#fTopic","#fIssue","#fYear"].forEach(s => $(s).addEventListener("input", render));
+  $("#fFeatured").addEventListener("change", render);
+  $("#clear").addEventListener("click", () => {
+    $("#q").value=""; ["#fAuthor","#fTopic","#fIssue","#fYear"].forEach(s=>$(s).value="");
+    $("#fFeatured").checked=false; render();
+  });
+  document.querySelectorAll("thead th").forEach(th => th.addEventListener("click", () => {
+    const k = th.dataset.k;
+    if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = (k==="published_date"||k==="word_count")?-1:1; }
+    render();
+  }));
+  // delegate clicks on author / topic / issue to set the matching filter
+  $("#rows").addEventListener("click", e => {
+    const el = e.target.closest("[data-author],[data-topic],[data-issue]"); if (!el) return;
+    if (el.dataset.author !== undefined) $("#fAuthor").value = el.dataset.author;
+    if (el.dataset.topic !== undefined) $("#fTopic").value = el.dataset.topic;
+    if (el.dataset.issue !== undefined) $("#fIssue").value = el.dataset.issue;
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
+function filtered() {
+  const q = $("#q").value.trim().toLowerCase();
+  const fa = $("#fAuthor").value, ft = $("#fTopic").value, fi = $("#fIssue").value, fy = $("#fYear").value;
+  const feat = $("#fFeatured").checked;
+  return DATA.filter(r => {
+    if (fa && !(r.authors||[]).includes(fa)) return false;
+    if (ft && !(r.topics||[]).includes(ft)) return false;
+    if (fi && !(r.issues||[]).includes(fi)) return false;
+    if (fy && !(r.published_date||"").startsWith(fy)) return false;
+    if (feat && !r.featured) return false;
+    if (q) {
+      const hay = [r.title, r.summary, (r.authors||[]).join(" "), (r.topics||[]).join(" "),
+        (r.issues||[]).join(" ")].join(" ").toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function sortRows(rows) {
+  const k = sortKey;
+  return rows.sort((a, b) => {
+    let va, vb;
+    if (k === "topics" || k === "issues") { va=(a[k]||[]).join(" "); vb=(b[k]||[]).join(" "); }
+    else { va = a[k]; vb = b[k]; }
+    if (va == null) va = ""; if (vb == null) vb = "";
+    if (typeof va === "number") return (va - vb) * sortDir;
+    return String(va).localeCompare(String(vb)) * sortDir;
+  });
+}
+
+function render() {
+  const rows = sortRows(filtered());
+  document.querySelectorAll("thead th .arrow").forEach(a => a.textContent = "");
+  const th = document.querySelector(`thead th[data-k="${sortKey}"] .arrow`);
+  if (th) th.textContent = sortDir === 1 ? "▲" : "▼";
+
+  $("#resultbar").innerHTML = `Showing <b>${rows.length}</b> of ${DATA.length} articles`;
+  if (!rows.length) { $("#rows").innerHTML = `<tr><td colspan="6" class="empty">No articles match these filters.</td></tr>`; return; }
+
+  const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  $("#rows").innerHTML = rows.map(r => `
+    <tr>
+      <td class="date">${fmtDate(r.published_date)}</td>
+      <td class="title">${r.featured?'<span class="star">★ </span>':''}<a class="headline" href="${r.url}" target="_blank" rel="noopener">${esc(r.title)}</a>${r.summary?`<span class="summary">${esc(r.summary)}</span>`:''}</td>
+      <td>${(r.authors||[]).map(a=>`<a class="author" data-author="${esc(a)}">${esc(a)}</a>`).join(", ")}</td>
+      <td>${(r.topics||[]).map(t=>`<span class="pill" data-topic="${esc(t)}">${esc(t)}</span>`).join("")}</td>
+      <td>${(r.issues||[]).map(n=>`<span class="pill issue" data-issue="${esc(n)}">${esc(issueLabel(n))}</span>`).join("")}</td>
+      <td class="words">${r.word_count?.toLocaleString()||""}</td>
+    </tr>`).join("");
+}
+
+// Keep the sticky column header pinned exactly below the (variable-height) filter bar.
+function syncStickyOffset() {
+  const c = document.querySelector(".controls");
+  if (c) document.documentElement.style.setProperty("--ctrlh", c.offsetHeight + "px");
+}
+window.addEventListener("resize", syncStickyOffset);
+new ResizeObserver(syncStickyOffset).observe(document.querySelector(".controls"));
+syncStickyOffset();
+
+$("#footer").innerHTML = '<span class="wm">Vital City</span> &nbsp; Data pulled from the Vital City Ghost Content API. See methodology.md for sources, definitions and limitations. Refreshes weekly.';
+load().catch(e => { $("#rows").innerHTML = `<tr><td colspan="6" class="empty">Could not load data (${e}). Serve this folder over http — see README.</td></tr>`; });
+</script>
+</body>
+</html>
