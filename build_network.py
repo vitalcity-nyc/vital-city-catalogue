@@ -670,6 +670,10 @@ def main():
                 p["types"] = o["types"]
             if o.get("topics") is not None:
                 p["topics"] = o["topics"]
+            if "note" in o:
+                p["note"] = o["note"]
+            if "star" in o:
+                p["star"] = 1 if o.get("star") else 0
         people = [p for p in people if not p.get("_deleted")]
         if deleted_keys:
             print(f"removed {deleted_keys} entries flagged deleted in people_overrides.json", file=__import__("sys").stderr)
@@ -692,6 +696,7 @@ def main():
                 "aname": name if o.get("auth") else "",
                 "don": 1 if o.get("don") else 0, "damt": float(o.get("damt") or 0),
                 "dcnt": 1 if o.get("don") else 0, "dlast": "", "unsub": 0,
+                "note": o.get("note") or "", "star": 1 if o.get("star") else 0,
                 "src": ["manual"], "added": True,
             })
             added += 1
