@@ -45,10 +45,10 @@
     <tr><th>Source</th><th>What it adds</th></tr>
     <tr><td><b>Newsletter subscribers</b> (from Ghost)</td><td>The <span class="pill b-mem">Subscriber</span> badge + the year they joined. <b>"Subscriber" means the free email list</b> — not the same as a donor.</td></tr>
     <tr><td><b>Contacts</b> (the Google Sheet your team maintains)</td><td>The <span class="pill">type</span> tags: journalist, academic, funder, gov, judge, architect, nonprofit, contributor, advisor + specialty domains (criminal justice, housing, transit, budget, urban planning, education, public health, economy, technology, politics &amp; government, race &amp; equity, culture).</td></tr>
-    <tr><td><b>Donors</b> (from FCNY)</td><td>The <span class="pill b-don">$ amount</span> badge (total given) and the date of their most recent gift.</td></tr>
+    <tr><td><b>Donors</b> (from Donorbox)</td><td>The <span class="pill b-don">$ amount</span> badge (total given) and the date of their most recent gift.</td></tr>
     <tr><td><b>Authors</b> (vitalcitynyc.org)</td><td>The "N pieces" badge (articles written).</td></tr>
   </table>
-  <div class="note"><b>Subscriber ≠ donor.</b> Someone can be a donor without being a newsletter subscriber, and vice-versa. If you filter "Donors + Non-subscribers," you're seeing donors who haven't joined the email list — good people to invite to subscribe.</div>
+  <div class="note"><b>Subscriber ≠ donor.</b> Someone can be a donor without being a newsletter subscriber, and vice-versa. Turn on <b>Donors</b> and set <b>Subscribers</b> to "Not subscribers" to see donors who haven't joined the email list — good people to invite to subscribe.</div>
 
   <h3>How types &amp; domains get assigned</h3>
   <p>Beyond what's in the contacts sheet, the tool fills in categories automatically:</p>
@@ -59,23 +59,23 @@
     <li><b>New authors</b> are added automatically whenever a new piece is published: on the next refresh they appear tagged <i>author</i>, with the domains they wrote about, and their email filled in if they're already in any source list.</li>
   </ul>
 
-  <h2>Just ask (natural language)</h2>
-  <p>The chartreuse <b>Ask</b> bar at the top takes plain English and sets the filters for you, then tells you the count. Try:</p>
+  <h2>The Show toggles — overlaps and exclusions</h2>
+  <p>The <b>Show:</b> row has four chips — <b>Subscribers · Donors · Authors · Other</b>. Each one cycles through three states as you click it:</p>
   <ul>
-    <li><i>"authors who are also donors"</i> · <i>"donors in criminal justice"</i></li>
-    <li><i>"how many subscribers are journalists"</i> · <i>"donors who are not subscribers"</i></li>
+    <li><b>Off</b> → <b>Include</b> (colored) → <b>Exclude</b> (turns magenta and reads "Not subscribers / Not donors / Not authors") → off again.</li>
+    <li><b>Combine them for overlaps.</b> Subscribers + Authors (both Include) = people who are both. <b>Donors + "Not subscribers"</b> = donors who haven't joined the email list. <b>Authors + "Not subscribers"</b> = contributors who don't get the newsletter. Any mix works.</li>
+    <li><b>Other</b> = none of the three (not a subscriber, donor or author).</li>
+    <li>When <b>Donors</b> is on, a <b>Repeat donors (2+ gifts)</b> checkbox appears to narrow to people who have given more than once.</li>
   </ul>
-  <p>It understands authors/contributors, donors, subscribers (and "non-"), every type, and the specialty domains. The matching filters light up below so you can see (and tweak) what it did.</p>
 
   <h2>Searching &amp; filtering</h2>
   <ul>
-    <li><b>Type / specialty</b> (left checkboxes): tick any combination — they're OR'd together (e.g. <i>journalist</i> + <i>academic</i> shows either).</li>
-    <li><b>Subscribers / Non-subscribers</b>, <b>Author</b>, <b>Donor</b>: each narrows further (AND'd with everything else).</li>
+    <li><b>Type / specialty</b> (left checkboxes): tick any combination — they're OR'd together (e.g. <i>journalist</i> + <i>academic</i> shows either). The little <b>ⓘ</b> next to each heading explains that these are partly inferred/extrapolated, so treat them as approximate.</li>
     <li><b>Subscribed between</b> (left): filter to people who joined the newsletter within a date range.</li>
     <li><b>Search box</b>: matches name, email or institution.</li>
-    <li>Click any type tag or the type×membership bars to filter by it. <b>Clear filters</b> resets everything.</li>
-    <li><b>The banner numbers are clickable shortcuts</b> — click "subscribers", "donors", "authors", "other" (neither subscriber nor donor), etc. to jump to that group, sorted sensibly (donors by amount, authors by piece count, subscribers newest first).</li>
-    <li>Sort any column by clicking its header. <b>Last name</b> is the default (compound surnames like "Jones Austin" stay together; middle initials are dropped); people with no last name sort to the bottom. A <i>VC contributor</i> tag shows <b>×N</b> when they've written more than one piece.</li>
+    <li><b>The banner numbers are clickable shortcuts</b> — click "subscribers", "donors", "authors" or "other" to turn that filter on (click again to turn it off); combine several. <b>Reset all</b> returns to the full list.</li>
+    <li>Sort any column by clicking its header — an arrow (▲/▼) shows the direction. <b>Last name</b> is the default (compound surnames like "Jones Austin" stay together; middle initials and quoted nicknames are dropped); people with no last name sort to the bottom.</li>
+    <li>A <b>VC contributor</b> chip shows <b>×N</b> for the number of pieces and is a <b>link</b> — click it to open the public <a href="../">article catalogue</a> filtered to that author's pieces.</li>
     <li>People can have <b>several emails</b> — all are shown and searchable.</li>
   </ul>
 
@@ -89,17 +89,30 @@
     <li><b>Email group</b> — pick <b>Bcc / To / Cc</b>, then it opens your default mail app with the subset's addresses in that field. (Big lists may exceed what a mail app accepts — use Copy emails for those.)</li>
   </ul>
 
-  <h2>Editing — every field</h2>
-  <p>Click the <b>✎</b> on any row to edit that person: <b>name, institution, emails, types and specialties</b>. A <span class="g">gray italic</span> name is an educated guess from the email (e.g. <code>aaron@naparstek.com</code> → <span class="g">Aaron Naparstek</span>); <b>✓</b> next to one confirms it's right (turns it black).</p>
-  <p>Edits save in your browser instantly. To make them permanent for everyone, click <b>Export edits</b> and send the file to whoever publishes — the build bakes them in on the next refresh.</p>
+  <h2>Fixing or cutting an entry</h2>
+  <p>Click <b>Edit</b> on any row to change that person: <b>name, institution, emails, types and specialties</b> — or <b>Delete entry</b> (the delete button lives inside the edit window, so it can't be hit by accident). A <span class="g">gray italic</span> name is an educated guess from the email (e.g. <code>aaron@naparstek.com</code> → <span class="g">Aaron Naparstek</span>); the <b>✓</b> next to one confirms it's right (turns it black).</p>
+  <div class="note"><b>Your edits stick automatically.</b> Every edit, confirmation and deletion is saved to a shared store (a Google Sheet behind the scenes), not just your browser — so it persists for everyone and survives every future refresh. You no longer have to export anything. (The change shows for you immediately; it appears for everyone else on the next daily refresh.)</div>
 
-  <h2>Keeping it current</h2>
-  <p>The page is a snapshot that's rebuilt when someone publishes. It doesn't read the sources live.</p>
-  <ul>
-    <li><b>Subscribers</b> come from Ghost/Mailchimp exports, <b>donors</b> from an FCNY export, the <b>author roster</b> from Vital City's contacts, and the <b>unsubscribed</b> list from Mailchimp.</li>
-    <li>A consolidated spreadsheet that mirrors this tool — <a href="https://docs.google.com/spreadsheets/d/17v3wa1OMW5XXIcu0oN6tp4-NfOje7xPTVUv5Zb3XVVE/edit"><b>Vital City — Network (master)</b></a> — holds everyone with all fields for sorting/filtering in Sheets.</li>
-    <li>To push everything live, a maintainer refreshes the source files (or asks Claude to pull Ghost directly) and runs the one-command publish; edits made in the tool are applied via <b>Export edits</b>. Changes appear in about a minute. See the maintenance playbook for details.</li>
-  </ul>
+  <h2>How the data updates — what's automatic vs. manual</h2>
+  <p>The page is a snapshot rebuilt by an automatic job <b>every day</b> on GitHub's servers — so it stays current <b>whether or not anyone's computer is on</b>. Here's what each piece does:</p>
+  <table>
+    <tr><th>Data</th><th>Updates</th><th>How</th></tr>
+    <tr><td><b>Newsletter subscribers</b></td><td><b>Automatic, daily</b></td><td>Pulled live from Ghost each morning. New sign-ups appear on the next day's refresh.</td></tr>
+    <tr><td><b>Authors / contributors</b></td><td><b>Automatic, daily</b></td><td>The article catalogue is re-scraped; new bylines become <i>VC contributor</i> rows automatically.</td></tr>
+    <tr><td><b>Inferred types &amp; specialties</b></td><td><b>Automatic</b></td><td>Recomputed every refresh (journalist from news domains, current nyc.gov from city emails, domains from what people wrote).</td></tr>
+    <tr><td><b>Your edits / confirms / deletes</b></td><td><b>Automatic</b></td><td>Saved to the shared store as you make them; folded in on the next daily refresh.</td></tr>
+    <tr><td><b>Donors</b></td><td><b>Manual</b></td><td>A snapshot from Donorbox — see below.</td></tr>
+    <tr><td><b>Contacts / CRM types</b></td><td><b>Manual</b></td><td>Maintained in the team's contacts Google Sheet; refreshed when that export is updated.</td></tr>
+  </table>
+
+  <h3>Refreshing donors (Donorbox)</h3>
+  <p>Donor data is a manual snapshot, not live. To refresh it: in Donorbox, <b>export the full donations CSV</b>, then hand that file to Claude Code and ask it to refresh the donor list (it replaces <code>donors_source.csv</code> and republishes). New gifts won't show until that's done.</p>
+
+  <h3>Adding a batch of new entries (a whole CSV)</h3>
+  <p>The in-tool <b>Edit</b> is for tweaking or removing <i>existing</i> people one at a time. A <b>whole new list</b> of people is different — it's a source update, not an edit. Don't try to add them one-by-one in the tool. Instead, <b>hand the CSV to Claude Code</b> and say what it is (new contacts, a donor export, a partner list, etc.); it folds the file into the right source and the new people appear on the next refresh. So: small fix → use Edit here; a batch → bring the CSV to Claude.</p>
+
+  <h3>The mirror spreadsheet</h3>
+  <p>A consolidated spreadsheet that mirrors this tool — <a href="https://docs.google.com/spreadsheets/d/17v3wa1OMW5XXIcu0oN6tp4-NfOje7xPTVUv5Zb3XVVE/edit"><b>Vital City — Network (master)</b></a> — holds everyone with all fields for sorting/filtering in Sheets. (Editing that sheet doesn't feed back into the tool — use <b>Edit</b> here for that.)</p>
 
   <h2>Confidentiality</h2>
   <p>This contains subscriber, donor and contact data. The page is password-protected and the underlying data is encrypted — only people with the passphrase can read it. Don't redistribute it or the passphrase.</p>
