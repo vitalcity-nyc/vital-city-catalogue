@@ -300,6 +300,7 @@ def main():
         set_name(p, a["name"], True)
         p["auth"] = 1
         p["arts"] = a.get("post_count", 0)
+        p["types"] = sorted(set(p["types"]) | {"VC contributor"})   # anyone who wrote for us is a contributor
         p["topics"] = sorted(set(p["topics"]) | author_specs.get(nn, set()))
         if "author" not in p["src"]: p["src"].append("author")
         index(p)
