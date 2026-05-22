@@ -460,7 +460,7 @@ const OVKEY="vc_overrides";
 // Google Apps Script /exec URL of the shared edit store. When set, edits are
 // pushed here (in addition to this device) so they persist for everyone via the
 // daily refresh. Empty = device-only (export-and-publish fallback still works).
-const BACKEND_URL="";
+const BACKEND_URL="https://script.google.com/macros/s/AKfycbw-lsFo3rHWZX3BnL0mEOo1kgRGqcsznH8WC3e5bcEu95zuwMG7NSCYpazP2Z4z7w3hPQ/exec";
 function loadOverrides(){ try{return JSON.parse(localStorage.getItem(OVKEY)||"{}");}catch(e){return {};} }
 // Fire-and-forget save to the shared store. Auth = the passphrase the viewer
 // entered (held on this device after unlock), never shipped in the page source.
