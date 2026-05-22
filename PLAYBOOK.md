@@ -19,15 +19,18 @@ person. A person can be several things at once (e.g. academic + member + donor).
 
 ## Day to day: editing contacts (anyone on the team)
 
-Edit the shared **Google Sheet** — add people, fix details, check the category
-columns. That's it. Keep the columns as they are:
+Edit the shared **Google Sheet** — add people, fix details, set their
+categories. One row per person. Keep these columns:
 
-`name, email, institution, role, VC contributor, VC advisor, journalist,
-academic, foundation leadership, nonprofit leadership, city gov, state gov,
-fed gov, judge, architect, criminal justice, housing, transit`
+`name, email, institution, role, categories, specialties`
 
-For a category, put anything in the cell (a `1`, an `x`, `yes`) to tag the
-person; leave it blank if not. One row per person.
+- **categories**: a semicolon-separated list from: VC contributor, VC advisor,
+  journalist, academic, foundation leadership, nonprofit leadership, city gov,
+  state gov, fed gov, judge, architect. e.g. `journalist; academic`
+- **specialties**: same idea, from: criminal justice, housing, transit.
+
+(The build also still understands the older one-column-per-category layout, so
+either works.)
 
 ## Publishing updates to the live page
 

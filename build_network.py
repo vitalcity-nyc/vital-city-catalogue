@@ -87,6 +87,17 @@ def load_crm():
     def cell(r, h):
         i = idx.get(h)
         return r[i] if (i is not None and i < len(r)) else None
+    def cats_from(r, allowed):
+        """Categories for a row, from either per-category boolean columns OR a
+        single 'categories'/'specialties' column with a ;- or ,-separated list."""
+        found = {c for c in allowed if _set(cell(r, c))}
+        for col in ("categories", "specialties", "specialty", "type", "types"):
+            v = cell(r, col)
+            if v:
+                wanted = {x.strip().lower() for x in re.split(r"[;,]", str(v)) if x.strip()}
+                found |= {c for c in allowed if c.lower() in wanted}
+        return sorted(found)
+
     out = []
     for r in rows:
         if not r or not r[0]:
@@ -96,8 +107,8 @@ def load_crm():
             "email": email_norm(cell(r, "email")),
             "institution": (cell(r, "institution") or "").strip(),
             "role": (cell(r, "role") or "").strip(),
-            "types": [c for c in PERSON_CATS if _set(cell(r, c))],
-            "topics": [c for c in TOPIC_CATS if _set(cell(r, c))],
+            "types": cats_from(r, PERSON_CATS),
+            "topics": cats_from(r, TOPIC_CATS),
         })
     return out
 
