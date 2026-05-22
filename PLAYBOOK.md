@@ -61,17 +61,29 @@ Open the URL, enter the passphrase. Filter by any combination — type/specialty
 (left checkboxes), Members / Non-members, Authors, Donors — and **Export CSV**
 to download the exact list (e.g. "academics who are donors but not members").
 
-## Fixing names
+## Editing people (every field)
 
-Some people show a **gray, italic** name — that's an educated guess pulled from
-their email (e.g. `aaron@naparstek.com` → *Aaron Naparstek*). Black names are
-confirmed. To fix any name:
+Click the **✎** on any row to edit a person's **name, institution, emails,
+types and specialties**. Gray italic names are email guesses; **✓** confirms one.
 
-1. Click the **✎** next to the name, type the correct one. It saves in your
-   browser immediately (turns black).
-2. To make a fix permanent for everyone, click **Export name fixes** (downloads
-   `email,name` rows), save it as `private/name_overrides.csv`, and run
-   `bash publish.sh`. The build bakes those corrections in for all users.
+1. Edits save in your browser instantly.
+2. To make them permanent for everyone, click **Export edits** (downloads
+   `vital-city-edits.json`), save it as `private/people_overrides.json`, and run
+   `bash publish.sh`. The build bakes them in for all users.
+
+## Unsubscribed (former contacts)
+
+People who left the newsletter (from the Mailchimp `unsubscribed` export, saved
+as `private/unsubscribed_source.csv`) are kept **separate**, shown in **red**,
+and hidden by default. Use the **Include unsubscribed** checkbox or the red
+**unsubscribed** banner number to see them.
+
+## Consolidated spreadsheet
+
+A full spreadsheet mirroring the tool (everyone, all fields, sortable) lives in
+the Workspace Drive as **Vital City — Network (master)**. Regenerate it any time
+from the tool's data and re-import; it replaces the old agglomeration sheet as
+the reference view.
 
 ## Rotating the passphrase
 

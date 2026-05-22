@@ -34,8 +34,17 @@ it drops into `private/` and rebuilds. You can always repopulate later.
 | **Subscribers** | `members_source.csv` | `email`, `name`, `created_at` |
 | **Contacts** | `contacts_source.csv` (Google Sheet export) or `contacts_source.xlsx` (sheet `combined`) | `name`, `email`, `institution`, `role`, `categories`, `specialties` (or one boolean column per category) |
 | **Donors** | `donors_source.csv` (FCNY export) | `First Name`, `Last Name`, `Email`, `Summed Donation Amount`, `Donations Count`, `Last Donation at` |
-| **Authors** | `data/authors.json` + `data/catalogue.json` (produced by `scrape.py` from the Ghost Content API) | name, post count, and each article's authors + topics |
-| **Manual name fixes** | `name_overrides.csv` (optional) | `email`, `name` |
+| **Authors** | `data/authors.json` + `data/catalogue.json` (Ghost Content API via `scrape.py`) | name, post count, each article's authors + topics |
+| **Author roster** | `vc_authors.csv` (Google Contacts export — authoritative contributors) | First/Middle/Last, E-mail 1/2/3 (first non-@vitalcitynyc.org wins) |
+| **Donors** | `donors_source.csv` (FCNY) | First/Last, Email, Summed Donation Amount, Donations Count, Last Donation at |
+| **Unsubscribed** | `unsubscribed_source.csv` (Mailchimp export) | Email, First/Last Name → flags people `unsub` (former contacts; excluded by default, shown red) |
+| **Extra contributors** | `extra_contributors.csv` (optional) | `email` → force VC-contributor tag (nickname stragglers) |
+| **In-tool edits** | `people_overrides.json` (optional, exported from the tool's ✎) | `{personKey: {n, inst, emails, types, topics}}`, applied last |
+| **Ghost members (live)** | `ghost_members.py` (read-only Admin API `/members/`; key in `.ghost_admin_key`) | refreshes the subscriber CSV; never reads `/users/` (fake author emails) |
+
+Key data-model notes: each person holds an **emails list** (multiple addresses; matching dedups on any), an `unsub` flag, and `ns` (name source: given/guess). Made-up `@vitalcitynyc.org` author emails are always scrubbed. Institution is inferred from the email domain where blank. The final build step **merges exact-full-name duplicates** (single first-names never merge).
+
+A consolidated spreadsheet mirroring the whole tool lives in Drive: **Vital City — Network (master)** (`17v3wa1OMW5XXIcu0oN6tp4-NfOje7xPTVUv5Zb3XVVE`).
 
 The current contacts Google Sheet: **vital-city-contacts-master** —
 `https://docs.google.com/spreadsheets/d/1GXNFKKspPgXK_ubUB2XptrNQfXqmHeHocyN2c_6O6Q8/edit`

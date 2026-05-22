@@ -59,6 +59,14 @@
     <li><b>New authors</b> are added automatically whenever a new piece is published: on the next refresh they appear tagged <i>author</i>, with the domains they wrote about, and their email filled in if they're already in any source list.</li>
   </ul>
 
+  <h2>Just ask (natural language)</h2>
+  <p>The chartreuse <b>Ask</b> bar at the top takes plain English and sets the filters for you, then tells you the count. Try:</p>
+  <ul>
+    <li><i>"authors who are also donors"</i> · <i>"donors in criminal justice"</i></li>
+    <li><i>"how many subscribers are journalists"</i> · <i>"donors who are not subscribers"</i></li>
+  </ul>
+  <p>It understands authors/contributors, donors, subscribers (and "non-"), every type, and the specialty domains. The matching filters light up below so you can see (and tweak) what it did.</p>
+
   <h2>Searching &amp; filtering</h2>
   <ul>
     <li><b>Type / specialty</b> (left checkboxes): tick any combination — they're OR'd together (e.g. <i>journalist</i> + <i>academic</i> shows either).</li>
@@ -67,9 +75,12 @@
     <li><b>Search box</b>: matches name, email or institution.</li>
     <li>Click any type tag or the type×membership bars to filter by it. <b>Clear filters</b> resets everything.</li>
     <li><b>The banner numbers are clickable shortcuts</b> — click "subscribers", "donors", "authors", "other" (neither subscriber nor donor), etc. to jump to that group, sorted sensibly (donors by amount, authors by piece count, subscribers newest first).</li>
-    <li>Sort any column by clicking its header. <b>Last name</b> is the default; people with no last name sort to the bottom. A <i>VC contributor</i> tag shows <b>×N</b> when they've written more than one piece.</li>
+    <li>Sort any column by clicking its header. <b>Last name</b> is the default (compound surnames like "Jones Austin" stay together; middle initials are dropped); people with no last name sort to the bottom. A <i>VC contributor</i> tag shows <b>×N</b> when they've written more than one piece.</li>
+    <li>People can have <b>several emails</b> — all are shown and searchable.</li>
   </ul>
-  <p>Example: tick <i>journalist</i>, set <b>Members</b> → every journalist on the newsletter. Or <i>academic</i> + <b>Donors only</b> → academics who give.</p>
+
+  <h2>Unsubscribed (former contacts)</h2>
+  <p>People who left the newsletter are kept <b>separate</b> and <b style="color:#c8102e">shown in red</b>. They're <b>hidden by default</b> — tick <b>Include unsubscribed</b> to mix them in, or click the red <b>unsubscribed</b> banner number to see only them. The other banner counts reflect <i>current</i> contacts only.</p>
 
   <h2>Getting lists out</h2>
   <ul>
@@ -78,20 +89,16 @@
     <li><b>Email group</b> — pick <b>Bcc / To / Cc</b>, then it opens your default mail app with the subset's addresses in that field. (Big lists may exceed what a mail app accepts — use Copy emails for those.)</li>
   </ul>
 
-  <h2>Names &amp; the gray ones</h2>
-  <p>Most people have a confirmed (black) name. A <span class="g">gray italic</span> name is an <b>educated guess pulled from the email address</b> (e.g. <code>aaron@naparstek.com</code> → <span class="g">Aaron Naparstek</span>) — used only when no source gives a real name. You can:</p>
-  <ul>
-    <li>Click <b>✎</b> to type the correct name.</li>
-    <li>Click <b>✓</b> next to a gray name to confirm the guess is right — it turns black.</li>
-  </ul>
-  <p>Your fixes save in your browser right away. To make them permanent for everyone, click <b>Export name fixes</b> and send the file to whoever publishes (it gets baked into the data on the next publish). Note: these gray names are mostly email-only subscribers/donors who aren't in the contacts Sheet, so fixes here are tracked separately — they are <i>not</i> written back into the Google Sheet.</p>
+  <h2>Editing — every field</h2>
+  <p>Click the <b>✎</b> on any row to edit that person: <b>name, institution, emails, types and specialties</b>. A <span class="g">gray italic</span> name is an educated guess from the email (e.g. <code>aaron@naparstek.com</code> → <span class="g">Aaron Naparstek</span>); <b>✓</b> next to one confirms it's right (turns it black).</p>
+  <p>Edits save in your browser instantly. To make them permanent for everyone, click <b>Export edits</b> and send the file to whoever publishes — the build bakes them in on the next refresh.</p>
 
   <h2>Keeping it current</h2>
   <p>The page is a snapshot that's rebuilt when someone publishes. It doesn't read the sources live.</p>
   <ul>
-    <li><b>Contacts &amp; categories</b> are maintained by the team in the Google Sheet <a href="https://docs.google.com/spreadsheets/d/1GXNFKKspPgXK_ubUB2XptrNQfXqmHeHocyN2c_6O6Q8/edit"><b>vital-city-contacts-master</b></a>. Edit there freely.</li>
-    <li><b>Subscribers</b> come from a Ghost export; <b>donors</b> from an FCNY export.</li>
-    <li>To push everything live, a maintainer refreshes those source files and runs the one-command publish (see the maintenance playbook). Changes appear in about a minute.</li>
+    <li><b>Subscribers</b> come from Ghost/Mailchimp exports, <b>donors</b> from an FCNY export, the <b>author roster</b> from Vital City's contacts, and the <b>unsubscribed</b> list from Mailchimp.</li>
+    <li>A consolidated spreadsheet that mirrors this tool — <a href="https://docs.google.com/spreadsheets/d/17v3wa1OMW5XXIcu0oN6tp4-NfOje7xPTVUv5Zb3XVVE/edit"><b>Vital City — Network (master)</b></a> — holds everyone with all fields for sorting/filtering in Sheets.</li>
+    <li>To push everything live, a maintainer refreshes the source files (or asks Claude to pull Ghost directly) and runs the one-command publish; edits made in the tool are applied via <b>Export edits</b>. Changes appear in about a minute. See the maintenance playbook for details.</li>
   </ul>
 
   <h2>Confidentiality</h2>
