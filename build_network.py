@@ -366,6 +366,17 @@ def main():
             p["e"] = ""
             scrubbed += 1
 
+    # ---- Force VC-contributor tag for emails in extra_contributors.csv ----
+    # (catches contributors whose byline name didn't match a catalogue author,
+    #  e.g. nickname variants like Bill vs William Bratton)
+    extra = PRIV / "extra_contributors.csv"
+    if extra.exists():
+        with open(extra, newline="") as f:
+            for row in csv.DictReader(f):
+                em = email_norm(row.get("email"))
+                if em and em in by_email:
+                    by_email[em]["types"] = sorted(set(by_email[em]["types"]) | {"VC contributor"})
+
     # ---- 5. Manual name fixes (email -> corrected name) ----
     # Edits made in the explorer's edit mode are exported here and become
     # permanent for everyone on the next publish.
