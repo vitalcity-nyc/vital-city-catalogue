@@ -83,6 +83,13 @@
   .nm.guess{color:var(--vc-charcoal);font-weight:400;font-style:italic}
   .edit{cursor:pointer;color:var(--vc-cloud);margin-left:7px;font-size:12px;text-decoration:none}
   .edit:hover{color:var(--vc-orange)}
+  .confirm{cursor:pointer;color:var(--vc-cloud);margin-left:5px;font-size:12px;text-decoration:none}
+  .confirm:hover{color:var(--vc-green)}
+  .howto{position:absolute;right:30px;top:24px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-cerulean);text-decoration:none}
+  .howto:hover{text-decoration:underline}
+  header.mast{position:relative}
+  .hint{padding:8px 30px 0;font-size:11.5px;color:var(--vc-charcoal)}
+  .hint .g{font-style:italic;color:var(--vc-charcoal)}
   .em{color:var(--vc-charcoal);font-size:12px}
   .pill{display:inline-block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;margin:1px 4px 1px 0;background:var(--vc-cloud);color:var(--vc-black);cursor:pointer;white-space:nowrap}
   .pill:hover{background:var(--vc-cerulean);color:#fff}
@@ -109,9 +116,10 @@
 
 <div id="app">
   <header class="mast">
+    <a class="howto" href="about.html" target="_blank">How it works ↗</a>
     <div class="wm">Vital City</div>
     <h1>Contact master search</h1>
-    <div class="sub">Everyone in Vital City's orbit — members, contributors, contacts and donors — searchable by type and category. Filter to any subset and export it as a contact or email list.</div>
+    <div class="sub">Everyone in Vital City's orbit — subscribers, contributors, contacts and donors — searchable by type and category. Filter to any subset and export it, copy its emails, or email the group. (&ldquo;Member&rdquo; here means newsletter subscriber.)</div>
   </header>
   <div class="confbar">Confidential · contains member and contact data · do not redistribute</div>
   <div class="stats" id="stats"></div>
@@ -134,9 +142,12 @@
     <input type="search" id="q" placeholder="Search name, email, institution…" autocomplete="off">
     <button class="btn primary" id="export">Export CSV</button>
     <button class="btn" id="copyEmails">Copy emails</button>
+    <select id="emailField" title="Which field to drop recipients into"><option value="bcc">Bcc</option><option value="to">To</option><option value="cc">Cc</option></select>
+    <button class="btn" id="emailGroup">Email group</button>
     <button class="btn" id="exportFixes">Export name fixes</button>
     <button class="btn" id="clear">Clear</button>
   </div>
+  <div class="hint"><span class="g">Gray italic</span> names are guessed from the email address — click <b>✎</b> to fix one, or <b>✓</b> to confirm the guess is correct (turns it black).</div>
   <div class="layout">
     <aside>
       <h2>Filter by type</h2>
@@ -220,11 +231,13 @@ function init(){
   ["#fAuthor","#fDonor","#q"].forEach(s=>$(s).addEventListener("input",render));
   $("#export").addEventListener("click",exportCSV);
   $("#copyEmails").addEventListener("click",copyEmails);
+  $("#emailGroup").addEventListener("click",emailGroup);
   $("#exportFixes").addEventListener("click",exportFixes);
   $("#clear").addEventListener("click",clearAll);
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
   $("#rows").addEventListener("click",e=>{
     const ed=e.target.closest(".edit"); if(ed){e.stopPropagation();editName(ed.dataset.em);return;}
+    const cf=e.target.closest(".confirm"); if(cf){e.stopPropagation();confirmName(cf.dataset.em);return;}
     const el=e.target.closest("[data-type]");if(!el)return;toggleCat(el.dataset.type,true);
   });
   render();
@@ -296,6 +309,19 @@ function editName(email){
   localStorage.setItem(OVKEY,JSON.stringify(ov));
   render();
 }
+function confirmName(email){
+  const p=PEOPLE.find(x=>x.e===email); if(!p||!p.n) return;
+  const ov=loadOverrides(); ov[email]=p.n;            // confirm the guess as correct
+  localStorage.setItem(OVKEY,JSON.stringify(ov));
+  p.ns="given"; render();
+}
+function emailGroup(){
+  const emails=[...new Set(filtered().map(p=>p.e).filter(Boolean))];
+  if(!emails.length){ alert("No email addresses in this subset."); return; }
+  if(emails.length>100 && !confirm(`This will hand ${emails.length.toLocaleString()} recipients to your mail app. Many apps cap how many open at once — for big lists, "Copy emails" is more reliable. Continue?`)) return;
+  const field=$("#emailField").value;
+  window.location.href=`mailto:?${field}=${encodeURIComponent(emails.join(","))}`;
+}
 function exportFixes(){
   const ov=loadOverrides(), keys=Object.keys(ov);
   if(!keys.length){ alert("No name fixes yet. Click the ✎ next to a name to fix it."); return; }
@@ -344,7 +370,7 @@ function render(){
   $("#resultbar").innerHTML=`Showing <b>${shown.length.toLocaleString()}</b> of ${all.length.toLocaleString()} people`+(all.length>CAP?` &nbsp;·&nbsp; refine filters to see all, or Export CSV for the full list`:"");
   $("#rows").innerHTML=shown.map(p=>`
     <tr>
-      <td><span class="nm${p.ns==='guess'?' guess':''}">${esc(p.n)||'<span class="muted">—</span>'}</span>${p.e?`<a class="edit" data-em="${esc(p.e)}" title="Fix name">✎</a>`:''}</td>
+      <td><span class="nm${p.ns==='guess'?' guess':''}">${esc(p.n)||'<span class="muted">—</span>'}</span>${p.e?`<a class="edit" data-em="${esc(p.e)}" title="Fix name">✎</a>`:''}${p.e&&p.ns==='guess'&&p.n?`<a class="confirm" data-em="${esc(p.e)}" title="Confirm this name is correct">✓</a>`:''}</td>
       <td>${(p.types||[]).map(t=>`<span class="pill" data-type="${esc(t)}">${esc(t)}</span>`).join("")||'<span class="muted">—</span>'}</td>
       <td>${p.mem?`<span class="badge b-mem">Member${p.since?" '"+p.since.slice(2,4):""}</span>`:'<span class="muted">—</span>'}</td>
       <td>${p.auth?`<span class="badge b-auth">${p.arts} ${p.arts===1?"piece":"pieces"}</span>`:'<span class="muted">—</span>'}</td>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Contact master search — how it works</title>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
+<style>
+  @font-face{font-family:"GascogneTS";src:url("https://vital-city-nyc.github.io/vital-city-design-system/fonts/GascogneTS-Light.ttf") format("truetype");font-weight:200;font-display:swap}
+  :root{--ink:#050507;--paper:#f7f7f4;--cloud:#dddddd;--charcoal:#707175;--orange:#ff7c53;--green:#57aa4a;--cerulean:#217ebe;
+    --sans:"halyard-text","Inter","Helvetica Neue",Arial,sans-serif;--serif:"GascogneTS","Source Serif 4",Georgia,serif}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 80px}
+  .wm{font-weight:900;letter-spacing:.22em;text-transform:uppercase;font-size:12px}
+  h1{font-family:var(--sans);font-weight:900;font-size:32px;line-height:1.05;margin:8px 0 6px;letter-spacing:-.01em}
+  .lede{color:var(--charcoal);font-size:16px;margin:0 0 30px}
+  h2{font-family:var(--sans);font-weight:900;font-size:18px;margin:34px 0 8px;border-top:1px solid var(--ink);padding-top:16px}
+  h3{font-weight:700;font-size:15px;margin:18px 0 4px}
+  p,li{font-size:15px}
+  ul{padding-left:20px}
+  a{color:var(--cerulean)}
+  code{background:#fff;border:1px solid var(--cloud);padding:1px 5px;font-size:13px}
+  .pill{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;background:var(--cloud)}
+  .b-mem{background:var(--green);color:#fff}.b-don{background:var(--orange);color:#000}
+  .g{font-style:italic;color:var(--charcoal)}
+  .back{display:inline-block;margin-bottom:20px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:11px;text-decoration:none;color:var(--cerulean)}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14px}
+  td,th{border:1px solid var(--cloud);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:#fff;font-weight:700}
+  .note{background:#fff;border:1px solid var(--ink);padding:12px 14px;font-size:14px;margin:14px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← Back to the search tool</a>
+  <div class="wm">Vital City</div>
+  <h1>Contact master search — how it works</h1>
+  <p class="lede">A single, searchable view of everyone in Vital City's orbit. It pulls together four lists, matches the same person across them, and lets you slice the result any way you like and pull out contact or email lists.</p>
+
+  <h2>What's in it</h2>
+  <p>Each person is one row, built by merging four sources (matched by email, then by name):</p>
+  <table>
+    <tr><th>Source</th><th>What it adds</th></tr>
+    <tr><td><b>Subscribers</b> (from Ghost)</td><td>The <span class="pill b-mem">Member</span> badge + join year. <b>"Member" here means a newsletter subscriber</b> — not the same as a donor.</td></tr>
+    <tr><td><b>Contacts</b> (the Google Sheet your team maintains)</td><td>The <span class="pill">type</span> tags: journalist, academic, funder, gov, judge, architect, nonprofit, contributor, advisor + specialties (criminal justice, housing, transit).</td></tr>
+    <tr><td><b>Donors</b> (from FCNY)</td><td>The <span class="pill b-don">$ amount</span> badge (total given).</td></tr>
+    <tr><td><b>Authors</b> (vitalcitynyc.org)</td><td>The "N pieces" badge (articles written).</td></tr>
+  </table>
+  <div class="note"><b>Subscriber ≠ donor.</b> Someone can be a donor without being a newsletter subscriber, and vice-versa. If you filter "Donors + Non-members," you're seeing donors who haven't joined the email list — good people to invite to subscribe.</div>
+
+  <h2>Searching &amp; filtering</h2>
+  <ul>
+    <li><b>Type / specialty</b> (left checkboxes): tick any combination — they're OR'd together (e.g. <i>journalist</i> + <i>academic</i> shows either).</li>
+    <li><b>Members / Non-members</b>, <b>Author</b>, <b>Donor</b>: each narrows further (AND'd with everything else).</li>
+    <li><b>Search box</b>: matches name, email or institution.</li>
+    <li>Click any type tag, the type×membership bars, a name's badges, etc. to filter by it. <b>Clear</b> resets everything.</li>
+  </ul>
+  <p>Example: tick <i>journalist</i>, set <b>Members</b> → every journalist on the newsletter. Or <i>academic</i> + <b>Donors only</b> → academics who give.</p>
+
+  <h2>Getting lists out</h2>
+  <ul>
+    <li><b>Export CSV</b> — downloads the full filtered list (name, email, types, member/author/donor status, giving).</li>
+    <li><b>Copy emails</b> — copies the subset's unique emails to your clipboard (comma-separated), ready to paste anywhere.</li>
+    <li><b>Email group</b> — pick <b>Bcc / To / Cc</b>, then it opens your default mail app with the subset's addresses in that field. (Big lists may exceed what a mail app accepts — use Copy emails for those.)</li>
+  </ul>
+
+  <h2>Names &amp; the gray ones</h2>
+  <p>Most people have a confirmed (black) name. A <span class="g">gray italic</span> name is an <b>educated guess pulled from the email address</b> (e.g. <code>aaron@naparstek.com</code> → <span class="g">Aaron Naparstek</span>) — used only when no source gives a real name. You can:</p>
+  <ul>
+    <li>Click <b>✎</b> to type the correct name.</li>
+    <li>Click <b>✓</b> next to a gray name to confirm the guess is right — it turns black.</li>
+  </ul>
+  <p>Your fixes save in your browser right away. To make them permanent for everyone, click <b>Export name fixes</b> and send the file to whoever publishes (it gets baked into the data on the next publish). Note: these gray names are mostly email-only subscribers/donors who aren't in the contacts Sheet, so fixes here are tracked separately — they are <i>not</i> written back into the Google Sheet.</p>
+
+  <h2>Keeping it current</h2>
+  <p>The page is a snapshot that's rebuilt when someone publishes. It doesn't read the sources live.</p>
+  <ul>
+    <li><b>Contacts &amp; categories</b> are maintained by the team in the Google Sheet <a href="https://docs.google.com/spreadsheets/d/1GXNFKKspPgXK_ubUB2XptrNQfXqmHeHocyN2c_6O6Q8/edit"><b>vital-city-contacts-master</b></a>. Edit there freely.</li>
+    <li><b>Subscribers</b> come from a Ghost export; <b>donors</b> from an FCNY export.</li>
+    <li>To push everything live, a maintainer refreshes those source files and runs the one-command publish (see the maintenance playbook). Changes appear in about a minute.</li>
+  </ul>
+
+  <h2>Confidentiality</h2>
+  <p>This contains member, donor and contact data. The page is password-protected and the underlying data is encrypted — only people with the passphrase can read it. Don't redistribute it or the passphrase.</p>
+
+  <a class="back" href="index.html">← Back to the search tool</a>
+</div>
+</body>
+</html>
