@@ -84,7 +84,8 @@
   .hintlink:hover{text-decoration:underline}
   .resultbar b{color:var(--vc-black);font-family:var(--vc-serif);font-weight:200;font-size:15px}
   .tablewrap{padding:6px 30px 60px}
-  table.people{width:100%;border-collapse:collapse;font-size:13.5px}
+  table.people{width:100%;border-collapse:collapse;font-size:13.5px;table-layout:fixed}
+  table.people td{overflow-wrap:anywhere}
   table.people th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;padding:9px 10px;border-bottom:1px solid var(--vc-black);position:sticky;top:60px;background:var(--vc-paper);cursor:pointer;white-space:nowrap}
   table.people td{padding:10px;border-bottom:1px solid var(--vc-cloud);vertical-align:top}
   tr:hover td{background:var(--vc-white)}
@@ -176,6 +177,11 @@
       </div>
       <div class="tablewrap">
         <table class="people">
+          <colgroup>
+            <col style="width:10%"><col style="width:11%"><col style="width:21%">
+            <col style="width:9%"><col style="width:8%"><col style="width:9%">
+            <col style="width:14%"><col style="width:18%">
+          </colgroup>
           <thead><tr>
             <th data-k="first">First name</th>
             <th data-k="last">Last name</th>
