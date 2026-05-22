@@ -7,3 +7,7 @@ com.vitalcity.catalogue-refresh.plist
 refresh.log
 launchd.out.log
 launchd.err.log
+
+# Private contact CRM — never publish. Local-only cross-analysis layer.
+private/
+*.xlsx

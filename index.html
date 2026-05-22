@@ -168,6 +168,12 @@
   .tt.t-tool { border-color: var(--vc-orange); color: var(--vc-orange); }
   .tt.t-qa { border-color: var(--vc-magenta); color: var(--vc-magenta); }
   .tt.t-review { border-color: var(--vc-black); color: var(--vc-black); }
+  .catpill {
+    display: inline-block; font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; padding: 2px 7px; margin: 2px 4px 0 0;
+    background: var(--vc-cloud); color: var(--vc-black); cursor: pointer; white-space: nowrap;
+  }
+  .catpill:hover { background: var(--vc-cerulean); color: var(--vc-white); }
   .star { color: var(--vc-orange); }
   .loading, .empty { padding: 70px 32px; text-align: center; color: var(--vc-charcoal); }
   footer {
@@ -196,6 +202,7 @@
 <div class="controls">
   <input type="search" id="q" placeholder="Search titles, summaries, authors, topics…" autocomplete="off">
   <select id="fType"><option value="">All types</option></select>
+  <select id="fAuthorType" hidden><option value="">All author types</option></select>
   <select id="fAuthor"><option value="">All authors</option></select>
   <select id="fTopic"><option value="">All topics</option></select>
   <select id="fIssue"><option value="">All issues</option></select>
@@ -225,7 +232,16 @@
 <script>
 const $ = s => document.querySelector(s);
 let DATA = [], META = {}, ISSUES = [];
+let AUTHOR_CATS = {};        // {author name -> {categories, topics, institution}} — local-only CRM layer
+let HAS_CRM = false;
 let sortKey = "published_date", sortDir = -1;
+
+// Union of contact categories across an article's authors
+function articleCats(r) {
+  const set = new Set();
+  (r.authors || []).forEach(a => (AUTHOR_CATS[a]?.categories || []).forEach(c => set.add(c)));
+  return [...set];
+}
 
 function fmtDate(d) {
   if (!d) return "";
@@ -251,6 +267,11 @@ async function load() {
     fetch("data/issues.json").then(r => r.json()),
   ]);
   DATA = cat; META = meta; ISSUES = issues;
+  // Optional, local-only contact CRM layer (gitignored; absent on the public site).
+  try {
+    const resp = await fetch("private/author_categories.json");
+    if (resp.ok) { AUTHOR_CATS = await resp.json(); HAS_CRM = Object.keys(AUTHOR_CATS).length > 0; }
+  } catch (e) { /* no CRM available — public mode */ }
   buildStats(); buildFilters(); bind(); render();
 }
 
@@ -277,6 +298,14 @@ function buildFilters() {
   const opt = (v, t) => `<option value="${v.replace(/"/g,'&quot;')}">${t}</option>`;
   $("#fType").innerHTML += Object.keys(types).sort((a,b)=>types[b]-types[a])
     .map(t => opt(t, `${t} (${types[t]})`)).join("");
+  // Author-type filter (contact CRM categories) — only when the local CRM layer is present
+  if (HAS_CRM) {
+    const catArticles = {};
+    DATA.forEach(r => articleCats(r).forEach(c => catArticles[c] = (catArticles[c]||0)+1));
+    $("#fAuthorType").innerHTML += Object.keys(catArticles).sort((a,b)=>catArticles[b]-catArticles[a])
+      .map(c => opt(c, `${c} (${catArticles[c]})`)).join("");
+    $("#fAuthorType").hidden = false;
+  }
   $("#fAuthor").innerHTML += Object.keys(authors).sort((a,b)=>authors[b]-authors[a])
     .map(a => opt(a, `${a} (${authors[a]})`)).join("");
   $("#fTopic").innerHTML += Object.keys(topics).sort((a,b)=>topics[b]-topics[a])
@@ -286,10 +315,10 @@ function buildFilters() {
 }
 
 function bind() {
-  ["#q","#fType","#fAuthor","#fTopic","#fIssue","#fYear"].forEach(s => $(s).addEventListener("input", render));
+  ["#q","#fType","#fAuthorType","#fAuthor","#fTopic","#fIssue","#fYear"].forEach(s => $(s).addEventListener("input", render));
   $("#fFeatured").addEventListener("change", render);
   $("#clear").addEventListener("click", () => {
-    $("#q").value=""; ["#fType","#fAuthor","#fTopic","#fIssue","#fYear"].forEach(s=>$(s).value="");
+    $("#q").value=""; ["#fType","#fAuthorType","#fAuthor","#fTopic","#fIssue","#fYear"].forEach(s=>$(s).value="");
     $("#fFeatured").checked=false; render();
   });
   document.querySelectorAll("thead th").forEach(th => th.addEventListener("click", () => {
@@ -299,11 +328,12 @@ function bind() {
   }));
   // delegate clicks on author / topic / issue to set the matching filter
   $("#rows").addEventListener("click", e => {
-    const el = e.target.closest("[data-author],[data-topic],[data-issue],[data-type]"); if (!el) return;
+    const el = e.target.closest("[data-author],[data-topic],[data-issue],[data-type],[data-cat]"); if (!el) return;
     if (el.dataset.author !== undefined) $("#fAuthor").value = el.dataset.author;
     if (el.dataset.topic !== undefined) $("#fTopic").value = el.dataset.topic;
     if (el.dataset.issue !== undefined) $("#fIssue").value = el.dataset.issue;
     if (el.dataset.type !== undefined) $("#fType").value = el.dataset.type;
+    if (el.dataset.cat !== undefined) $("#fAuthorType").value = el.dataset.cat;
     render();
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
@@ -311,10 +341,11 @@ function bind() {
 
 function filtered() {
   const q = $("#q").value.trim().toLowerCase();
-  const ftype = $("#fType").value, fa = $("#fAuthor").value, ft = $("#fTopic").value, fi = $("#fIssue").value, fy = $("#fYear").value;
+  const ftype = $("#fType").value, fatype = $("#fAuthorType").value, fa = $("#fAuthor").value, ft = $("#fTopic").value, fi = $("#fIssue").value, fy = $("#fYear").value;
   const feat = $("#fFeatured").checked;
   return DATA.filter(r => {
     if (ftype && r.type !== ftype) return false;
+    if (fatype && !articleCats(r).includes(fatype)) return false;
     if (fa && !(r.authors||[]).includes(fa)) return false;
     if (ft && !(r.topics||[]).includes(ft)) return false;
     if (fi && !(r.issues||[]).includes(fi)) return false;
@@ -356,7 +387,7 @@ function render() {
       <td class="date">${fmtDate(r.published_date)}</td>
       <td class="typecell">${r.type?`<span class="tt ${typeClass(r.type)}" data-type="${esc(r.type)}">${esc(r.type)}</span>`:''}</td>
       <td class="title">${r.featured?'<span class="star">★ </span>':''}<a class="headline" href="${r.url}" target="_blank" rel="noopener">${esc(r.title)}</a>${r.summary?`<span class="summary">${esc(r.summary)}</span>`:''}</td>
-      <td>${(r.authors||[]).map(a=>`<a class="author" data-author="${esc(a)}">${esc(a)}</a>`).join(", ")}</td>
+      <td>${(r.authors||[]).map(a=>`<a class="author" data-author="${esc(a)}">${esc(a)}</a>`).join(", ")}${HAS_CRM?articleCats(r).map(c=>`<span class="catpill" data-cat="${esc(c)}">${esc(c)}</span>`).join(""):""}</td>
       <td>${(r.topics||[]).map(t=>`<span class="pill" data-topic="${esc(t)}">${esc(t)}</span>`).join("")}</td>
       <td>${(r.issues||[]).map(n=>`<span class="pill issue" data-issue="${esc(n)}">${esc(issueLabel(n))}</span>`).join("")}</td>
       <td class="words">${r.word_count?.toLocaleString()||""}</td>

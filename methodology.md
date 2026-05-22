@@ -121,6 +121,29 @@ map/tool 10, book review 5, something else 1.
 - `data/types.json` — each content type with its post count.
 - `data/meta.json` — run timestamp and totals.
 
+## Contact CRM cross-analysis (local-only)
+
+A separate, **private** layer lets us cross-analyze authors by contact type. It
+is built by `build_contacts.py` from Vital City's contact agglomeration
+spreadsheet and is **never published** — the source `.xlsx` and the entire
+`private/` output folder are gitignored, so none of it reaches the public site.
+
+- Source: `private/contacts_source.xlsx`, sheet `combined` (~1,250 contacts).
+- Person-type categories used: VC contributor, VC advisor, journalist, academic,
+  foundation leadership, nonprofit leadership, city gov, state gov, fed gov,
+  judge, architect. (The sheet's criminal-justice / housing / transit columns are
+  beat tags, kept as `topics`.)
+- Authors are matched to contacts by **name** (exact normalized, then first+last),
+  the same method used elsewhere — so it inherits the same name-matching caveats
+  (namesakes, spelling variants). 245 of 443 authors (55%) matched.
+- Outputs (all gitignored): `private/contacts.json`, `private/author_categories.json`
+  (the file the catalogue UI reads), `private/cross_analysis.json` (summary counts).
+
+In the catalogue UI, when this local layer is present the page shows an "author
+type" filter and contact-category tags beside each author. On the public
+GitHub Pages site the file is absent, so those features simply do not appear —
+the public catalogue contains only published-content data, never the CRM.
+
 ## Known limitations
 
 1. **Publish-date quirks.** A few issues span a wide date range (e.g. the
