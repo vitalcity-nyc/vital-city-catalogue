@@ -57,22 +57,47 @@ def name_from_email(e):
     return "", ""
 
 
-def load_crm():
+def _set(v):
+    """A category column counts as 'set' for any truthy, non-empty value
+    (1, x, yes, TRUE, etc.) — tolerant of however the team marks the sheet."""
+    if v is None:
+        return False
+    s = str(v).strip().lower()
+    return s not in ("", "0", "no", "false", "n", "-")
+
+
+def _crm_rows():
+    """Yield (header_list, row_list) from the contacts source. Prefers a CSV
+    export of the maintained Google Sheet (private/contacts_source.csv); falls
+    back to the original Excel agglomeration (sheet 'combined')."""
+    csv_path = PRIV / "contacts_source.csv"
+    if csv_path.exists():
+        with open(csv_path, newline="") as f:
+            rows = list(csv.reader(f))
+        return rows[0], rows[1:]
     wb = openpyxl.load_workbook(PRIV / "contacts_source.xlsx", read_only=True, data_only=True)
-    ws = wb["combined"]; rows = list(ws.iter_rows(values_only=True))
-    hdr = [str(c) for c in rows[0]]; idx = {h: i for i, h in enumerate(hdr)}
+    ws = wb["combined"]
+    rows = list(ws.iter_rows(values_only=True))
+    return [str(c) for c in rows[0]], rows[1:]
+
+
+def load_crm():
+    hdr, rows = _crm_rows()
+    idx = {str(h).strip(): i for i, h in enumerate(hdr)}
     def cell(r, h):
-        i = idx.get(h); return r[i] if (i is not None and i < len(r)) else None
+        i = idx.get(h)
+        return r[i] if (i is not None and i < len(r)) else None
     out = []
-    for r in rows[1:]:
-        if not r or not r[0]: continue
+    for r in rows:
+        if not r or not r[0]:
+            continue
         out.append({
             "name": str(r[0]).strip(),
             "email": email_norm(cell(r, "email")),
             "institution": (cell(r, "institution") or "").strip(),
             "role": (cell(r, "role") or "").strip(),
-            "types": [c for c in PERSON_CATS if cell(r, c) not in (None, "", 0)],
-            "topics": [c for c in TOPIC_CATS if cell(r, c) not in (None, "", 0)],
+            "types": [c for c in PERSON_CATS if _set(cell(r, c))],
+            "topics": [c for c in TOPIC_CATS if _set(cell(r, c))],
         })
     return out
 

@@ -30,9 +30,26 @@ def make_passphrase():
     return "-".join(secrets.choice(WORDS) for _ in range(5))
 
 
+NETPASS = ROOT / "private" / ".netpass"
+
+
+def resolve_passphrase():
+    """Stable passphrase so re-publishing doesn't change the shared password:
+    $VC_NETWORK_PASS  >  private/.netpass  >  freshly generated (then saved)."""
+    p = os.environ.get("VC_NETWORK_PASS")
+    if p:
+        return p, "env"
+    if NETPASS.exists() and NETPASS.read_text().strip():
+        return NETPASS.read_text().strip(), "file"
+    p = make_passphrase()
+    NETPASS.parent.mkdir(parents=True, exist_ok=True)
+    NETPASS.write_text(p)
+    return p, "generated"
+
+
 def main():
     data = SRC.read_bytes()
-    passphrase = os.environ.get("VC_NETWORK_PASS") or make_passphrase()
+    passphrase, source = resolve_passphrase()
 
     salt = secrets.token_bytes(16)
     iv = secrets.token_bytes(12)
@@ -49,12 +66,13 @@ def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(blob))
     print(f"Wrote {OUT} ({OUT.stat().st_size//1024} KB encrypted)")
-    print("\n" + "=" * 52)
-    print("  PASSPHRASE (save this; share out-of-band):")
-    print(f"      {passphrase}")
-    print("=" * 52)
-    if not os.environ.get("VC_NETWORK_PASS"):
-        print("  (auto-generated. To set your own: VC_NETWORK_PASS='...' python3 encrypt_people.py)")
+    if source == "generated":
+        print("\n" + "=" * 52)
+        print("  NEW PASSPHRASE (saved to private/.netpass; share out-of-band):")
+        print(f"      {passphrase}")
+        print("=" * 52)
+    else:
+        print(f"  (reused passphrase from {source}; unchanged)")
 
 
 if __name__ == "__main__":
