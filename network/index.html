@@ -198,16 +198,15 @@
       <div class="tablewrap">
         <table class="people">
           <colgroup>
-            <col style="width:10%"><col style="width:11%"><col style="width:21%">
-            <col style="width:9%"><col style="width:8%"><col style="width:9%">
-            <col style="width:14%"><col style="width:18%">
+            <col style="width:10%"><col style="width:11%"><col style="width:24%">
+            <col style="width:10%"><col style="width:10%">
+            <col style="width:14%"><col style="width:21%">
           </colgroup>
           <thead><tr>
             <th data-k="first">First name</th>
             <th data-k="last">Last name</th>
             <th data-k="types">Type(s)</th>
             <th data-k="mem">Subscriber</th>
-            <th data-k="arts">Author</th>
             <th data-k="damt">Donor</th>
             <th data-k="inst">Institution</th>
             <th data-k="e">Email</th>
@@ -549,7 +548,6 @@ function render(){
       <td><span class="nm${g}">${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
       <td>${types}</td>
       <td>${p.unsub?'<span class="badge" style="background:#c8102e;color:#fff">Unsubscribed</span>':(p.mem?`<span class="badge b-mem">Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>`:'<span class="muted">—</span>')}</td>
-      <td>${p.auth?`<span class="badge b-auth">${p.arts>0?p.arts+(p.arts===1?" piece":" pieces"):"author"}</span>`:'<span class="muted">—</span>'}</td>
       <td>${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>${p.dlast?`<div class="sub-d">last ${p.dlast}</div>`:''}`:'<span class="muted">—</span>'}</td>
       <td>${esc(p.inst)||'<span class="muted">—</span>'}</td>
       <td class="em${p.unsub?' unsub':''}">${(p.emails&&p.emails.length?p.emails.map(esc).join("<br>"):'<span class="muted">—</span>')}</td>

@@ -379,28 +379,8 @@ def main():
             if since and not p["since"]: p["since"] = since
             index(p)
 
-    # ---- 1b. Mailchimp subscribers (UNION with Ghost; the two lists are synced
-    #          by hand and drift, so neither alone is complete) ----
-    mc_path = PRIV / "mailchimp_subscribed.csv"
-    if mc_path.exists():
-        with open(mc_path, newline="") as f:
-            for row in csv.DictReader(f):
-                email = email_norm(row.get("Email"))
-                if not email:
-                    continue
-                fn, ln = (row.get("First Name") or "").strip(), (row.get("Last Name") or "").strip()
-                name = f"{fn} {ln}".strip()
-                guess = name_from_email(email) if not name else ""
-                p = get_or_make(emails=[email], name=norm(name or guess))
-                p["mem"] = 1
-                if "member" not in p["src"]:
-                    p["src"].append("member")
-                set_email(p, email)
-                set_name(p, name, True) if name else set_name(p, guess, False)
-                since = (row.get("OPTIN_TIME") or "")[:10]
-                if since and not p["since"]:
-                    p["since"] = since
-                index(p)
+    # (Subscribers come from Ghost only — Mailchimp subscribed list intentionally
+    #  not used; the two drift and mixing them caused confusion.)
 
     # ---- 2. CRM contacts (types) ----
     crm = load_crm()
