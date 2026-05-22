@@ -261,8 +261,8 @@
           <li><b>Manual:</b> donors (a Donorbox export) and any whole new list — hand the CSV to Claude Code to fold in.</li>
           <li><b>Edits &amp; manual adds here</b> save automatically to the shared store; they show for you now and for everyone on the next daily refresh.</li>
         </ul>
-        <a id="edSheetLink" href="#" target="_blank" rel="noopener">View the shared edit store (Google Sheet) ↗</a>
-        <div class="updcaution">Make changes <b>through this tool</b> — it writes the correct format. Editing the Sheet's JSON by hand is fragile (deleting a row to undo a change is fine).</div>
+        <a id="edSheetLink" href="#" target="_blank" rel="noopener">Open the Google Sheet ↗</a>
+        <div class="updcaution">To add several people at once, use the Sheet's <b>"Add people"</b> tab (plain columns) — those rows flow in on the next refresh. Otherwise make changes <b>through this tool</b>; editing the <code>overrides</code> tab's raw JSON by hand is fragile (deleting a row to undo is fine).</div>
       </div>
       <div class="modalbtns">
         <button class="btn primary" id="edSave">Save</button>
@@ -496,7 +496,7 @@ const OVKEY="vc_overrides";
 // daily refresh. Empty = device-only (export-and-publish fallback still works).
 const BACKEND_URL="https://script.google.com/macros/s/AKfycbw-lsFo3rHWZX3BnL0mEOo1kgRGqcsznH8WC3e5bcEu95zuwMG7NSCYpazP2Z4z7w3hPQ/exec";
 // Edit URL of the Google Sheet that backs the shared edit store (for the "view it" link).
-const SHEET_URL="";
+const SHEET_URL="https://docs.google.com/spreadsheets/d/1XmLmlVsZOElAcj-0X-hFCnSes66tRLf3vY3ndbdkZSM/edit";
 function loadOverrides(){ try{return JSON.parse(localStorage.getItem(OVKEY)||"{}");}catch(e){return {};} }
 // Fire-and-forget save to the shared store. Auth = the passphrase the viewer
 // entered (held on this device after unlock), never shipped in the page source.
