@@ -38,7 +38,7 @@
   .sub{color:var(--vc-charcoal);font-size:13px}
   .confbar{background:var(--vc-black);color:#fff;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;padding:6px 30px;font-weight:700}
 
-  .stats{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid var(--vc-black);background:var(--vc-paper)}
+  .stats{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--vc-black);background:var(--vc-paper)}
   .stat{padding:14px 18px;border-right:1px solid var(--vc-cloud)}
   .stat:last-child{border-right:none}
   .stat .num{font-family:var(--vc-serif);font-weight:200;font-size:30px;line-height:1;font-synthesis:none}
@@ -86,6 +86,7 @@
   .badge{display:inline-block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 7px;white-space:nowrap}
   .b-mem{background:var(--vc-green);color:#fff}
   .b-auth{border:1px solid var(--vc-magenta);color:var(--vc-magenta)}
+  .b-don{background:var(--vc-orange);color:var(--vc-black)}
   .muted{color:var(--vc-cloud)}
   @media(max-width:820px){.layout{grid-template-columns:1fr}aside{border-right:none;border-bottom:1px solid var(--vc-cloud)}.stats{grid-template-columns:repeat(3,1fr)}}
 </style>
@@ -122,6 +123,11 @@
       <option value="yes">Authors only</option>
       <option value="no">Non-authors</option>
     </select>
+    <select id="fDonor">
+      <option value="any">Donor: any</option>
+      <option value="yes">Donors only</option>
+      <option value="no">Non-donors</option>
+    </select>
     <input type="search" id="q" placeholder="Search name, email, institution…" autocomplete="off">
     <button class="btn primary" id="export">Export CSV</button>
     <button class="btn" id="clear">Clear</button>
@@ -146,6 +152,7 @@
             <th data-k="types">Type(s)</th>
             <th data-k="mem">Member</th>
             <th data-k="arts">Author</th>
+            <th data-k="damt">Donor</th>
             <th data-k="inst">Institution</th>
             <th data-k="e">Email</th>
           </tr></thead>
@@ -193,16 +200,18 @@ $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock();});
 
 function init(){
   const memTotal=PEOPLE.filter(p=>p.mem).length;
-  const typed=PEOPLE.filter(p=>p.types&&p.types.length).length;
   const auth=PEOPLE.filter(p=>p.auth).length;
   const authMem=PEOPLE.filter(p=>p.auth&&p.mem).length;
   const crm=PEOPLE.filter(p=>(p.src||[]).includes("crm")).length;
-  const S=[[PEOPLE.length,"people"],[memTotal,"members"],[crm,"CRM contacts"],[typed,"typed"],[auth,"authors"],[authMem,"author-members"]];
-  $("#stats").innerHTML=S.map(([n,l])=>`<div class="stat"><div class="num">${n.toLocaleString()}</div><div class="lbl">${l}</div></div>`).join("");
+  const donors=PEOPLE.filter(p=>p.don).length;
+  const raised=PEOPLE.reduce((s,p)=>s+(p.damt||0),0);
+  const raisedStr=raised>=1000?"$"+Math.round(raised/1000)+"K":"$"+Math.round(raised);
+  const S=[[PEOPLE.length.toLocaleString(),"people"],[memTotal.toLocaleString(),"members"],[donors.toLocaleString(),"donors"],[crm.toLocaleString(),"CRM contacts"],[auth.toLocaleString(),"authors"],[authMem.toLocaleString(),"author-members"],[raisedStr,"raised"]];
+  $("#stats").innerHTML=S.map(([n,l])=>`<div class="stat"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join("");
   buildFacets();
   buildMatrix();
   $("#segMem").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;seg=b.dataset.seg;[...$("#segMem").children].forEach(x=>x.classList.toggle("on",x===b));render();});
-  ["#fAuthor","#q"].forEach(s=>$(s).addEventListener("input",render));
+  ["#fAuthor","#fDonor","#q"].forEach(s=>$(s).addEventListener("input",render));
   $("#export").addEventListener("click",exportCSV);
   $("#clear").addEventListener("click",clearAll);
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
@@ -228,7 +237,7 @@ function toggleCat(c,on){
 function clearAll(){
   selectedCats.clear(); seg="all";
   [...$("#segMem").children].forEach((x,i)=>x.classList.toggle("on",i===0));
-  $("#fAuthor").value="any"; $("#q").value="";
+  $("#fAuthor").value="any"; $("#fDonor").value="any"; $("#q").value="";
   document.querySelectorAll(".facet").forEach(l=>{l.classList.remove("on");const cb=l.querySelector("input");if(cb)cb.checked=false;});
   render();
 }
@@ -245,13 +254,15 @@ function buildMatrix(){
 }
 
 function filtered(){
-  const q=$("#q").value.trim().toLowerCase(), au=$("#fAuthor").value;
+  const q=$("#q").value.trim().toLowerCase(), au=$("#fAuthor").value, dn=$("#fDonor").value;
   const cats=[...selectedCats];
   return PEOPLE.filter(p=>{
     if(seg==="members"&&!p.mem)return false;
     if(seg==="non"&&p.mem)return false;
     if(au==="yes"&&!p.auth)return false;
     if(au==="no"&&p.auth)return false;
+    if(dn==="yes"&&!p.don)return false;
+    if(dn==="no"&&p.don)return false;
     if(cats.length){const have=new Set([...(p.types||[]),...(p.topics||[])]);if(!cats.some(c=>have.has(c)))return false;}
     if(q){const hay=`${p.n} ${p.e} ${p.inst}`.toLowerCase();if(!hay.includes(q))return false;}
     return true;
@@ -261,9 +272,9 @@ function filtered(){
 function csvCell(v){v=v==null?"":String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
 function exportCSV(){
   const rows=sortRows(filtered());
-  const cols=["name","email","institution","role","types","specialties","member","member_since","author","articles"];
+  const cols=["name","email","institution","role","types","specialties","member","member_since","author","articles","donor","donation_total","donation_count"];
   const lines=[cols.join(",")];
-  rows.forEach(p=>lines.push([p.n,p.e,p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0].map(csvCell).join(",")));
+  rows.forEach(p=>lines.push([p.n,p.e,p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0,p.don?"yes":"no",p.damt||0,p.dcnt||0].map(csvCell).join(",")));
   const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download=`vital-city-network-${new Date().toISOString().slice(0,10)}.csv`;
@@ -293,6 +304,7 @@ function render(){
       <td>${(p.types||[]).map(t=>`<span class="pill" data-type="${esc(t)}">${esc(t)}</span>`).join("")||'<span class="muted">—</span>'}</td>
       <td>${p.mem?`<span class="badge b-mem">Member${p.since?" '"+p.since.slice(2,4):""}</span>`:'<span class="muted">—</span>'}</td>
       <td>${p.auth?`<span class="badge b-auth">${p.arts} ${p.arts===1?"piece":"pieces"}</span>`:'<span class="muted">—</span>'}</td>
+      <td>${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>`:'<span class="muted">—</span>'}</td>
       <td>${esc(p.inst)||'<span class="muted">—</span>'}</td>
       <td class="em">${esc(p.e)||'<span class="muted">—</span>'}</td>
     </tr>`).join("");

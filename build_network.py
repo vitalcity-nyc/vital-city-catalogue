@@ -89,7 +89,8 @@ def main():
         if name and name in by_name: return by_name[name]
         if fl and fl in by_fl: return by_fl[fl]
         p = {"n": "", "e": "", "inst": "", "role": "",
-             "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0, "src": []}
+             "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0,
+             "don": 0, "damt": 0.0, "dcnt": 0, "src": []}
         people.append(p)
         return p
 
@@ -145,6 +146,39 @@ def main():
         if "author" not in p["src"]: p["src"].append("author")
         index(p)
 
+    # ---- 4. Donors (FCNY giving) ----
+    donors_path = PRIV / "donors_source.csv"
+    donors_total = 0
+    if donors_path.exists():
+        with open(donors_path, newline="") as f:
+            for row in csv.DictReader(f):
+                email = email_norm(row.get("Email"))
+                fname = (row.get("First Name") or "").strip()
+                lname = (row.get("Last Name") or "").strip()
+                name = f"{fname} {lname}".strip()
+                if not email and not name:
+                    continue
+                donors_total += 1
+                try:
+                    amt = float(row.get("Summed Donation Amount") or 0)
+                except ValueError:
+                    amt = 0.0
+                try:
+                    cnt = int(float(row.get("Donations Count") or 0))
+                except ValueError:
+                    cnt = 0
+                p = get_or_make(email=email, name=norm(name), fl=firstlast(name))
+                if not p["n"] and name:
+                    p["n"] = name
+                if email and not p["e"]:
+                    p["e"] = email
+                p["don"] = 1
+                p["damt"] = round(p["damt"] + amt, 2)
+                p["dcnt"] += cnt
+                if "donor" not in p["src"]:
+                    p["src"].append("donor")
+                index(p)
+
     # NB: people with no real name (email-only members whose address yields no
     # name) keep an empty name and are identified by email in the UI.
 
@@ -157,13 +191,19 @@ def main():
     for c in PERSON_CATS:
         grp = [p for p in people if c in p["types"]]
         type_matrix[c] = {"total": len(grp), "members": sum(1 for p in grp if p["mem"])}
+    donors = sum(1 for p in people if p["don"])
     stats = {
         "total_people": len(people),
         "members_total_rows": members_total,
         "members": members,
         "crm_contacts": crm_people,
         "authors": author_people,
+        "donors": donors,
+        "donors_total_rows": donors_total,
+        "total_raised": round(sum(p["damt"] for p in people), 2),
         "authors_who_are_members": sum(1 for p in people if p["auth"] and p["mem"]),
+        "donors_who_are_members": sum(1 for p in people if p["don"] and p["mem"]),
+        "donors_who_are_authors": sum(1 for p in people if p["don"] and p["auth"]),
         "crm_who_are_members": sum(1 for p in people if "crm" in p["src"] and p["mem"]),
         "typed_people": len(typed),
         "type_matrix": type_matrix,
@@ -173,9 +213,10 @@ def main():
     (PRIV / "people.json").write_text(json.dumps(people, ensure_ascii=False, separators=(",", ":")))
     (PRIV / "network_stats.json").write_text(json.dumps(stats, indent=2, ensure_ascii=False))
     print(f"People (deconflicted): {len(people)}")
-    print(f"  members: {members} | CRM contacts: {crm_people} | authors: {author_people}")
+    print(f"  members: {members} | CRM contacts: {crm_people} | authors: {author_people} | donors: {donors}")
     print(f"  authors who are members: {stats['authors_who_are_members']}")
-    print(f"  CRM contacts who are members: {stats['crm_who_are_members']}")
+    print(f"  donors who are members: {stats['donors_who_are_members']} | donors who are authors: {stats['donors_who_are_authors']}")
+    print(f"  total raised: ${stats['total_raised']:,.0f}")
     sz = (PRIV / "people.json").stat().st_size
     print(f"people.json: {sz//1024} KB")
 
