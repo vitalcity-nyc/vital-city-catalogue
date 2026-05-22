@@ -74,8 +74,7 @@
   #tDon.on{background:var(--vc-orange);border-color:var(--vc-orange);color:var(--vc-black)}
   #tAuth.on{background:var(--vc-magenta);border-color:var(--vc-magenta);color:#fff}
   #tOther.on{background:var(--vc-black);border-color:var(--vc-black);color:#fff}
-  .tg.excl{background:#fff;border-color:var(--vc-magenta);color:var(--vc-magenta)}
-  .tg.excl::before{content:"\2260 "}  /* ≠ : excluded */
+  .tg.excl{background:#fdecef;border-color:var(--vc-magenta);color:var(--vc-magenta)}
   .toghint{font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
   .donornote{margin:0 30px 0;padding:10px 14px;border:1px solid var(--vc-orange);background:#fff7f3;font-size:12px;line-height:1.5;color:var(--vc-black)}
   .donornote b{font-weight:700}
@@ -116,10 +115,12 @@
   tr:hover td{background:var(--vc-white)}
   .nm{font-weight:700}
   .nm.guess{color:var(--vc-charcoal);font-weight:400;font-style:italic}
-  .edit{cursor:pointer;color:var(--vc-cloud);margin-left:7px;font-size:12px;text-decoration:none}
-  .edit:hover{color:var(--vc-orange)}
-  .confirm{cursor:pointer;color:var(--vc-cloud);margin-left:5px;font-size:12px;text-decoration:none}
-  .confirm:hover{color:var(--vc-green)}
+  th.editcol{cursor:default}
+  td.editcell{white-space:nowrap}
+  .rowedit{font:inherit;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border:1px solid var(--vc-charcoal);background:var(--vc-white);color:var(--vc-black);cursor:pointer;border-radius:0}
+  .rowedit:hover{background:var(--vc-black);color:#fff;border-color:var(--vc-black)}
+  .confirm{cursor:pointer;color:var(--vc-green);margin-left:6px;font-size:14px;font-weight:700;text-decoration:none}
+  .confirm:hover{color:var(--vc-black)}
   .howto{position:absolute;right:30px;top:24px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-cerulean);text-decoration:none}
   .howto:hover{text-decoration:underline}
   header.mast{position:relative}
@@ -130,8 +131,6 @@
   .pill:hover{background:var(--vc-cerulean);color:#fff}
   a.pill-link{text-decoration:none}
   a.pill-link:hover{background:var(--vc-magenta);color:#fff}
-  .del{cursor:pointer;color:var(--vc-cloud);margin-left:5px;font-size:12px;text-decoration:none}
-  .del:hover{color:var(--vc-magenta)}
   .badge{display:inline-block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 7px;white-space:nowrap}
   .b-mem{background:var(--vc-green);color:#fff}
   .b-auth{border:1px solid var(--vc-magenta);color:var(--vc-magenta)}
@@ -165,12 +164,12 @@
   <div class="controls">
     <span class="toghint">Show:</span>
     <div class="toggles">
-      <button class="tg" id="tSub" title="Click: include → exclude (≠) → off. Newsletter subscribers.">Subscribers</button>
-      <button class="tg" id="tDon" title="Click: include → exclude (≠) → off. People who have given.">Donors</button>
-      <button class="tg" id="tAuth" title="Click: include → exclude (≠) → off. Vital City contributors.">Authors</button>
+      <button class="tg" id="tSub" title="Click once to include, again to exclude (Not subscribers), again for off. Newsletter subscribers.">Subscribers</button>
+      <button class="tg" id="tDon" title="Click once to include, again to exclude (Not donors), again for off. People who have given.">Donors</button>
+      <button class="tg" id="tAuth" title="Click once to include, again to exclude (Not authors), again for off. Vital City contributors.">Authors</button>
       <button class="tg" id="tOther" title="None of subscriber, donor or author">Other</button>
     </div>
-    <span class="toghint">click again to exclude (≠) · combine for overlaps</span>
+    <span class="toghint">click again to exclude · combine for overlaps</span>
     <label class="chk" id="repeatDonorWrap" style="display:none"><input type="checkbox" id="fRepeatDonor"> Repeat donors (2+ gifts)</label>
     <input type="search" id="q" placeholder="Search name, email, institution…" autocomplete="off">
     <label class="chk"><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
@@ -182,7 +181,7 @@
     <code>private/donors_source.csv</code> with it and republish (or hand the CSV to
     Claude Code and ask it to refresh the donor list). New gifts won't appear until then.
   </div>
-  <div class="hint">Click <b>✎</b> to edit, <b>✓</b> to confirm a <span class="g">gray</span> guessed name, <b>🗑</b> to delete an entry. Edits are saved <b>on this device only</b> until you <a href="#" id="exportFixes" class="hintlink">Export edits →</a> and publish them (then they stick for everyone, permanently).
+  <div class="hint">Click <b>Edit</b> on any row to change a person's details or delete the entry; <b>✓</b> confirms a <span class="g">gray</span> guessed name. <a href="#" id="exportFixes" class="hintlink">Export edits →</a></div>
   <div class="layout">
     <aside>
       <h2>Filter by type<span class="infodot" title="Types are pieced together from our contact CRM plus automatic inference: 'VC contributor' from a published byline, 'journalist' from a news-outlet email domain, 'current nyc.gov' from an active city email, and others from the CRM. They are approximate and may be incomplete or out of date — edit any row to correct it.">i</span></h2>
@@ -208,11 +207,12 @@
       <div class="tablewrap">
         <table class="people">
           <colgroup>
-            <col style="width:10%"><col style="width:11%"><col style="width:24%">
+            <col style="width:5%"><col style="width:9%"><col style="width:10%"><col style="width:23%">
             <col style="width:10%"><col style="width:10%">
-            <col style="width:14%"><col style="width:21%">
+            <col style="width:13%"><col style="width:20%">
           </colgroup>
           <thead><tr>
+            <th class="editcol">Edit</th>
             <th data-k="first">First name</th>
             <th data-k="last">Last name</th>
             <th data-k="types">Type(s)</th>
@@ -346,11 +346,10 @@ function init(){
   $("#edCancel").addEventListener("click",closeEdit);
   $("#edDelete").addEventListener("click",()=>{ if(editKey) deleteEntry(editKey); });
   $("#editModal").addEventListener("click",e=>{if(e.target.id==="editModal")closeEdit();});
-  document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
+  document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(!k)return;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
   $("#rows").addEventListener("click",e=>{
-    const ed=e.target.closest(".edit"); if(ed){e.stopPropagation();openEdit(ed.dataset.key);return;}
+    const ed=e.target.closest(".rowedit"); if(ed){e.stopPropagation();openEdit(ed.dataset.key);return;}
     const cf=e.target.closest(".confirm"); if(cf){e.stopPropagation();confirmName(cf.dataset.key);return;}
-    const dl=e.target.closest(".del"); if(dl){e.stopPropagation();deleteEntry(dl.dataset.key);return;}
     if(e.target.closest("a.pill-link")) return;   // let the catalogue link open
     const el=e.target.closest("[data-type]");if(!el)return;toggleCat(el.dataset.type,true);
   });
@@ -374,7 +373,10 @@ function toggleCat(c,on){
 }
 function syncToggles(){
   const other=isOther();
-  const set=(id,v)=>{const e=$(id);e.classList.toggle("on",!other&&v===1);e.classList.toggle("excl",!other&&v===-1);};
+  const LAB={tSub:["Subscribers","Not subscribers"],tDon:["Donors","Not donors"],tAuth:["Authors","Not authors"]};
+  const set=(id,v)=>{const e=$(id);const on=!other&&v===1,ex=!other&&v===-1;
+    e.classList.toggle("on",on);e.classList.toggle("excl",ex);
+    e.textContent=LAB[id.slice(1)][ex?1:0];};
   set("#tSub",want.mem); set("#tDon",want.don); set("#tAuth",want.auth);
   $("#tOther").classList.toggle("on",other);
   const map={subs:want.mem===1,donors:want.don===1,authors:want.auth===1,other:other};
@@ -564,7 +566,7 @@ function render(){
   $("#rows").innerHTML=shown.map(p=>{
     const np=nameParts(p.n), g=(p.ns==='guess'?' guess':'')+(p.unsub?' unsub':'');
     const key=esc(personKey(p));
-    const acts=`<a class="edit" data-key="${key}" title="Edit this person">✎</a>${p.ns==='guess'&&p.n?`<a class="confirm" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}<a class="del" data-key="${key}" title="Delete this entry">🗑</a>`;
+    const acts=`<button class="rowedit" data-key="${key}" title="Edit or delete this person">Edit</button>${p.ns==='guess'&&p.n?`<a class="confirm" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}`;
     const types=(p.types||[]).map(t=>{
       const x=(t==='VC contributor'&&p.arts>1)?` ×${p.arts}`:'';
       if(t==='VC contributor'&&p.auth){
@@ -575,8 +577,9 @@ function render(){
     }).join("")||'<span class="muted">—</span>';
     return `
     <tr${p.unsub?' title="Unsubscribed — former contact"':''}>
+      <td class="editcell">${acts}</td>
       <td><span class="nm${g}">${esc(np.first)||'<span class="muted">—</span>'}</span></td>
-      <td><span class="nm${g}">${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
+      <td><span class="nm${g}">${esc(np.last)||'<span class="muted">—</span>'}</span></td>
       <td>${types}</td>
       <td>${p.unsub?'<span class="badge" style="background:#c8102e;color:#fff">Unsubscribed</span>':(p.mem?`<span class="badge b-mem">Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>`:'<span class="muted">—</span>')}</td>
       <td>${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>${p.dlast?`<div class="sub-d">last ${p.dlast}</div>`:''}`:'<span class="muted">—</span>'}</td>
