@@ -554,6 +554,31 @@ def main():
         if p["unsub"]:
             p["mem"] = 0
 
+    # ---- apply exported in-tool edits (every-field) permanently ----
+    # private/people_overrides.json: {personKey: {n, inst, emails, types, topics}}
+    # personKey = primary email, else "name:<lowercased name>" (matches the UI).
+    ov_path = PRIV / "people_overrides.json"
+    if ov_path.exists():
+        try:
+            ov = json.loads(ov_path.read_text())
+        except Exception:
+            ov = {}
+        for p in people:
+            o = ov.get(p["e"]) or ov.get("name:" + (p["n"] or "").lower())
+            if not o:
+                continue
+            if o.get("n"):
+                p["n"], p["ns"] = o["n"], "given"
+            if "inst" in o:
+                p["inst"] = o["inst"]
+            if o.get("emails"):
+                p["emails"] = o["emails"]
+                p["e"] = primary_email(o["emails"])
+            if o.get("types") is not None:
+                p["types"] = o["types"]
+            if o.get("topics") is not None:
+                p["topics"] = o["topics"]
+
     # ---- stats ----
     members = sum(1 for p in people if p["mem"])
     crm_people = sum(1 for p in people if "crm" in p["src"])

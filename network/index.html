@@ -44,6 +44,14 @@
   .askbar .askans{font-weight:700;font-size:13px;white-space:nowrap}
   .stats{display:grid;grid-template-columns:repeat(8,1fr);border-bottom:1px solid var(--vc-black);background:var(--vc-paper)}
   .nm.unsub,.em.unsub{color:#c8102e}
+  .modal{position:fixed;inset:0;background:rgba(5,5,7,.5);display:flex;align-items:center;justify-content:center;z-index:200}
+  .modalbox{background:#fff;border:1px solid var(--vc-black);padding:24px;width:440px;max-width:92vw;max-height:90vh;overflow:auto}
+  .modalbox h3{font-family:var(--vc-sans);font-weight:900;font-size:18px;margin:0 0 14px}
+  .modalbox label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);margin:12px 0 0}
+  .modalbox input,.modalbox textarea{display:block;width:100%;font:inherit;font-size:14px;padding:8px 10px;margin-top:4px;border:1px solid var(--vc-black);border-radius:0;background:#fff;text-transform:none;letter-spacing:0;color:var(--vc-black);font-weight:300}
+  .modalbox .lbl-note{font-weight:400;text-transform:none;letter-spacing:0;color:var(--vc-charcoal)}
+  .modalbtns{display:flex;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .modalbtns .lbl-note{font-size:11px;flex:1 1 100%}
   .stat .num.unsubnum{color:#c8102e}
   .stat{padding:14px 18px;border-right:1px solid var(--vc-cloud)}
   .stat:last-child{border-right:none}
@@ -164,7 +172,7 @@
     <label class="chk"><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
     <button class="btn" id="clear">Clear filters</button>
   </div>
-  <div class="hint"><span class="g">Gray italic</span> names are guessed from the email — click <b>✎</b> to fix, or <b>✓</b> to confirm. <a href="#" id="exportFixes" class="hintlink">Export name fixes →</a></div>
+  <div class="hint">Click <b>✎</b> on any row to edit a person's fields; <span class="g">gray italic</span> names are email guesses (<b>✓</b> confirms one). <a href="#" id="exportFixes" class="hintlink">Export edits →</a></div>
   <div class="layout">
     <aside>
       <h2>Filter by type</h2>
@@ -206,6 +214,22 @@
           </tr></thead>
           <tbody id="rows"></tbody>
         </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal" style="display:none">
+    <div class="modalbox">
+      <h3>Edit person</h3>
+      <label>Name<input id="edName" type="text"></label>
+      <label>Institution<input id="edInst" type="text"></label>
+      <label>Emails <span class="lbl-note">(one per line)</span><textarea id="edEmails" rows="3"></textarea></label>
+      <label>Types <span class="lbl-note">(comma-separated)</span><input id="edTypes" type="text"></label>
+      <label>Specialties <span class="lbl-note">(comma-separated)</span><input id="edTopics" type="text"></label>
+      <div class="modalbtns">
+        <button class="btn primary" id="edSave">Save</button>
+        <button class="btn" id="edCancel">Cancel</button>
+        <span class="lbl-note">Saves on this device; use “Export edits” to make it permanent for everyone.</span>
       </div>
     </div>
   </div>
@@ -300,10 +324,13 @@ function init(){
   $("#forget").addEventListener("click",e=>{e.preventDefault();localStorage.removeItem(PASSKEY);location.reload();});
   $("#ask").addEventListener("keydown",e=>{if(e.key==="Enter")runAsk();});
   $("#ask").addEventListener("search",runAsk);
+  $("#edSave").addEventListener("click",saveEdit);
+  $("#edCancel").addEventListener("click",closeEdit);
+  $("#editModal").addEventListener("click",e=>{if(e.target.id==="editModal")closeEdit();});
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
   $("#rows").addEventListener("click",e=>{
-    const ed=e.target.closest(".edit"); if(ed){e.stopPropagation();editName(ed.dataset.em);return;}
-    const cf=e.target.closest(".confirm"); if(cf){e.stopPropagation();confirmName(cf.dataset.em);return;}
+    const ed=e.target.closest(".edit"); if(ed){e.stopPropagation();openEdit(ed.dataset.key);return;}
+    const cf=e.target.closest(".confirm"); if(cf){e.stopPropagation();confirmName(cf.dataset.key);return;}
     const el=e.target.closest("[data-type]");if(!el)return;toggleCat(el.dataset.type,true);
   });
   render();
@@ -417,27 +444,46 @@ function filtered(){
   });
 }
 
-const OVKEY="vc_name_overrides";
+const OVKEY="vc_overrides";
 function loadOverrides(){ try{return JSON.parse(localStorage.getItem(OVKEY)||"{}");}catch(e){return {};} }
+function personKey(p){ return p.e || ("name:"+(p.n||"").toLowerCase()); }
+function realPrimary(emails){ return (emails||[]).find(e=>!e.endsWith("vitalcitynyc.org"))||(emails&&emails[0])||""; }
+function applyOverrideTo(p,o){
+  if(o.n){ p.n=o.n; p.ns="given"; }
+  if("inst" in o) p.inst=o.inst;
+  if(o.emails){ p.emails=o.emails; p.e=realPrimary(o.emails); }
+  if(o.types) p.types=o.types;
+  if(o.topics) p.topics=o.topics;
+}
 function applyLocalFixes(){
   const ov=loadOverrides();
-  PEOPLE.forEach(p=>{ if(p.e && ov[p.e]){ p.n=ov[p.e]; p.ns="given"; } });
+  PEOPLE.forEach(p=>{ const o=ov[personKey(p)]; if(o) applyOverrideTo(p,o); });
 }
-function editName(email){
-  const p=PEOPLE.find(x=>x.e===email); if(!p) return;
-  const v=prompt(`Correct name for ${email}:`, p.n||"");
-  if(v===null) return;
-  const nv=v.trim();
-  const ov=loadOverrides();
-  if(nv){ ov[email]=nv; p.n=nv; p.ns="given"; } else { delete ov[email]; }
-  localStorage.setItem(OVKEY,JSON.stringify(ov));
-  render();
+let editKey=null;
+function openEdit(key){
+  const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
+  editKey=key;
+  $("#edName").value=p.n||""; $("#edInst").value=p.inst||"";
+  $("#edEmails").value=(p.emails||[]).join("\n");
+  $("#edTypes").value=(p.types||[]).join(", "); $("#edTopics").value=(p.topics||[]).join(", ");
+  $("#editModal").style.display="flex"; $("#edName").focus();
 }
-function confirmName(email){
-  const p=PEOPLE.find(x=>x.e===email); if(!p||!p.n) return;
-  const ov=loadOverrides(); ov[email]=p.n;            // confirm the guess as correct
-  localStorage.setItem(OVKEY,JSON.stringify(ov));
-  p.ns="given"; render();
+function saveEdit(){
+  const p=PEOPLE.find(x=>personKey(x)===editKey); if(!p){ closeEdit(); return; }
+  const o={
+    n:$("#edName").value.trim(), inst:$("#edInst").value.trim(),
+    emails:$("#edEmails").value.split(/[\n,]/).map(s=>s.trim().toLowerCase()).filter(Boolean),
+    types:$("#edTypes").value.split(",").map(s=>s.trim()).filter(Boolean),
+    topics:$("#edTopics").value.split(",").map(s=>s.trim()).filter(Boolean),
+  };
+  const ov=loadOverrides(); ov[editKey]=o; localStorage.setItem(OVKEY,JSON.stringify(ov));
+  applyOverrideTo(p,o); closeEdit(); render();
+}
+function closeEdit(){ $("#editModal").style.display="none"; editKey=null; }
+function confirmName(key){
+  const p=PEOPLE.find(x=>personKey(x)===key); if(!p||!p.n) return;
+  const ov=loadOverrides(); ov[key]=Object.assign({}, ov[key], {n:p.n});
+  localStorage.setItem(OVKEY,JSON.stringify(ov)); p.ns="given"; render();
 }
 function emailGroup(){
   const emails=[...new Set(filtered().map(p=>p.e).filter(Boolean))];
@@ -447,13 +493,11 @@ function emailGroup(){
   window.location.href=`mailto:?${field}=${encodeURIComponent(emails.join(","))}`;
 }
 function exportFixes(){
-  const ov=loadOverrides(), keys=Object.keys(ov);
-  if(!keys.length){ alert("No name fixes yet. Click the ✎ next to a name to fix it."); return; }
-  const lines=["email,name"];
-  keys.forEach(em=>lines.push([em,ov[em]].map(csvCell).join(",")));
-  const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
+  const ov=loadOverrides();
+  if(!Object.keys(ov).length){ alert("No edits yet. Click the ✎ on any row to edit a person's fields."); return; }
+  const blob=new Blob([JSON.stringify(ov,null,2)],{type:"application/json"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
-  a.download="vital-city-name-fixes.csv";document.body.appendChild(a);a.click();a.remove();
+  a.download="vital-city-edits.json";document.body.appendChild(a);a.click();a.remove();
 }
 function copyEmails(){
   const emails=[...new Set(filtered().map(p=>p.e).filter(Boolean))];
@@ -496,7 +540,8 @@ function render(){
   $("#resultbar").innerHTML=`Showing <b>${shown.length.toLocaleString()}</b> of ${all.length.toLocaleString()} people`+(all.length>CAP?` &nbsp;·&nbsp; refine filters to see all, or Export CSV for the full list`:"");
   $("#rows").innerHTML=shown.map(p=>{
     const np=nameParts(p.n), g=(p.ns==='guess'?' guess':'')+(p.unsub?' unsub':'');
-    const acts=`${p.e?`<a class="edit" data-em="${esc(p.e)}" title="Fix name">✎</a>`:''}${p.e&&p.ns==='guess'&&p.n?`<a class="confirm" data-em="${esc(p.e)}" title="Confirm this name is correct">✓</a>`:''}`;
+    const key=esc(personKey(p));
+    const acts=`<a class="edit" data-key="${key}" title="Edit this person">✎</a>${p.ns==='guess'&&p.n?`<a class="confirm" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}`;
     const types=(p.types||[]).map(t=>{const x=(t==='VC contributor'&&p.arts>1)?` ×${p.arts}`:'';return `<span class="pill" data-type="${esc(t)}">${esc(t)}${x}</span>`;}).join("")||'<span class="muted">—</span>';
     return `
     <tr${p.unsub?' title="Unsubscribed — former contact"':''}>
