@@ -54,6 +54,29 @@ bash refresh.sh          # update + commit + push to the live site
 Each run records what changed since the previous one in `data/meta.json`
 (`new_article_count` and a `new_articles` list).
 
+## Network explorer (password-protected, separate page)
+
+`network/index.html` is a confidential people explorer — every person in Vital
+City's orbit (members/subscribers, contributors, contacts) fused and
+deconflicted across the members export, the contact CRM and the author list,
+categorized by type and organized around membership status.
+
+It is **client-side encrypted** (AES-256-GCM): only `network/data.enc`
+(ciphertext) is published, and the page decrypts it in the browser when the
+shared passphrase is entered. Live at `…/vital-city-catalogue/network/`.
+
+Rebuild + re-encrypt (keeps your chosen passphrase out of git):
+
+```
+python3 build_network.py                                  # private/people.json (gitignored)
+VC_NETWORK_PASS='your-passphrase' python3 encrypt_people.py   # writes network/data.enc
+git add network/data.enc && git commit -m "refresh network" && git push
+```
+
+Source data (`private/`, `*.xlsx`, the members CSV) and the plaintext
+`people.json` are gitignored and never published. The passphrase is shared
+out-of-band; rotate it by re-encrypting with a new value.
+
 ## Current totals
 
 812 articles · 445 contributors · 28 issues & series · ~200 topics ·
