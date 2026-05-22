@@ -74,7 +74,11 @@
   .matrix .bar{height:5px;background:var(--vc-cloud);margin-top:3px}
   .matrix .bar i{display:block;height:5px;background:var(--vc-cerulean)}
 
-  .resultbar{padding:10px 30px 0;font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+  .resultrow{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:12px 30px 4px}
+  .actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .resultbar{font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+  .hintlink{color:var(--vc-cerulean);font-weight:700;text-decoration:none;white-space:nowrap}
+  .hintlink:hover{text-decoration:underline}
   .resultbar b{color:var(--vc-black);font-family:var(--vc-serif);font-weight:200;font-size:15px}
   .tablewrap{padding:6px 30px 60px}
   table.people{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -142,14 +146,9 @@
       <option value="no">Non-donors</option>
     </select>
     <input type="search" id="q" placeholder="Search name, email, institution…" autocomplete="off">
-    <button class="btn primary" id="export">Export CSV</button>
-    <button class="btn" id="copyEmails">Copy emails</button>
-    <select id="emailField" title="Which field to drop recipients into"><option value="bcc">Bcc</option><option value="to">To</option><option value="cc">Cc</option></select>
-    <button class="btn" id="emailGroup">Email group</button>
-    <button class="btn" id="exportFixes">Export name fixes</button>
-    <button class="btn" id="clear">Clear</button>
+    <button class="btn" id="clear">Clear filters</button>
   </div>
-  <div class="hint"><span class="g">Gray italic</span> names are guessed from the email address — click <b>✎</b> to fix one, or <b>✓</b> to confirm the guess is correct (turns it black).</div>
+  <div class="hint"><span class="g">Gray italic</span> names are guessed from the email — click <b>✎</b> to fix, or <b>✓</b> to confirm. <a href="#" id="exportFixes" class="hintlink">Export name fixes →</a></div>
   <div class="layout">
     <aside>
       <h2>Filter by type</h2>
@@ -163,7 +162,15 @@
       <div style="font-size:11px;color:var(--vc-charcoal);margin-top:6px">Blue fill = share of that type who subscribe.</div>
     </aside>
     <div>
-      <div class="resultbar" id="resultbar"></div>
+      <div class="resultrow">
+        <div class="resultbar" id="resultbar"></div>
+        <div class="actions">
+          <button class="btn primary" id="export">Export CSV</button>
+          <button class="btn" id="copyEmails">Copy emails</button>
+          <select id="emailField" title="Which field to drop recipients into"><option value="bcc">Bcc</option><option value="to">To</option><option value="cc">Cc</option></select>
+          <button class="btn" id="emailGroup">Email group</button>
+        </div>
+      </div>
       <div class="tablewrap">
         <table class="people">
           <thead><tr>
@@ -185,7 +192,14 @@
 <script>
 const $=s=>document.querySelector(s);
 const CATS=["VC contributor","VC advisor","journalist","academic","foundation leadership","nonprofit leadership","city gov","state gov","fed gov","judge","architect"];
-const SPECS=["criminal justice","housing","transit"];
+const SPECS=["criminal justice","housing","transit","budget","urban planning","education","public health","economy","technology","politics & government","race & equity","culture"];
+function lastName(n){
+  if(!n) return "";
+  const t=n.trim().split(/\s+/);
+  const suf=new Set(["jr","jr.","sr","sr.","ii","iii","iv","md","phd","esq"]);
+  let i=t.length-1; while(i>0 && (suf.has(t[i].toLowerCase())||!/[a-z]/i.test(t[i]))) i--;
+  return (t[i]||"").toLowerCase().replace(/[^a-z]/g,"");
+}
 let PEOPLE=[], seg="all", sortKey="n", sortDir=1;
 let selectedCats=new Set();   // chosen type/specialty categories (OR within)
 const CAP=600;
@@ -231,7 +245,7 @@ function init(){
   const donors=PEOPLE.filter(p=>p.don).length;
   const raised=PEOPLE.reduce((s,p)=>s+(p.damt||0),0);
   const raisedStr=raised>=1000?"$"+Math.round(raised/1000)+"K":"$"+Math.round(raised);
-  const S=[[PEOPLE.length.toLocaleString(),"people"],[memTotal.toLocaleString(),"subscribers"],[donors.toLocaleString(),"donors"],[crm.toLocaleString(),"CRM contacts"],[auth.toLocaleString(),"authors"],[authMem.toLocaleString(),"author-subscribers"],[raisedStr,"raised"]];
+  const S=[[PEOPLE.length.toLocaleString(),"people"],[memTotal.toLocaleString(),"subscribers"],[donors.toLocaleString(),"donors"],[crm.toLocaleString(),"on contact list"],[auth.toLocaleString(),"authors"],[authMem.toLocaleString(),"author-subscribers"],[raisedStr,"raised"]];
   $("#stats").innerHTML=S.map(([n,l])=>`<div class="stat"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join("");
   buildFacets();
   buildMatrix();
@@ -240,7 +254,7 @@ function init(){
   $("#export").addEventListener("click",exportCSV);
   $("#copyEmails").addEventListener("click",copyEmails);
   $("#emailGroup").addEventListener("click",emailGroup);
-  $("#exportFixes").addEventListener("click",exportFixes);
+  $("#exportFixes").addEventListener("click",e=>{e.preventDefault();exportFixes();});
   $("#clear").addEventListener("click",clearAll);
   $("#forget").addEventListener("click",e=>{e.preventDefault();localStorage.removeItem(PASSKEY);location.reload();});
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
@@ -364,7 +378,8 @@ function exportCSV(){
 function sortRows(rows){
   return rows.sort((a,b)=>{
     let va,vb;
-    if(sortKey==="types"){va=(a.types||[]).join(" ");vb=(b.types||[]).join(" ");}
+    if(sortKey==="n"){va=a.n?lastName(a.n)+"|"+a.n.toLowerCase():"￿";vb=b.n?lastName(b.n)+"|"+b.n.toLowerCase():"￿";}
+    else if(sortKey==="types"){va=(a.types||[]).join(" ");vb=(b.types||[]).join(" ");}
     else if(sortKey==="mem"){va=a.mem;vb=b.mem;}
     else{va=a[sortKey];vb=b[sortKey];}
     if(va==null)va="";if(vb==null)vb="";

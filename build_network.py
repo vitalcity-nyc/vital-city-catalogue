@@ -22,9 +22,48 @@ PRIV = ROOT / "private"
 PERSON_CATS = ["VC contributor", "VC advisor", "journalist", "academic",
                "foundation leadership", "nonprofit leadership", "city gov",
                "state gov", "fed gov", "judge", "architect"]
-TOPIC_CATS = ["criminal justice", "housing", "transit"]
+# Domain-area interests (specialties).
+TOPIC_CATS = ["criminal justice", "housing", "transit", "budget", "urban planning",
+              "education", "public health", "economy", "technology",
+              "politics & government", "race & equity", "culture"]
 NONPERSON = {"vital city", "a survey", "a photo essay", "a conversation",
              "the editors", "editorial board", "vital city staff", "various"}
+
+# Map an article's public topic tag (lowercased) -> a specialty domain. Used to
+# infer a person's domain interests from what they've written for us.
+TOPIC_MAP = {
+    "crime": "criminal justice", "justice": "criminal justice",
+    "police reform": "criminal justice", "policing": "criminal justice",
+    "jails": "criminal justice", "incarceration": "criminal justice",
+    "gun violence": "criminal justice", "subway crime": "criminal justice",
+    "drugs": "criminal justice",
+    "housing": "housing", "homelessness": "housing",
+    "transit": "transit", "transportation": "transit",
+    "budget": "budget",
+    "city planning": "urban planning", "neighborhood life": "urban planning",
+    "quality of life": "urban planning", "infrastructure": "urban planning",
+    "education": "education",
+    "public health": "public health", "mental health": "public health",
+    "economics": "economy", "inequality": "economy",
+    "technology": "technology",
+    "politics": "politics & government", "city government": "politics & government",
+    "government operations": "politics & government", "corruption": "politics & government",
+    "race": "race & equity",
+    "culture": "culture", "history": "culture",
+}
+
+# Email domains that indicate the person works in journalism/media.
+MEDIA_DOMAINS = {
+    "nytimes.com", "wsj.com", "washingtonpost.com", "theatlantic.com", "newyorker.com",
+    "nymag.com", "vox.com", "axios.com", "politico.com", "bloomberg.net", "reuters.com",
+    "apnews.com", "npr.org", "wnyc.org", "gothamist.com", "thecity.nyc", "hellgatenyc.com",
+    "nydailynews.com", "nypost.com", "amny.com", "cityandstateny.com", "citylimits.org",
+    "documentedny.com", "themarshallproject.org", "propublica.org", "chalkbeat.org",
+    "the74million.org", "brooklyneagle.com", "gothamgazette.com", "thenation.com",
+    "motherjones.com", "slate.com", "theguardian.com", "cnn.com", "cbsnews.com",
+    "ny1.com", "pix11.com", "news12.com", "abc.com", "nbcuni.com", "spectrumnews.org",
+    "epicenter-nyc.com", "thecity.org", "qns.com", "observer.com", "crainsnewyork.com",
+}
 
 
 def norm(s):
@@ -83,9 +122,21 @@ def name_from_email(e):
     return ""
 
 
+def prettify_name(name):
+    """Capitalize names entered all-lowercase or ALL-CAPS (deirdre hamill ->
+    Deirdre Hamill; SAM SCHWARTZ -> Sam Schwartz). Names already in mixed case
+    are assumed intentional (VanNostrand, McDonnell, DeFabbia-Kane) and kept."""
+    if not name or not any(c.isalpha() for c in name):
+        return name
+    if name != name.lower() and name != name.upper():
+        return name
+    return re.sub(r"[A-Za-z]+", lambda m: m.group(0)[:1].upper() + m.group(0)[1:].lower(), name)
+
+
 def set_name(p, name, given):
     """Set a person's display name, tracking whether it's authoritative ('given')
     or an email guess ('guess'). A given name upgrades a previous guess."""
+    name = prettify_name(name)
     if not name:
         return
     if not p["n"]:
@@ -205,8 +256,18 @@ def main():
         if "crm" not in p["src"]: p["src"].append("crm")
         index(p)
 
-    # ---- 3. Authors (article counts) ----
+    # ---- 3. Authors (article counts + specialties inferred from their pieces) ----
     authors = json.loads((ROOT / "data" / "authors.json").read_text())
+    try:
+        catalogue = json.loads((ROOT / "data" / "catalogue.json").read_text())
+    except Exception:
+        catalogue = []
+    author_specs = {}   # norm author name -> set of specialty domains they've written about
+    for art in catalogue:
+        specs = {TOPIC_MAP[t.lower()] for t in art.get("topics", []) if t.lower() in TOPIC_MAP}
+        if specs:
+            for au in art.get("authors", []):
+                author_specs.setdefault(norm(au), set()).update(specs)
     authors_total = 0
     for a in authors:
         nn = norm(a["name"])
@@ -216,6 +277,7 @@ def main():
         set_name(p, a["name"], True)
         p["auth"] = 1
         p["arts"] = a.get("post_count", 0)
+        p["topics"] = sorted(set(p["topics"]) | author_specs.get(nn, set()))
         if "author" not in p["src"]: p["src"].append("author")
         index(p)
 
@@ -257,6 +319,15 @@ def main():
                 if "donor" not in p["src"]:
                     p["src"].append("donor")
                 index(p)
+
+    # ---- 6. Infer journalists from media email domains ----
+    media_inferred = 0
+    for p in people:
+        if p["e"]:
+            dom = p["e"].split("@")[-1].strip().lower()
+            if dom in MEDIA_DOMAINS and "journalist" not in p["types"]:
+                p["types"] = sorted(set(p["types"]) | {"journalist"})
+                media_inferred += 1
 
     # ---- 5. Manual name fixes (email -> corrected name) ----
     # Edits made in the explorer's edit mode are exported here and become

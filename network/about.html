@@ -44,11 +44,18 @@
   <table>
     <tr><th>Source</th><th>What it adds</th></tr>
     <tr><td><b>Newsletter subscribers</b> (from Ghost)</td><td>The <span class="pill b-mem">Subscriber</span> badge + the year they joined. <b>"Subscriber" means the free email list</b> — not the same as a donor.</td></tr>
-    <tr><td><b>Contacts</b> (the Google Sheet your team maintains)</td><td>The <span class="pill">type</span> tags: journalist, academic, funder, gov, judge, architect, nonprofit, contributor, advisor + specialties (criminal justice, housing, transit).</td></tr>
+    <tr><td><b>Contacts</b> (the Google Sheet your team maintains — the "on contact list" count)</td><td>The <span class="pill">type</span> tags: journalist, academic, funder, gov, judge, architect, nonprofit, contributor, advisor + specialty domains (criminal justice, housing, transit, budget, urban planning, education, public health, economy, technology, politics &amp; government, race &amp; equity, culture).</td></tr>
     <tr><td><b>Donors</b> (from FCNY)</td><td>The <span class="pill b-don">$ amount</span> badge (total given) and the date of their most recent gift.</td></tr>
     <tr><td><b>Authors</b> (vitalcitynyc.org)</td><td>The "N pieces" badge (articles written).</td></tr>
   </table>
   <div class="note"><b>Subscriber ≠ donor.</b> Someone can be a donor without being a newsletter subscriber, and vice-versa. If you filter "Donors + Non-subscribers," you're seeing donors who haven't joined the email list — good people to invite to subscribe.</div>
+
+  <h3>How types &amp; domains get assigned</h3>
+  <p>Beyond what's in the contacts sheet, the tool fills in categories automatically:</p>
+  <ul>
+    <li><b>Journalists</b> are also inferred from the email someone subscribed with — if it's a known news-outlet domain (nytimes.com, wnyc.org, thecity.nyc, politico.com, etc.), they're tagged <i>journalist</i>.</li>
+    <li><b>Domain interests</b> are inferred from what people have <i>written</i> for Vital City — an author of pieces tagged Housing gets the <i>housing</i> domain, Budget → <i>budget</i>, and so on.</li>
+  </ul>
 
   <h2>Searching &amp; filtering</h2>
   <ul>
