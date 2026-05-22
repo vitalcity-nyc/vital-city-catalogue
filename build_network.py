@@ -582,6 +582,13 @@ def main():
             if o.get("topics") is not None:
                 p["topics"] = o["topics"]
 
+    # ---- drop people with no way to act on them ----
+    # No email AND not a subscriber, author, donor or unsubscribed = just a name
+    # in the contacts sheet (e.g. an official with no email). Not useful here.
+    dropped = [p for p in people if not (p["emails"] or p["mem"] or p["auth"] or p["don"] or p["unsub"])]
+    people = [p for p in people if p["emails"] or p["mem"] or p["auth"] or p["don"] or p["unsub"]]
+    print(f"dropped {len(dropped)} no-contact-info entries", file=__import__("sys").stderr)
+
     # ---- stats ----
     members = sum(1 for p in people if p["mem"])
     crm_people = sum(1 for p in people if "crm" in p["src"])
