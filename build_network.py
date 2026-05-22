@@ -316,6 +316,9 @@ def fold(q, p):
     q["arts"] = max(q["arts"], p["arts"])
     q["damt"] = round(q["damt"] + p["damt"], 2)
     q["dcnt"] += p["dcnt"]
+    q["d7"] = round(q["d7"] + p["d7"], 2); q["d7c"] += p["d7c"]
+    q["d30"] = round(q["d30"] + p["d30"], 2); q["d30c"] += p["d30c"]
+    if p["udate"] > q["udate"]: q["udate"] = p["udate"]
     q["types"] = sorted(set(q["types"]) | set(p["types"]))
     q["topics"] = sorted(set(q["topics"]) | set(p["topics"]))
     q["src"] = sorted(set(q["src"]) | set(p["src"]))
@@ -410,7 +413,8 @@ def main():
         if fl and fl in by_fl: return by_fl[fl]
         p = {"n": "", "ns": "", "e": "", "emails": [], "inst": "", "role": "",
              "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0,
-             "aname": "", "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "unsub": 0, "src": []}
+             "aname": "", "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "unsub": 0, "udate": "",
+             "d7": 0.0, "d7c": 0, "d30": 0.0, "d30c": 0, "src": []}
         people.append(p)
         return p
 
@@ -526,6 +530,15 @@ def main():
                 p["don"] = 1
                 p["damt"] = round(p["damt"] + amt, 2)
                 p["dcnt"] += cnt
+                # recent-window giving (for the activity bar)
+                try: p["d7"] = round(p["d7"] + float(row.get("Amount 7d") or 0), 2)
+                except ValueError: pass
+                try: p["d7c"] += int(float(row.get("Count 7d") or 0))
+                except ValueError: pass
+                try: p["d30"] = round(p["d30"] + float(row.get("Amount 30d") or 0), 2)
+                except ValueError: pass
+                try: p["d30c"] += int(float(row.get("Count 30d") or 0))
+                except ValueError: pass
                 # most-recent gift date (M/D/YYYY ... -> YYYY-MM-DD), keep the latest
                 ld = (row.get("Last Donation at") or "").strip()
                 m = re.match(r"(\d{1,2})/(\d{1,2})/(\d{4})", ld)
@@ -552,6 +565,9 @@ def main():
                 if name:
                     set_name(p, name, True)
                 p["unsub"] = 1
+                ud = (row.get("Unsub Date") or "").strip()[:10]
+                if ud > p["udate"]:
+                    p["udate"] = ud
                 if "unsub" not in p["src"]:
                     p["src"].append("unsub")
                 index(p)

@@ -74,6 +74,10 @@
   .stat.clickable:not(.inc):not(.exc):not(.active):hover{background:var(--vc-white)}
   .stat.clickable:not(.inc):not(.exc):not(.active):hover .lbl{color:var(--vc-orange)}
   .stat.inc:hover,.stat.exc:hover,.stat.active:hover{filter:brightness(0.92)}
+  .activitybar{padding:7px 30px;border-bottom:1px solid var(--vc-cloud);background:var(--vc-paper);font-size:11.5px;color:var(--vc-charcoal);font-weight:400;line-height:1.5}
+  .activitybar .albl{text-transform:uppercase;letter-spacing:.09em;font-weight:700;margin-right:6px}
+  .activitybar b{color:var(--vc-black);font-weight:700}
+  .activitybar .up{color:var(--vc-green)}.activitybar .down{color:#c8102e}.activitybar .gift{color:var(--vc-orange)}
 
   .controls{position:sticky;top:0;z-index:20;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);padding:12px 30px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
   .seg{display:inline-flex;border:1px solid var(--vc-black)}
@@ -204,6 +208,7 @@
   </header>
   <div class="confbar">Confidential · contains subscriber, donor and contact data · do not redistribute<a href="#" id="forget" style="float:right;color:#fff;text-decoration:underline">Lock / forget password on this device</a></div>
   <div class="stats" id="stats"></div>
+  <div class="activitybar" id="activityBar"></div>
   <div class="controls">
     <span class="toghint">Show:</span>
     <div class="toggles">
@@ -431,8 +436,22 @@ function buildStats(){
   ];
   $("#stats").innerHTML=S.map(([n,l,a,t,cls])=>`<div class="stat clickable" data-action="${a}" data-stat="${a}" title="${t}"><div class="num${cls}">${n}</div><div class="lbl">${l}</div><div class="tilestate"></div></div>`).join("");
 }
+function computeActivity(){
+  const iso=d=>d.toISOString().slice(0,10), now=Date.now();
+  const d7=iso(new Date(now-7*864e5)), d30=iso(new Date(now-30*864e5));
+  let ns7=0,ns30=0,un7=0,un30=0,g7=0,g7c=0,g30=0,g30c=0;
+  PEOPLE.forEach(p=>{
+    if(p.mem&&!p.unsub&&p.since){ if(p.since>=d7)ns7++; if(p.since>=d30)ns30++; }
+    if(p.unsub&&p.udate){ if(p.udate>=d7)un7++; if(p.udate>=d30)un30++; }
+    if(p.d7)g7+=p.d7; if(p.d7c)g7c+=p.d7c; if(p.d30)g30+=p.d30; if(p.d30c)g30c+=p.d30c;
+  });
+  const money=n=>"$"+Math.round(n).toLocaleString();
+  const seg=(ns,un,g,gc)=>`<b class="up">+${ns.toLocaleString()}</b> subscribers · <b class="down">−${un.toLocaleString()}</b> unsubscribed · <b class="gift">${money(g)}</b> from ${gc} gift${gc===1?"":"s"}`;
+  $("#activityBar").innerHTML=`<span class="albl">Recent activity</span><b>Last 7 days:</b> ${seg(ns7,un7,g7,g7c)} &nbsp;&middot;&nbsp; <b>Last 30 days:</b> ${seg(ns30,un30,g30,g30c)}`;
+}
 function init(){
   buildStats();
+  computeActivity();
   buildFacets();
   buildMatrix();
   $("#tSub").addEventListener("click",()=>cycleWant("mem"));

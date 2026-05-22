@@ -30,21 +30,23 @@ def main():
     rows, offset, count = [], 0, 1000
     while True:
         url = (f"{BASE}/lists/{LIST}/members?status=unsubscribed&count={count}&offset={offset}"
-               "&fields=members.email_address,members.merge_fields,total_items")
+               "&fields=members.email_address,members.merge_fields,members.last_changed,total_items")
         d = get(url)
         members = d.get("members", [])
         for m in members:
             mf = m.get("merge_fields", {}) or {}
             email = (m.get("email_address") or "").strip()
             if email:
-                rows.append([email, (mf.get("FNAME") or "").strip(), (mf.get("LNAME") or "").strip()])
+                # last_changed ~= when they unsubscribed (their last status change)
+                udate = (m.get("last_changed") or "")[:10]
+                rows.append([email, (mf.get("FNAME") or "").strip(), (mf.get("LNAME") or "").strip(), udate])
         offset += len(members)
         if not members or offset >= d.get("total_items", 0):
             break
     out = PRIV / "unsubscribed_source.csv"
     with open(out, "w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["Email", "First Name", "Last Name"])
+        w.writerow(["Email", "First Name", "Last Name", "Unsub Date"])
         w.writerows(rows)
     print(f"wrote {len(rows)} unsubscribed contacts -> {out.name}", file=sys.stderr)
 
