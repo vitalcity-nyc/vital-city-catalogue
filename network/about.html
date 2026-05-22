@@ -109,8 +109,10 @@
   <p>Donor data is a manual snapshot, not live. To refresh it: in Donorbox, <b>export the full donations CSV</b>, then hand that file to Claude Code and ask it to refresh the donor list (it replaces <code>donors_source.csv</code> and republishes). New gifts won't show until that's done.</p>
 
   <h3>Adding people</h3>
-  <p><b>One new person</b> — a single new donor, author or contact — can be added right here: click <b>+ Add person</b> (top of the list), fill in their details, tick what they are (subscriber / author / donor, with a donation total if relevant), and Save. It persists like any other edit (shared store → next refresh), so use it sparingly for the occasional manual add.</p>
-  <p><b>A whole list</b> of new people (a CSV) is different — that's a source update, not a one-off. Don't add them one-by-one. <b>Hand the CSV to Claude Code</b> and say what it is (new contacts, a donor export, a partner list); it folds the file into the right source and they all appear on the next refresh.</p>
+  <p><b>One new person</b> — a single new donor, author or contact — can be added right here: click <b>+ Add person</b> (top of the list), fill in their details, tick what they are (subscriber / author / donor, with a donation total if relevant), and Save.</p>
+  <p><b>A few at a time</b> — type rows in the Google Sheet's <b>"add"</b> tab (plain columns: name, email, institution, types, specialties, subscriber/author/donor, donation). They appear in the tool on the next refresh.</p>
+  <div class="note"><b>Leave those rows in the Sheet.</b> The <code>add</code> tab is re-read on every refresh — it's the permanent home for hand-added people, not a one-time inbox. <b>Deleting a row removes that person</b> from the tool (unless they also come from a live source). Same for the <code>overrides</code> tab: deleting a row undoes that edit.</div>
+  <p><b>A whole list</b> of new people (a big CSV) is a source update, not a one-off. Don't add them one-by-one. <b>Hand the CSV to Claude Code</b> and say what it is (new contacts, a donor export, a partner list); it folds the file into the right source and they all appear on the next refresh.</p>
 
   <h3>The mirror spreadsheet</h3>
   <p>A consolidated spreadsheet that mirrors this tool — <a href="https://docs.google.com/spreadsheets/d/17v3wa1OMW5XXIcu0oN6tp4-NfOje7xPTVUv5Zb3XVVE/edit"><b>Vital City — Network (master)</b></a> — holds everyone with all fields for sorting/filtering in Sheets. (Editing that sheet doesn't feed back into the tool — use <b>Edit</b> here for that.)</p>
