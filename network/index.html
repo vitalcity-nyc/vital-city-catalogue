@@ -127,6 +127,10 @@
   .em{color:var(--vc-charcoal);font-size:12px}
   .pill{display:inline-block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;margin:1px 4px 1px 0;background:var(--vc-cloud);color:var(--vc-black);cursor:pointer;white-space:nowrap}
   .pill:hover{background:var(--vc-cerulean);color:#fff}
+  a.pill-link{text-decoration:none}
+  a.pill-link:hover{background:var(--vc-magenta);color:#fff}
+  .del{cursor:pointer;color:var(--vc-cloud);margin-left:5px;font-size:12px;text-decoration:none}
+  .del:hover{color:var(--vc-magenta)}
   .badge{display:inline-block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 7px;white-space:nowrap}
   .b-mem{background:var(--vc-green);color:#fff}
   .b-auth{border:1px solid var(--vc-magenta);color:var(--vc-magenta)}
@@ -163,13 +167,15 @@
   </div>
   <div class="stats" id="stats"></div>
   <div class="controls">
+    <span class="toghint">Show:</span>
     <div class="toggles">
       <button class="tg" id="tSub" title="Newsletter subscribers">Subscribers</button>
       <button class="tg" id="tDon" title="People who have given">Donors</button>
       <button class="tg" id="tAuth" title="Vital City contributors">Authors</button>
       <button class="tg" id="tOther" title="None of subscriber, donor or author">Other</button>
     </div>
-    <span class="toghint">overlap = on together</span>
+    <span class="toghint">turn on 2+ for the overlap</span>
+    <label class="chk" id="repeatDonorWrap" style="display:none"><input type="checkbox" id="fRepeatDonor"> Repeat donors (2+ gifts)</label>
     <input type="search" id="q" placeholder="Search name, email, institution…" autocomplete="off">
     <label class="chk"><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
     <button class="btn" id="clear">Clear filters</button>
@@ -230,6 +236,7 @@
       <div class="modalbtns">
         <button class="btn primary" id="edSave">Save</button>
         <button class="btn" id="edCancel">Cancel</button>
+        <button class="btn" id="edDelete" style="margin-left:auto;border-color:var(--vc-magenta);color:var(--vc-magenta)">Delete entry</button>
         <span class="lbl-note">Saves on this device; use “Export edits” to make it permanent for everyone.</span>
       </div>
     </div>
@@ -243,15 +250,21 @@ const SPECS=["criminal justice","housing","transit","budget","urban planning","e
 function nameParts(n){
   // First name = first token; everything after is the (often compound) surname,
   // e.g. "Jennifer Jones Austin" → first "Jennifer", last "Jones Austin".
-  // Middle initials ("Aaron M. Pallas") are dropped from the displayed name.
+  // Middle initials ("Aaron M. Pallas") and quoted/parenthesized nicknames
+  // ("Willis “Gary” Dunkum") are dropped so the surname sorts correctly.
   if(!n) return {first:"",last:""};
   const t=n.trim().split(/\s+/);
   if(t.length===1) return {first:t[0],last:""};
   const isInitial=s=>/^[A-Za-z]\.?$/.test(s);
-  let rest=t.slice(1).filter(s=>!isInitial(s));
+  const isNick=s=>/^[("'“‘]/.test(s)||/[)"'”’]$/.test(s);
+  let rest=t.slice(1).filter(s=>!isInitial(s)&&!isNick(s));
+  if(!rest.length) rest=t.slice(1).filter(s=>!isNick(s));
   if(!rest.length) rest=t.slice(1);
   return {first:t[0], last:rest.join(" ")};
 }
+// Normalize a name part for sorting: lowercase, drop punctuation/accents so
+// "O'Brien", "“Gary”" etc. sort by their letters, not by leading symbols.
+function sortName(s){return (s||"").toLowerCase().normalize("NFKD").replace(/[^a-z0-9 ]+/g,"").trim();}
 let PEOPLE=[], sortKey="last", sortDir=1;
 let onlyUnsub=false;   // banner "unsubscribed" → show only former contacts
 let selectedCats=new Set();   // chosen type/specialty categories (OR within)
@@ -321,6 +334,7 @@ function init(){
   $("#tAuth").addEventListener("click",()=>toggleWant("auth"));
   $("#tOther").addEventListener("click",toggleOther);
   ["#q","#dFrom","#dTo"].forEach(s=>$(s).addEventListener("input",render));
+  $("#fRepeatDonor").addEventListener("change",render);
   $("#fUnsub").addEventListener("change",()=>{onlyUnsub=false;render();});
   $("#export").addEventListener("click",exportCSV);
   $("#copyEmails").addEventListener("click",copyEmails);
@@ -333,11 +347,14 @@ function init(){
   $("#ask").addEventListener("search",runAsk);
   $("#edSave").addEventListener("click",saveEdit);
   $("#edCancel").addEventListener("click",closeEdit);
+  $("#edDelete").addEventListener("click",()=>{ if(editKey) deleteEntry(editKey); });
   $("#editModal").addEventListener("click",e=>{if(e.target.id==="editModal")closeEdit();});
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
   $("#rows").addEventListener("click",e=>{
     const ed=e.target.closest(".edit"); if(ed){e.stopPropagation();openEdit(ed.dataset.key);return;}
     const cf=e.target.closest(".confirm"); if(cf){e.stopPropagation();confirmName(cf.dataset.key);return;}
+    const dl=e.target.closest(".del"); if(dl){e.stopPropagation();deleteEntry(dl.dataset.key);return;}
+    if(e.target.closest("a.pill-link")) return;   // let the catalogue link open
     const el=e.target.closest("[data-type]");if(!el)return;toggleCat(el.dataset.type,true);
   });
   render();
@@ -365,6 +382,10 @@ function syncToggles(){
   $("#tOther").classList.toggle("on",isOther());
   const map={subs:want.mem===1,donors:want.don===1,authors:want.auth===1,other:isOther()};
   document.querySelectorAll(".stat[data-stat]").forEach(s=>s.classList.toggle("active",!!map[s.dataset.stat]));
+  // Repeat-donor sub-filter is only meaningful while viewing donors.
+  const showRepeat=want.don===1;
+  $("#repeatDonorWrap").style.display=showRepeat?"inline-flex":"none";
+  if(!showRepeat) $("#fRepeatDonor").checked=false;
 }
 function toggleWant(k){
   if(isOther()) want={mem:0,don:0,auth:0};   // leaving "other" mode
@@ -461,6 +482,7 @@ function filtered(){
     if(want.don===-1&&p.don)return false;
     if(want.auth===1&&!p.auth)return false;
     if(want.auth===-1&&p.auth)return false;
+    if($("#fRepeatDonor").checked && !((p.dcnt||0)>1)) return false;
     if(df||dt){ if(!p.since)return false; if(df&&p.since<df)return false; if(dt&&p.since>dt)return false; }
     if(cats.length){const have=new Set([...(p.types||[]),...(p.topics||[])]);if(!cats.some(c=>have.has(c)))return false;}
     if(q){const hay=`${p.n} ${p.e} ${p.inst}`.toLowerCase();if(!hay.includes(q))return false;}
@@ -481,7 +503,16 @@ function applyOverrideTo(p,o){
 }
 function applyLocalFixes(){
   const ov=loadOverrides();
-  PEOPLE.forEach(p=>{ const o=ov[personKey(p)]; if(o) applyOverrideTo(p,o); });
+  PEOPLE.forEach(p=>{ const o=ov[personKey(p)]; if(o&&!o.deleted) applyOverrideTo(p,o); });
+  PEOPLE=PEOPLE.filter(p=>{ const o=ov[personKey(p)]; return !(o&&o.deleted); });
+}
+function deleteEntry(key){
+  const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
+  if(!confirm(`Delete "${p.n||p.e||'this entry'}"? It will be hidden on this device, and removed for everyone once you Export edits and publish.`)) return;
+  const ov=loadOverrides(); ov[key]=Object.assign({}, ov[key], {deleted:true});
+  localStorage.setItem(OVKEY,JSON.stringify(ov));
+  PEOPLE=PEOPLE.filter(x=>x!==p);
+  closeEdit(); render();
 }
 let editKey=null;
 function openEdit(key){
@@ -545,8 +576,8 @@ function exportCSV(){
 function sortRows(rows){
   return rows.sort((a,b)=>{
     let va,vb;
-    if(sortKey==="last"){const A=nameParts(a.n),B=nameParts(b.n);va=A.last?A.last.toLowerCase()+"|"+A.first.toLowerCase():"￿";vb=B.last?B.last.toLowerCase()+"|"+B.first.toLowerCase():"￿";}
-    else if(sortKey==="first"){const A=nameParts(a.n),B=nameParts(b.n);va=A.first?A.first.toLowerCase()+"|"+A.last.toLowerCase():"￿";vb=B.first?B.first.toLowerCase()+"|"+B.last.toLowerCase():"￿";}
+    if(sortKey==="last"){const A=nameParts(a.n),B=nameParts(b.n);va=sortName(A.last)?sortName(A.last)+"|"+sortName(A.first):"￿";vb=sortName(B.last)?sortName(B.last)+"|"+sortName(B.first):"￿";}
+    else if(sortKey==="first"){const A=nameParts(a.n),B=nameParts(b.n);va=sortName(A.first)?sortName(A.first)+"|"+sortName(A.last):"￿";vb=sortName(B.first)?sortName(B.first)+"|"+sortName(B.last):"￿";}
     else if(sortKey==="types"){va=(a.types||[]).join(" ");vb=(b.types||[]).join(" ");}
     else if(sortKey==="mem"){va=a.mem;vb=b.mem;}
     else{va=a[sortKey];vb=b[sortKey];}
@@ -559,14 +590,25 @@ function sortRows(rows){
 }
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function render(){
+  document.querySelectorAll("table.people th").forEach(th=>{
+    const base=th.dataset.label||(th.dataset.label=th.textContent.replace(/[ ▲▼]+$/,""));
+    th.textContent=base+(sortKey===th.dataset.k?(sortDir>0?" ▲":" ▼"):"");
+  });
   const all=sortRows(filtered());
   const shown=all.slice(0,CAP);
   $("#resultbar").innerHTML=`Showing <b>${shown.length.toLocaleString()}</b> of ${all.length.toLocaleString()} people`+(all.length>CAP?` &nbsp;·&nbsp; refine filters to see all, or Export CSV for the full list`:"");
   $("#rows").innerHTML=shown.map(p=>{
     const np=nameParts(p.n), g=(p.ns==='guess'?' guess':'')+(p.unsub?' unsub':'');
     const key=esc(personKey(p));
-    const acts=`<a class="edit" data-key="${key}" title="Edit this person">✎</a>${p.ns==='guess'&&p.n?`<a class="confirm" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}`;
-    const types=(p.types||[]).map(t=>{const x=(t==='VC contributor'&&p.arts>1)?` ×${p.arts}`:'';return `<span class="pill" data-type="${esc(t)}">${esc(t)}${x}</span>`;}).join("")||'<span class="muted">—</span>';
+    const acts=`<a class="edit" data-key="${key}" title="Edit this person">✎</a>${p.ns==='guess'&&p.n?`<a class="confirm" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}<a class="del" data-key="${key}" title="Delete this entry">🗑</a>`;
+    const types=(p.types||[]).map(t=>{
+      const x=(t==='VC contributor'&&p.arts>1)?` ×${p.arts}`:'';
+      if(t==='VC contributor'&&p.auth){
+        const an=encodeURIComponent(p.aname||p.n);
+        return `<a class="pill pill-link" href="../?author=${an}" target="_blank" rel="noopener" title="See ${esc(p.aname||p.n)}'s pieces in the catalogue ↗">${esc(t)}${x} ↗</a>`;
+      }
+      return `<span class="pill" data-type="${esc(t)}">${esc(t)}${x}</span>`;
+    }).join("")||'<span class="muted">—</span>';
     return `
     <tr${p.unsub?' title="Unsubscribed — former contact"':''}>
       <td><span class="nm${g}">${esc(np.first)||'<span class="muted">—</span>'}</span></td>

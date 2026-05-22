@@ -272,7 +272,21 @@ async function load() {
     const resp = await fetch("private/author_categories.json");
     if (resp.ok) { AUTHOR_CATS = await resp.json(); HAS_CRM = Object.keys(AUTHOR_CATS).length > 0; }
   } catch (e) { /* no CRM available — public mode */ }
-  buildStats(); buildFilters(); bind(); render();
+  buildStats(); buildFilters(); bind(); applyURLParams(); render();
+}
+
+// Deep-link support: ?author=<name> (and optional ?q=) preselects a filter, so
+// the contact tool's "VC contributor" chip can open this catalogue scoped to one
+// author. Falls back gracefully if the author isn't in the list.
+function applyURLParams() {
+  const p = new URLSearchParams(location.search);
+  const a = p.get("author");
+  if (a) {
+    const sel = $("#fAuthor");
+    const match = [...sel.options].find(o => o.value.toLowerCase() === a.toLowerCase());
+    if (match) sel.value = match.value;
+  }
+  if (p.get("q")) $("#q").value = p.get("q");
 }
 
 function buildStats() {

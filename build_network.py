@@ -115,9 +115,18 @@ def infer_institution(emails):
     return ""
 
 
+# Latin letters that NFKD+ascii would silently DROP (so Synøve != Synove). Map
+# them to their conventional ASCII spelling before stripping accents.
+TRANSLIT = {"ø": "o", "Ø": "o", "æ": "ae", "Æ": "ae", "å": "a", "Å": "a",
+            "ß": "ss", "ð": "d", "Ð": "d", "þ": "th", "Þ": "th", "ł": "l",
+            "Ł": "l", "đ": "d", "Đ": "d", "ı": "i", "œ": "oe", "Œ": "oe"}
+_TRANSLIT = str.maketrans(TRANSLIT)
+
+
 def norm(s):
     if not s: return ""
-    s = unicodedata.normalize("NFKD", str(s)).encode("ascii", "ignore").decode().lower().strip()
+    s = str(s).translate(_TRANSLIT)
+    s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower().strip()
     s = re.sub(r"\b(dr|mr|mrs|ms|prof|jr|sr|phd|md|esq)\b\.?", "", s)
     s = re.sub(r"[^a-z0-9 ]", " ", s)
     return re.sub(r"\s+", " ", s).strip()
@@ -146,16 +155,6 @@ NICKNAMES = {
     "fred": "frederick", "ray": "raymond", "vince": "vincent", "cy": "cyrus",
 }
 
-
-def first_compatible(a, b):
-    """Two first names plausibly the same person: equal, nickname-equivalent, or
-    one a prefix of the other (>=3 chars), e.g. jeff/jeffrey, ben/benjamin."""
-    if not a or not b:
-        return False
-    a, b = a.lower(), b.lower()
-    if a == b or NICKNAMES.get(a, a) == NICKNAMES.get(b, b):
-        return True
-    return len(a) >= 3 and len(b) >= 3 and (a.startswith(b) or b.startswith(a))
 
 def email_norm(e):
     return (e or "").strip().lower()
@@ -309,39 +308,69 @@ def load_crm():
     return out
 
 
+def fold(q, p):
+    """Fold person p into person q (q is kept). Combines flags, sums giving,
+    unions categories/emails, prefers a real email and a confirmed name."""
+    q["mem"], q["auth"], q["don"] = q["mem"] or p["mem"], q["auth"] or p["auth"], q["don"] or p["don"]
+    q["unsub"] = q["unsub"] or p["unsub"]
+    q["arts"] = max(q["arts"], p["arts"])
+    q["damt"] = round(q["damt"] + p["damt"], 2)
+    q["dcnt"] += p["dcnt"]
+    q["types"] = sorted(set(q["types"]) | set(p["types"]))
+    q["topics"] = sorted(set(q["topics"]) | set(p["topics"]))
+    q["src"] = sorted(set(q["src"]) | set(p["src"]))
+    for e in p["emails"]:
+        if e not in q["emails"]:
+            q["emails"].append(e)
+    q["e"] = primary_email(q["emails"])
+    if p["inst"] and not q["inst"]: q["inst"] = p["inst"]
+    if p["role"] and not q["role"]: q["role"] = p["role"]
+    if p.get("aname") and not q.get("aname"): q["aname"] = p["aname"]
+    if p["since"] and (not q["since"] or p["since"] < q["since"]): q["since"] = p["since"]
+    if p["dlast"] > q["dlast"]: q["dlast"] = p["dlast"]
+    if q["ns"] == "guess" and p["ns"] == "given": q["n"], q["ns"] = p["n"], "given"
+
+
+def merge_key(name, nick=False):
+    """first|last merge key from a name: drops middle names/initials and (with
+    nick=True) maps nicknames to a formal form. norm() already transliterates
+    accents, so 'Synøve N. Andersen' and 'Synove Andersen' share a key."""
+    parts = norm(name).split()
+    if len(parts) < 2:                 # single tokens never merge by name
+        return None
+    first, last = parts[0], parts[-1]
+    if nick:
+        first = NICKNAMES.get(first, first)
+    return first + "|" + last
+
+
+def known(p):
+    """A 'known' person carries identity beyond a bare subscription — a category,
+    authorship or a gift. Used to gate the looser nickname merge so two unrelated
+    subscribers ('Dan Lee'/'Daniel Lee') are never fused."""
+    return bool(p["auth"] or p["don"] or p["types"])
+
+
 def merge_people(people):
-    """Final consolidation: merge records that share an exact normalized full
-    name (different sources/emails for the same person). Full-name match keeps
-    namesake risk low. Combines flags, sums giving, unions categories, prefers a
-    real (non-@vitalcitynyc.org) email and a confirmed name."""
-    seen, out = {}, []
-    for p in people:
-        nn = norm(p["n"])
-        multi = len(nn.split()) >= 2          # only merge real first+last names, never single tokens
-        if not nn or not multi or nn not in seen:
-            if nn and multi:
-                seen[nn] = p
-            out.append(p)
-            continue
-        q = seen[nn]
-        q["mem"], q["auth"], q["don"] = q["mem"] or p["mem"], q["auth"] or p["auth"], q["don"] or p["don"]
-        q["unsub"] = q["unsub"] or p["unsub"]
-        q["arts"] = max(q["arts"], p["arts"])
-        q["damt"] = round(q["damt"] + p["damt"], 2)
-        q["dcnt"] += p["dcnt"]
-        q["types"] = sorted(set(q["types"]) | set(p["types"]))
-        q["topics"] = sorted(set(q["topics"]) | set(p["topics"]))
-        q["src"] = sorted(set(q["src"]) | set(p["src"]))
-        for e in p["emails"]:
-            if e not in q["emails"]:
-                q["emails"].append(e)
-        q["e"] = primary_email(q["emails"])
-        if p["inst"] and not q["inst"]: q["inst"] = p["inst"]
-        if p["role"] and not q["role"]: q["role"] = p["role"]
-        if p["since"] and (not q["since"] or p["since"] < q["since"]): q["since"] = p["since"]
-        if p["dlast"] > q["dlast"]: q["dlast"] = p["dlast"]
-        if q["ns"] == "guess" and p["ns"] == "given": q["n"], q["ns"] = p["n"], "given"
-    return out
+    """Consolidate the same person split across sources/emails. Two passes:
+      1. exact key (first|last, accent- and middle-name-insensitive) — always.
+      2. nickname key (Dan->Daniel) — only when at least one side is 'known',
+         to keep namesake risk low.
+    Within a pass, only merge when exactly one prior record shares the key."""
+    def run(rows, keyfn, guard):
+        seen, out = {}, []
+        for p in rows:
+            k = keyfn(p["n"])
+            if k and k in seen and (guard is None or guard(seen[k], p)):
+                fold(seen[k], p)
+            else:
+                if k:
+                    seen.setdefault(k, p)
+                out.append(p)
+        return out
+    people = run(people, lambda n: merge_key(n, nick=False), None)
+    people = run(people, lambda n: merge_key(n, nick=True), lambda a, b: known(a) or known(b))
+    return people
 
 
 def load_author_file():
@@ -381,7 +410,7 @@ def main():
         if fl and fl in by_fl: return by_fl[fl]
         p = {"n": "", "ns": "", "e": "", "emails": [], "inst": "", "role": "",
              "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0,
-             "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "unsub": 0, "src": []}
+             "aname": "", "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "unsub": 0, "src": []}
         people.append(p)
         return p
 
@@ -448,6 +477,7 @@ def main():
         set_name(p, a["name"], True)
         p["auth"] = 1
         p["arts"] = a.get("post_count", 0)
+        if not p.get("aname"): p["aname"] = a["name"]   # exact catalogue byline, for deep-linking
         p["types"] = sorted(set(p["types"]) | {"VC contributor"})   # anyone who wrote for us is a contributor
         p["topics"] = sorted(set(p["topics"]) | author_specs.get(nn, set()))
         if "author" not in p["src"]: p["src"].append("author")
@@ -580,48 +610,13 @@ def main():
                     by_email[em]["ns"] = "given"
                     overrides_applied += 1
 
-    # ---- consolidate exact-full-name duplicates (last) ----
+    # ---- consolidate duplicates: exact key, then nickname key (last) ----
+    # Catches accents/middle initials (Synøve N. Andersen == Synove Andersen),
+    # nicknames (Dan Garodnick == Daniel Garodnick) and contributors who
+    # subscribed under a name variant (Jeff Asher == Jeffrey Asher).
     before = len(people)
     people = merge_people(people)
     print(f"merged {before - len(people)} duplicate-name records", file=__import__("sys").stderr)
-
-    # ---- link known contributors/donors to a subscriber record filed under a
-    # name variant (e.g. "Jeff Asher" author == "Jeffrey Asher" subscriber, often
-    # a different email). Conservative: same last name + compatible first name,
-    # and only when EXACTLY ONE subscriber matches (ambiguous namesakes skipped).
-    members_by_last = {}
-    for m in people:
-        if m["mem"]:
-            parts = norm(m["n"]).split()
-            if len(parts) >= 2:
-                members_by_last.setdefault(parts[-1], []).append(m)
-    linked = 0
-    for p in people:
-        if p["mem"] or not (p["auth"] or p["don"]):
-            continue
-        parts = norm(p["n"]).split()
-        if len(parts) < 2:
-            continue
-        cands = [m for m in members_by_last.get(parts[-1], [])
-                 if m is not p and not m.get("_merged_away")
-                 and first_compatible(parts[0], norm(m["n"]).split()[0])]
-        if len(cands) != 1:
-            continue
-        m = cands[0]
-        p["mem"] = 1
-        if "member" not in p["src"]:
-            p["src"].append("member")
-        p["unsub"] = p["unsub"] or m["unsub"]
-        if m["since"] and (not p["since"] or m["since"] < p["since"]):
-            p["since"] = m["since"]
-        for e in m["emails"]:
-            if e not in p["emails"]:
-                p["emails"].append(e)
-        p["e"] = primary_email(p["emails"])
-        m["_merged_away"] = True
-        linked += 1
-    people = [p for p in people if not p.get("_merged_away")]
-    print(f"linked {linked} contributor/donor records to a name-variant subscriber", file=__import__("sys").stderr)
 
     for p in people:                 # unsubscribed wins: a former contact is not a current subscriber
         if p["unsub"]:
@@ -636,9 +631,14 @@ def main():
             ov = json.loads(ov_path.read_text())
         except Exception:
             ov = {}
+        deleted_keys = 0
         for p in people:
             o = ov.get(p["e"]) or ov.get("name:" + (p["n"] or "").lower())
             if not o:
+                continue
+            if o.get("deleted"):
+                p["_deleted"] = True       # extraneous entry removed in the tool
+                deleted_keys += 1
                 continue
             if o.get("n"):
                 p["n"], p["ns"] = o["n"], "given"
@@ -651,6 +651,9 @@ def main():
                 p["types"] = o["types"]
             if o.get("topics") is not None:
                 p["topics"] = o["topics"]
+        people = [p for p in people if not p.get("_deleted")]
+        if deleted_keys:
+            print(f"removed {deleted_keys} entries flagged deleted in people_overrides.json", file=__import__("sys").stderr)
 
     # ---- drop people with no way to act on them ----
     # No email AND not a subscriber, author, donor or unsubscribed = just a name
