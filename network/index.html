@@ -121,6 +121,7 @@
   .daterow{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--vc-charcoal)}
   .daterow input{font:inherit;font-size:12px;padding:5px 6px;border:1px solid var(--vc-black);border-radius:0;background:#fff;width:46%}
   .sub-d{font-size:10px;color:var(--vc-charcoal);margin-top:2px;white-space:nowrap}
+  .erate{display:block;font-size:9px;letter-spacing:.5px;color:var(--vc-green);margin-top:2px;white-space:nowrap}
 
   .layout{display:grid;grid-template-columns:260px 1fr;gap:0}
   .layout>*{min-width:0}   /* let the results column shrink so a wide table scrolls inside .tablewrap, not the page */
@@ -306,6 +307,7 @@
         <div class="actions">
           <button class="btn" id="addPerson" title="Manually add one new person">+ Add person</button>
           <button class="btn" id="findDupes" title="Find possible duplicate records">Find duplicates</button>
+          <button class="btn" id="needsReview" title="Records that could use a human check">Needs review</button>
           <button class="btn primary" id="export">Export CSV</button>
           <button class="btn" id="copyEmails">Copy emails</button>
           <select id="emailField" title="Which field to drop recipients into"><option value="bcc">Bcc</option><option value="to">To</option><option value="cc">Cc</option></select>
@@ -323,7 +325,7 @@
             <th data-k="first">First name</th>
             <th data-k="last">Last name</th>
             <th data-k="types">Type(s)</th>
-            <th data-k="mem">Subscriber</th>
+            <th data-k="eng" title="Subscriber status + email engagement (click to rank most-engaged first)">Subscriber</th>
             <th data-k="damt">Donor</th>
             <th data-k="inst">Institution</th>
             <th data-k="e">Email</th>
@@ -395,6 +397,15 @@
     </div>
   </div>
 
+  <div id="reviewModal" class="modal" style="display:none">
+    <div class="modalbox">
+      <h3>Needs review</h3>
+      <p style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.5">Records that could use a quick human check. Pick one to filter the list, then fix each with ✎ — every fix saves for everyone.</p>
+      <div id="reviewList"></div>
+      <div class="modalbtns"><button class="btn" id="reviewClose">Close</button></div>
+    </div>
+  </div>
+
   <div id="helpModal" class="modal" style="display:none">
     <div class="modalbox">
       <h3>Keyboard shortcuts</h3>
@@ -438,6 +449,7 @@ let selectedCats=new Set();   // chosen type/specialty categories (OR within)
 // Subscribers/Donors/Authors toggle 0↔1 (overlap when more than one is on);
 // "Other" sets all three to -1 (= none of the three).
 let want={mem:0,don:0,auth:0};
+let reviewMode="";   // "" | "guessed" | "noinst" — the needs-review queue filter
 const isOther=()=>want.mem===-1&&want.don===-1&&want.auth===-1;
 let lastSorted=[], shownCount=0; const PAGE=300;   // infinite-scroll paging
 
@@ -532,6 +544,11 @@ function init(){
   $("#themeToggle").addEventListener("click",e=>{e.preventDefault(); const t=document.documentElement.classList.contains("dark")?"light":"dark"; localStorage.setItem("vc_theme",t); applyTheme(t);});
   $("#addPerson").addEventListener("click",openAdd);
   $("#findDupes").addEventListener("click",showDuplicates);
+  $("#needsReview").addEventListener("click",showReview);
+  $("#reviewClose").addEventListener("click",()=>$("#reviewModal").style.display="none");
+  $("#reviewModal").addEventListener("click",e=>{if(e.target.id==="reviewModal")$("#reviewModal").style.display="none";});
+  $("#reviewList").addEventListener("click",e=>{const a=e.target.closest(".rvlink");if(!a)return; $("#reviewModal").style.display="none";
+    if(a.dataset.act==="dupes"){ showDuplicates(); return; } clearAll(); reviewMode=a.dataset.act; render(); });
   $("#dupClose").addEventListener("click",()=>$("#dupModal").style.display="none");
   $("#dupModal").addEventListener("click",e=>{if(e.target.id==="dupModal")$("#dupModal").style.display="none";});
   $("#dupList").addEventListener("click",e=>{const a=e.target.closest("a[data-key]");if(!a)return;$("#dupModal").style.display="none";openEdit(a.dataset.key);});
@@ -566,7 +583,7 @@ function init(){
   });
   // Keyboard shortcuts
   document.addEventListener("keydown",e=>{
-    if(e.key==="Escape"){ ["editModal","emailModal","dupModal","helpModal"].forEach(id=>{const m=$("#"+id);if(m)m.style.display="none";}); return; }
+    if(e.key==="Escape"){ ["editModal","emailModal","dupModal","helpModal","reviewModal"].forEach(id=>{const m=$("#"+id);if(m)m.style.display="none";}); return; }
     const inField=/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
     if((e.key==="/"||((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k")) && !inField){ e.preventDefault(); $("#q").focus(); }
     else if(e.key==="?" && !inField){ const m=$("#helpModal"); m.style.display=m.style.display==="flex"?"none":"flex"; }
@@ -649,7 +666,7 @@ function syncToggles(){
   $("#repeatDonorWrap").style.display=showDon?"inline-flex":"none";
   if(!showDon) $("#fRepeatDonor").checked=false;
 }
-function setSort(k){ if(k==="mem"){sortKey="since";sortDir=-1;} else if(k==="don"){sortKey="damt";sortDir=-1;} else {sortKey="arts";sortDir=-1;} }
+function setSort(k){ if(k==="mem"){sortKey="eng";sortDir=-1;} else if(k==="don"){sortKey="damt";sortDir=-1;} else {sortKey="arts";sortDir=-1;} }
 // Chip: cycle off -> include -> exclude -> off (lets you ask e.g. donors who are NOT subscribers).
 function cycleWant(k){
   if(isOther()) want={mem:0,don:0,auth:0};
@@ -670,7 +687,7 @@ function toggleOther(){
   syncToggles(); render();
 }
 function clearAll(){
-  selectedCats.clear(); want={mem:0,don:0,auth:0};
+  selectedCats.clear(); want={mem:0,don:0,auth:0}; reviewMode="";
   $("#q").value=""; $("#dFrom").value=""; $("#dTo").value="";
   onlyUnsub=false; $("#fUnsub").checked=false; $("#fStar").checked=false;
   document.querySelectorAll(".facet").forEach(l=>{l.classList.remove("on");const cb=l.querySelector("input");if(cb)cb.checked=false;});
@@ -717,6 +734,8 @@ function filtered(){
     if($("#fStar").checked && !p.star) return false;
     if(df||dt){ if(!p.since)return false; if(df&&p.since<df)return false; if(dt&&p.since>dt)return false; }
     if(cats.length){const have=new Set([...(p.types||[]),...(p.topics||[])]);if(!cats.some(c=>have.has(c)))return false;}
+    if(reviewMode==="guessed" && !(p.ns==="guess" && (p.auth||p.don||(p.types&&p.types.length)))) return false;
+    if(reviewMode==="noinst" && (p.inst || !(p.auth||p.don||(p.types&&p.types.length)))) return false;
     if(q){const hay=`${p.n} ${(p.emails||[]).join(" ")} ${p.inst} ${p.note||""}`.toLowerCase();if(!hay.includes(q))return false;}
     return true;
   });
@@ -882,6 +901,8 @@ function describeFilters(){
   else { ["mem","don","auth"].forEach(k=>{ if(want[k]===1)inc.push(lab[k]); else if(want[k]===-1)exc.push(lab[k]); });
     if(inc.length) parts.push(inc.join(" <b>AND</b> "));
     if(exc.length) parts.push((inc.length?"<b>excluding</b> ":"<b>Excluding</b> ")+exc.join(", ")); }
+  if(reviewMode==="guessed") parts.push("<b>needs review:</b> guessed names");
+  if(reviewMode==="noinst") parts.push("<b>needs review:</b> missing institution");
   if($("#fRepeatDonor").checked) parts.push("repeat donors (2+ gifts)");
   if($("#fStar").checked) parts.push("<b>★ starred</b>");
   const cats=[...selectedCats]; if(cats.length) parts.push("type/area: "+cats.join(" <b>OR</b> "));
@@ -979,6 +1000,19 @@ function showDuplicates(){
   }).join("");
   $("#dupModal").style.display="flex";
 }
+function showReview(){
+  const cur=PEOPLE.filter(p=>!p.unsub);
+  const known=p=>(p.auth||p.don||(p.types&&p.types.length));
+  const guessed=cur.filter(p=>p.ns==="guess" && known(p)).length;
+  const noinst=cur.filter(p=>!p.inst && known(p)).length;
+  const dupes=findDuplicates().length;
+  const item=(n,label,desc,act)=>`<div class="dupgroup" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div><b>${n.toLocaleString()} ${label}</b><div style="font-size:12px;color:var(--vc-charcoal)">${desc}</div></div><a class="rvlink" data-act="${act}" style="color:var(--vc-cerulean);font-weight:700;cursor:pointer;white-space:nowrap">Review →</a></div>`;
+  $("#reviewList").innerHTML =
+    item(guessed,"guessed names (known contacts)","Contributors / donors / typed people whose name is still a gray email-guess — confirm (✓) or fix.","guessed")+
+    item(noinst,"missing institution","Known people (typed / author / donor) with no organization filled in.","noinst")+
+    item(dupes,"possible duplicates","Same email or similar name across records.","dupes");
+  $("#reviewModal").style.display="flex";
+}
 function exportFixes(){
   const ov=loadOverrides();
   if(!Object.keys(ov).length){ alert("No edits yet. Click the ✎ on any row to edit a person's fields."); return; }
@@ -998,9 +1032,9 @@ function copyEmails(){
 function csvCell(v){v=v==null?"":String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
 function exportCSV(){
   const rows=sortRows(filtered());
-  const cols=["name","email","institution","role","types","specialties","subscriber","subscribed_since","author","articles","donor","donation_total","donation_count","last_donation","starred","notes"];
+  const cols=["name","email","institution","role","types","specialties","subscriber","subscribed_since","author","articles","donor","donation_total","donation_count","last_donation","engagement_rating","open_rate","starred","notes"];
   const lines=[cols.join(",")];
-  rows.forEach(p=>lines.push([p.n,(p.emails||[]).join("; "),p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0,p.don?"yes":"no",p.damt||0,p.dcnt||0,p.dlast||"",p.star?"yes":"no",p.note||""].map(csvCell).join(",")));
+  rows.forEach(p=>lines.push([p.n,(p.emails||[]).join("; "),p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0,p.don?"yes":"no",p.damt||0,p.dcnt||0,p.dlast||"",p.erate||0,(p.eopen||0)+"%",p.star?"yes":"no",p.note||""].map(csvCell).join(",")));
   const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download=`vital-city-network-${new Date().toISOString().slice(0,10)}.csv`;
@@ -1013,6 +1047,7 @@ function sortRows(rows){
     else if(sortKey==="first"){const A=nameParts(a.n),B=nameParts(b.n);va=sortName(A.first)?sortName(A.first)+"|"+sortName(A.last):"￿";vb=sortName(B.first)?sortName(B.first)+"|"+sortName(B.last):"￿";}
     else if(sortKey==="types"){va=(a.types||[]).join(" ");vb=(b.types||[]).join(" ");}
     else if(sortKey==="mem"){va=a.mem;vb=b.mem;}
+    else if(sortKey==="eng"){va=(a.erate||0)*1000+(a.eopen||0);vb=(b.erate||0)*1000+(b.eopen||0);}
     else{va=a[sortKey];vb=b[sortKey];}
     if(va==null)va="";if(vb==null)vb="";
     if(typeof va==="number")return (va-vb)*sortDir;
@@ -1063,7 +1098,7 @@ function paintRows(){
       <td>${star} <span class="nm${g}">${esc(np.first)||'<span class="muted">—</span>'}</span></td>
       <td><span class="nm${g}">${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
       <td>${types}</td>
-      <td>${p.unsub?'<span class="badge" style="background:#c8102e;color:#fff">Unsubscribed</span>':(p.mem?`<span class="badge b-mem">Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>`:'<span class="muted">—</span>')}</td>
+      <td>${p.unsub?'<span class="badge" style="background:#c8102e;color:#fff">Unsubscribed</span>':(p.mem?`<span class="badge b-mem">Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>${p.erate?`<span class="erate" title="Email engagement ${p.erate}/5 · ${p.eopen}% opens · ${p.eclick}% clicks">${"●".repeat(p.erate)}${"○".repeat(5-p.erate)} ${p.eopen}%</span>`:''}`:'<span class="muted">—</span>')}</td>
       <td>${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>${p.dlast?`<div class="sub-d">last ${p.dlast}</div>`:''}`:'<span class="muted">—</span>'}</td>
       <td>${esc(p.inst)||'<span class="muted">—</span>'}</td>
       <td class="em${p.unsub?' unsub':''}">${emailCell}</td>

@@ -381,6 +381,7 @@ def fold(q, p):
     q["d7"] = round(q["d7"] + p["d7"], 2); q["d7c"] += p["d7c"]
     q["d30"] = round(q["d30"] + p["d30"], 2); q["d30c"] += p["d30c"]
     if p["udate"] > q["udate"]: q["udate"] = p["udate"]
+    q["erate"]=max(q["erate"],p["erate"]); q["eopen"]=max(q["eopen"],p["eopen"]); q["eclick"]=max(q["eclick"],p["eclick"])
     q["types"] = sorted(set(q["types"]) | set(p["types"]))
     q["topics"] = sorted(set(q["topics"]) | set(p["topics"]))
     q["src"] = sorted(set(q["src"]) | set(p["src"]))
@@ -476,7 +477,8 @@ def main():
         p = {"n": "", "ns": "", "e": "", "emails": [], "inst": "", "role": "",
              "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0,
              "aname": "", "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "unsub": 0, "udate": "",
-             "d7": 0.0, "d7c": 0, "d30": 0.0, "d30c": 0, "src": []}
+             "d7": 0.0, "d7c": 0, "d30": 0.0, "d30c": 0,
+             "erate": 0, "eopen": 0, "eclick": 0, "src": []}
         people.append(p)
         return p
 
@@ -633,6 +635,25 @@ def main():
                 if "unsub" not in p["src"]:
                     p["src"].append("unsub")
                 index(p)
+
+    # ---- 4d. Engagement (Mailchimp member_rating + open/click rates), joined by email ----
+    eng_path = PRIV / "engagement_source.csv"
+    if eng_path.exists():
+        with open(eng_path, newline="") as f:
+            for row in csv.DictReader(f):
+                em = email_norm(row.get("Email"))
+                p = by_email.get(em)
+                if not p:
+                    continue
+                try: r = int(float(row.get("Rating") or 0))
+                except ValueError: r = 0
+                try: o = int(float(row.get("Open Rate") or 0))
+                except ValueError: o = 0
+                try: c = int(float(row.get("Click Rate") or 0))
+                except ValueError: c = 0
+                if r > p["erate"]: p["erate"] = r
+                if o > p["eopen"]: p["eopen"] = o
+                if c > p["eclick"]: p["eclick"] = c
 
     # ---- 6. Infer categories from email domain ----
     #   journalist     -> known news-outlet domains

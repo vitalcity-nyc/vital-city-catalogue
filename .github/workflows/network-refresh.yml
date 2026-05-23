@@ -59,7 +59,8 @@ jobs:
           MAILCHIMP_KEY: ${{ secrets.MAILCHIMP_KEY }}
         run: |
           if [ -n "$MAILCHIMP_KEY" ]; then
-            python3 mailchimp_unsubs.py || echo "WARNING: Mailchimp pull failed; using bundled unsubscribed_source.csv"
+            python3 mailchimp_unsubs.py || echo "WARNING: Mailchimp unsubscribe pull failed; using bundled unsubscribed_source.csv"
+            python3 mailchimp_engagement.py || echo "WARNING: Mailchimp engagement pull failed; continuing without"
           else
             echo "MAILCHIMP_KEY not set — using bundled unsubscribed_source.csv"
           fi
