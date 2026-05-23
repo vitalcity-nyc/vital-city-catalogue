@@ -21,11 +21,11 @@ ROOT = Path(__file__).resolve().parent
 PRIV = ROOT / "private"
 PERSON_CATS = ["VC contributor", "VC advisor", "journalist", "academic",
                "foundation leadership", "nonprofit leadership", "city gov",
-               "current nyc.gov", "state gov", "fed gov", "judge", "architect"]
-# Domain-area interests (specialties).
+               "current nyc.gov", "state gov", "fed gov", "judge"]
+# Domain-area interests (specialties). "architecture" lives here (was a top-level type).
 TOPIC_CATS = ["criminal justice", "housing", "transit", "budget", "urban planning",
               "education", "public health", "economy", "technology",
-              "politics & government", "race & equity", "culture"]
+              "politics & government", "race & equity", "culture", "architecture"]
 NONPERSON = {"vital city", "a survey", "a photo essay", "a conversation",
              "the editors", "editorial board", "vital city staff", "various"}
 
@@ -85,6 +85,34 @@ INST_DOMAINS = {
     "rand.org": "RAND Corporation", "manhattan-institute.org": "Manhattan Institute",
     "vera.org": "Vera Institute of Justice", "urban.org": "Urban Institute",
     "brookings.edu": "Brookings Institution", "cbcny.org": "Citizens Budget Commission",
+    # --- more curated (high confidence) ---
+    "innovatingjustice.org": "Center for Justice Innovation",
+    "courtinnovation.org": "Center for Justice Innovation",
+    "aclu.org": "ACLU", "nyclu.org": "NYCLU", "naacpldf.org": "NAACP Legal Defense Fund",
+    "robinhood.org": "Robin Hood Foundation", "fordfoundation.org": "Ford Foundation",
+    "rockefellerfoundation.org": "The Rockefeller Foundation", "macfound.org": "MacArthur Foundation",
+    "carnegie.org": "Carnegie Corporation of New York", "hewlett.org": "Hewlett Foundation",
+    "kresge.org": "The Kresge Foundation", "arnoldventures.org": "Arnold Ventures",
+    "opensocietyfoundations.org": "Open Society Foundations", "revson.org": "Charles H. Revson Foundation",
+    "nyctrust.org": "The New York Community Trust", "altman.org": "Altman Foundation",
+    "pewtrusts.org": "The Pew Charitable Trusts", "jpmchase.com": "JPMorgan Chase",
+    "bloomberg.com": "Bloomberg", "edelman.com": "Edelman",
+    "regionalplan.org": "Regional Plan Association", "rpa.org": "Regional Plan Association",
+    "citizensunion.org": "Citizens Union", "nyclass.org": "NYCLASS",
+    "cssny.org": "Community Service Society", "fphnyc.org": "Fund for Public Health NYC",
+    "fcny.org": "Fund for the City of New York", "nycfuture.org": "Center for an Urban Future",
+    "nyu.edu": "New York University", "columbia.edu": "Columbia University",
+    "law.columbia.edu": "Columbia Law School", "gc.cuny.edu": "CUNY Graduate Center",
+    "jjay.cuny.edu": "John Jay College", "newschool.edu": "The New School",
+    "fordham.edu": "Fordham University", "princeton.edu": "Princeton University",
+    "harvard.edu": "Harvard University", "law.harvard.edu": "Harvard Law School",
+    "hks.harvard.edu": "Harvard Kennedy School", "yale.edu": "Yale University",
+    "mit.edu": "MIT", "stanford.edu": "Stanford University", "berkeley.edu": "UC Berkeley",
+    "umich.edu": "University of Michigan", "upenn.edu": "University of Pennsylvania",
+    "council.nyc.gov": "New York City Council",
+    "schools.nyc.gov": "NYC Department of Education", "mtaif.org": "MTA",
+    "thecity.org": "THE CITY", "gothamgazette.com": "Gotham Gazette",
+    "spectrumnews.org": "Spectrum News NY1", "nybg.org": "New York Botanical Garden",
 }
 WEBMAIL = {"gmail.com","googlemail.com","yahoo.com","ymail.com","hotmail.com","outlook.com",
  "live.com","msn.com","aol.com","icloud.com","me.com","mac.com","proton.me","protonmail.com",
@@ -112,6 +140,9 @@ def infer_institution(emails):
         sld = dom.split(".")[0]
         if "-" in sld and len(sld) >= 5:                    # e.g. court-innovation -> Court Innovation
             return " ".join(w.capitalize() for w in sld.split("-"))
+        # A .org domain is almost always an organization → name it from the SLD.
+        if dom.endswith(".org") and re.fullmatch(r"[a-z]{4,20}", sld):
+            return sld.capitalize()
     return ""
 
 
@@ -170,6 +201,30 @@ PROVIDERS = {"gmail","googlemail","yahoo","ymail","rocketmail","hotmail","outloo
  "mail","email","ms","cloud","inbox","aim"}
 
 
+# Common given names — used only to detect when an email looks like last.first
+# (so the guess can swap them). Lowercase. Not exhaustive; high-frequency names.
+COMMON_FIRST = set("""
+james john robert michael william david richard joseph thomas charles christopher
+daniel matthew anthony donald mark paul steven andrew kenneth joshua kevin brian
+george edward ronald timothy jason jeffrey ryan jacob gary nicholas eric jonathan
+stephen larry justin scott brandon benjamin samuel gregory alexander patrick frank
+raymond jack dennis jerry tyler aaron jose adam henry nathan douglas peter zachary
+kyle walter ethan jeremy harold carl keith roger gerald sean austin arthur noah
+lawrence jesse joe bryan billy bruce ralph roy eugene wayne alan juan luis martin
+mary patricia jennifer linda elizabeth barbara susan jessica sarah karen nancy lisa
+margaret betty sandra ashley dorothy kimberly emily donna michelle carol amanda
+melissa deborah stephanie rebecca laura sharon cynthia kathleen amy shirley angela
+helen anna brenda pamela nicole ruth katherine virginia catherine christine samantha
+debra janet rachel carolyn emma maria heather diane julie joyce victoria kelly
+christina joan evelyn lauren judith megan andrea cheryl hannah jacqueline martha
+gloria teresa ann sara madison frances kathryn janice jean abigail alice julia judy
+sophia grace denise amber danielle marilyn beverly charlotte natalie theresa diana
+allison alison alexis tracy josephine alexandra rose anne erin claire molly leah
+naomi ellen jane jeremy josh ben dan tom chris dave mike steve matt nick tony greg
+ed ken ron pat sam gabe nate josh zach jeff geoff vince cyrus harry erroll errol
+""".split())
+
+
 def name_from_email(e):
     """Best-guess display name from an email address. These are educated guesses
     (shown in gray in the UI), never treated as authoritative.
@@ -186,7 +241,13 @@ def name_from_email(e):
     parts = [re.sub(r"[^a-z]", "", p) for p in re.split(r"[._\-]+", local)]
     parts = [p for p in parts if p and p not in GENERIC and len(p) >= 2]
     if len(parts) >= 2:
-        return f"{parts[0].capitalize()} {parts[1].capitalize()}"
+        # First token + LAST token (not the middle): jane.marie.doe -> Jane Doe.
+        first, last = parts[0], parts[-1]
+        # If the surname slot is a common given name and the first slot isn't, the
+        # email is likely last.first — swap (e.g. "smith.allison" -> Allison Smith).
+        if last in COMMON_FIRST and first not in COMMON_FIRST:
+            first, last = last, first
+        return f"{first.capitalize()} {last.capitalize()}"
     if len(parts) == 1:
         first = parts[0]
         droot = domain.split(".")[0]
@@ -290,6 +351,7 @@ def load_crm():
             v = cell(r, col)
             if v:
                 wanted = {x.strip().lower() for x in re.split(r"[;,]", str(v)) if x.strip()}
+                if "architect" in wanted: wanted.add("architecture")   # moved type -> specialty
                 found |= {c for c in allowed if c.lower() in wanted}
         return sorted(found)
 

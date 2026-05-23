@@ -123,6 +123,7 @@
   .sub-d{font-size:10px;color:var(--vc-charcoal);margin-top:2px;white-space:nowrap}
 
   .layout{display:grid;grid-template-columns:260px 1fr;gap:0}
+  .layout>*{min-width:0}   /* let the results column shrink so a wide table scrolls inside .tablewrap, not the page */
   aside{border-right:1px solid var(--vc-cloud);padding:18px 22px 40px}
   aside h2{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);font-weight:700;margin:0 0 10px}
   .matrix{width:100%;border-collapse:collapse;font-size:12.5px}
@@ -169,6 +170,8 @@
   .star:hover,.star.on{color:#f5a623}
   .notedot{cursor:pointer;margin-left:5px;font-size:11px;text-decoration:none}
   .emrow{display:flex;align-items:center;gap:5px}
+  .emlink{color:inherit;text-decoration:none}
+  .emlink:hover{text-decoration:underline;color:var(--vc-cerulean)}
   .emcopy{visibility:hidden;cursor:pointer;color:var(--vc-cerulean);font-size:12px;text-decoration:none;font-weight:700}
   tr:hover .emcopy{visibility:visible}
   .emcopy:hover{color:var(--vc-orange)}
@@ -189,7 +192,53 @@
   .b-auth{border:1px solid var(--vc-magenta);color:var(--vc-magenta)}
   .b-don{background:var(--vc-orange);color:var(--vc-black)}
   .muted{color:var(--vc-cloud)}
-  @media(max-width:820px){.layout{grid-template-columns:1fr}aside{border-right:none;border-bottom:1px solid var(--vc-cloud)}.stats{grid-template-columns:repeat(4,1fr)}}
+  /* ---- responsive ---- */
+  .modalbox{max-width:92vw}
+  @media(max-width:1024px){ .layout{grid-template-columns:210px 1fr} }
+  @media(max-width:820px){
+    .layout{grid-template-columns:1fr}
+    aside{border-right:none;border-bottom:1px solid var(--vc-cloud)}
+    .stats{grid-template-columns:repeat(3,1fr)}
+    .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    table.people{min-width:660px}      /* scroll sideways instead of squishing on small screens */
+    header.mast{padding:18px 16px 14px}
+    .confbar,.controls,.resultrow,.activitybar,.savedviews,.hint,.tablewrap{padding-left:16px;padding-right:16px}
+    .confbar a{float:none!important;display:inline-block;margin:6px 14px 0 0}   /* stack links below text, not overlapping */
+    .controls,.resultrow{position:static}        /* drop sticky on small screens — scroll naturally */
+    table.people th{position:static}
+  }
+  @media(max-width:480px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .stat{padding:10px 12px}
+    .stat .num{font-size:22px}
+    header.mast h1{font-size:21px}
+    .actions{width:100%}
+  }
+
+  /* ---- dark mode ---- */
+  html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2}
+  html.dark body{background:var(--vc-paper);color:var(--vc-black)}
+  html.dark input,html.dark select,html.dark textarea{background:#212329!important;color:var(--vc-black)!important;border-color:var(--vc-cloud)!important}
+  html.dark .modalbox{background:#212329}
+  html.dark .confbar{background:#0b0b0d;color:#cfcfcf}
+  html.dark .toast{background:#0b0b0d;color:#fff}
+  html.dark .btn{background:var(--vc-white);color:var(--vc-black)}
+  html.dark .btn:hover{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  html.dark .btn.primary{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  html.dark .btn.primary:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:#161719}
+  html.dark .stat.active{background:var(--vc-cerulean)}
+  html.dark .stat.active .num,html.dark .stat.active .lbl{color:#fff}
+  html.dark #tOther.on{background:var(--vc-cerulean);border-color:var(--vc-cerulean)}
+  html.dark .tg{background:var(--vc-white);color:var(--vc-charcoal)}
+  html.dark .gatebox{background:var(--vc-white)}
+  html.dark .gatebox button{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  html.dark .gatebox button:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:#161719}
+  html.dark .pill{background:var(--vc-cloud);color:var(--vc-black)}
+  html.dark table.people th{background:var(--vc-paper)}
+  html.dark tr:hover td{background:#1c1d23}
+  html.dark .stat.clickable:not(.inc):not(.exc):not(.active):hover{background:#1c1d23}
+  html.dark .matrix .bar{background:var(--vc-cloud)}
+  html.dark kbd{background:#0b0b0d}
 </style>
 </head>
 <body>
@@ -213,7 +262,7 @@
     <h1>Contact master search</h1>
     <div class="sub">Everyone in Vital City's orbit — newsletter subscribers, contributors, contacts and donors — searchable by type and category. Filter to any subset, then export it, copy its emails, or email the group.</div>
   </header>
-  <div class="confbar">Confidential · contains subscriber, donor and contact data · do not redistribute<a href="#" id="forget" style="float:right;color:#fff;text-decoration:underline">Lock / forget password on this device</a></div>
+  <div class="confbar">Confidential · contains subscriber, donor and contact data · do not redistribute<a href="#" id="forget" style="float:right;color:#fff;text-decoration:underline">Lock / forget password on this device</a><a href="#" id="themeToggle" style="float:right;color:#fff;text-decoration:underline;margin-right:18px">🌙 Dark mode</a></div>
   <div class="stats" id="stats"></div>
   <div class="activitybar" id="activityBar"></div>
   <div class="controls">
@@ -316,6 +365,7 @@
       <div class="modalbtns">
         <button class="btn primary" id="edSave">Save</button>
         <button class="btn" id="edCancel">Cancel</button>
+        <button class="btn" id="edEmailCard" title="Open your mail app with this contact's full details in the message">✉ Email this card</button>
         <button class="btn" id="edDelete" style="margin-left:auto;border-color:var(--vc-magenta);color:var(--vc-magenta)">Delete entry</button>
         <span class="lbl-note">Saved for everyone automatically — shows for you now, for everyone on the next daily refresh.</span>
       </div>
@@ -361,8 +411,8 @@
 
 <script>
 const $=s=>document.querySelector(s);
-const CATS=["VC contributor","VC advisor","journalist","academic","foundation leadership","nonprofit leadership","city gov","current nyc.gov","state gov","fed gov","judge","architect"];
-const SPECS=["criminal justice","housing","transit","budget","urban planning","education","public health","economy","technology","politics & government","race & equity","culture"];
+const CATS=["VC contributor","VC advisor","journalist","academic","foundation leadership","nonprofit leadership","city gov","current nyc.gov","state gov","fed gov","judge"];
+const SPECS=["criminal justice","housing","transit","budget","urban planning","education","public health","economy","technology","politics & government","race & equity","culture","architecture"];
 function nameParts(n){
   // First name = first token; everything after is the (often compound) surname,
   // e.g. "Jennifer Jones Austin" → first "Jennifer", last "Jones Austin".
@@ -390,6 +440,11 @@ let selectedCats=new Set();   // chosen type/specialty categories (OR within)
 let want={mem:0,don:0,auth:0};
 const isOther=()=>want.mem===-1&&want.don===-1&&want.auth===-1;
 let lastSorted=[], shownCount=0; const PAGE=300;   // infinite-scroll paging
+
+// ---- Theme (light/dark) ----
+function applyTheme(t){ document.documentElement.classList.toggle("dark", t==="dark");
+  const b=$("#themeToggle"); if(b) b.textContent = t==="dark" ? "☀️ Light mode" : "🌙 Dark mode"; }
+(function(){ const t=localStorage.getItem("vc_theme") || ((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light"); applyTheme(t); })();
 
 function b64d(s){const b=atob(s);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
 async function decryptBlob(pass,blob){
@@ -474,6 +529,7 @@ function init(){
   $("#clear").addEventListener("click",clearAll);
   $("#stats").addEventListener("click",e=>{const s=e.target.closest(".stat[data-action]");if(s)statAction(s.dataset.action);});
   $("#forget").addEventListener("click",e=>{e.preventDefault();localStorage.removeItem(PASSKEY);location.reload();});
+  $("#themeToggle").addEventListener("click",e=>{e.preventDefault(); const t=document.documentElement.classList.contains("dark")?"light":"dark"; localStorage.setItem("vc_theme",t); applyTheme(t);});
   $("#addPerson").addEventListener("click",openAdd);
   $("#findDupes").addEventListener("click",showDuplicates);
   $("#dupClose").addEventListener("click",()=>$("#dupModal").style.display="none");
@@ -533,6 +589,7 @@ function init(){
   $("#edSave").addEventListener("click",saveEdit);
   $("#edCancel").addEventListener("click",closeEdit);
   $("#edDelete").addEventListener("click",()=>{ if(editKey) deleteEntry(editKey); });
+  $("#edEmailCard").addEventListener("click",emailCard);
   $("#editModal").addEventListener("click",e=>{if(e.target.id==="editModal")closeEdit();});
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(!k)return;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
   $("#rows").addEventListener("click",e=>{
@@ -541,13 +598,13 @@ function init(){
     const ed=e.target.closest(".edit"); if(ed){e.stopPropagation();openEdit(ed.dataset.key);return;}
     const nd=e.target.closest(".notedot"); if(nd){e.stopPropagation();openEdit(nd.dataset.key);return;}
     const cf=e.target.closest(".confirm"); if(cf){e.stopPropagation();confirmName(cf.dataset.key);return;}
-    if(e.target.closest("a.pill-link")) return;   // let the catalogue link open
+    if(e.target.closest("a.pill-link")||e.target.closest("a.emlink")) return;   // let catalogue + mailto links open
     const el=e.target.closest("[data-type]");if(!el)return;toggleCat(el.dataset.type,true);
   });
   if(!applyHash()) render();   // a shared #link reopens its filters; else default view
 }
 
-function catCount(c){return PEOPLE.filter(p=>(p.types||[]).includes(c)||(p.topics||[]).includes(c)).length;}
+function catCount(c){return PEOPLE.filter(p=>!p.unsub&&((p.types||[]).includes(c)||(p.topics||[]).includes(c))).length;}
 function facetRow(c){
   const id="f_"+c.replace(/[^a-z]/gi,"");
   return `<label class="facet" data-cat="${c}"><input type="checkbox" id="${id}" value="${c}"><span>${c}</span><span class="c">${catCount(c).toLocaleString()}</span></label>`;
@@ -634,7 +691,7 @@ function statAction(a){
 }
 function buildMatrix(){
   const rows=CATS.map(c=>{
-    const grp=PEOPLE.filter(p=>(p.types||[]).includes(c));
+    const grp=PEOPLE.filter(p=>!p.unsub&&(p.types||[]).includes(c));
     const m=grp.filter(p=>p.mem).length;
     const pct=grp.length?Math.round(100*m/grp.length):0;
     return `<tr data-type="${c}"><td>${c}<div class="bar"><i style="width:${pct}%"></i></div></td><td class="m">${m}/${grp.length}</td></tr>`;
@@ -735,7 +792,7 @@ function openEdit(key){
   $("#edEmails").value=(p.emails||[]).join("\n");
   $("#edTypes").value=(p.types||[]).join(", "); $("#edTopics").value=(p.topics||[]).join(", ");
   $("#edNote").value=p.note||"";
-  $("#edAddFlags").style.display="none"; $("#edUpdateNote").style.display="none"; $("#edDelete").style.display="";
+  $("#edAddFlags").style.display="none"; $("#edUpdateNote").style.display="none"; $("#edDelete").style.display=""; $("#edEmailCard").style.display="";
   $("#editModal").style.display="flex"; $("#edName").focus();
 }
 function openAdd(){
@@ -745,7 +802,7 @@ function openAdd(){
   $("#edMem").checked=false; $("#edAuth").checked=false; $("#edDon").checked=false; $("#edDamt").value="";
   $("#edDamtWrap").style.display="none";
   if(SHEET_URL){ $("#edSheetLink").href=SHEET_URL; $("#edSheetLink").style.display=""; } else { $("#edSheetLink").style.display="none"; }
-  $("#edAddFlags").style.display="block"; $("#edUpdateNote").style.display="block"; $("#edDelete").style.display="none";
+  $("#edAddFlags").style.display="block"; $("#edUpdateNote").style.display="block"; $("#edDelete").style.display="none"; $("#edEmailCard").style.display="none";
   $("#editModal").style.display="flex"; $("#edName").focus();
 }
 function readFields(){
@@ -779,6 +836,19 @@ function saveEdit(){
   applyOverrideTo(p,f); closeEdit(); render();
 }
 function closeEdit(){ $("#editModal").style.display="none"; editKey=null; addMode=false; }
+function emailCard(){
+  const p=PEOPLE.find(x=>personKey(x)===editKey); if(!p) return;
+  const L=["Name: "+(p.n||"")];
+  if(p.inst) L.push("Institution: "+p.inst);
+  if(p.emails&&p.emails.length) L.push("Email: "+p.emails.join(", "));
+  if(p.types&&p.types.length) L.push("Type: "+p.types.join(", "));
+  if(p.topics&&p.topics.length) L.push("Areas: "+p.topics.join(", "));
+  const st=[]; if(p.mem)st.push("newsletter subscriber"+(p.since?" since "+p.since.slice(0,4):""));
+  if(p.auth)st.push((p.arts?p.arts+" ":"")+"VC contributor"); if(p.don)st.push("donor ($"+Math.round(p.damt).toLocaleString()+(p.dlast?", last "+p.dlast:"")+")");
+  if(st.length) L.push("Status: "+st.join(" · "));
+  if(p.note) L.push("Notes: "+p.note);
+  window.location.href="mailto:?subject="+encodeURIComponent("Vital City contact: "+(p.n||p.e||""))+"&body="+encodeURIComponent(L.join("\n"));
+}
 function toggleStar(key){
   const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
   p.star=p.star?0:1;
@@ -986,7 +1056,7 @@ function paintRows(){
       return `<span class="pill" data-type="${esc(t)}">${esc(t)}${x}</span>`;
     }).join("")||'<span class="muted">—</span>';
     const emailCell=(p.emails&&p.emails.length)
-      ? p.emails.map(e=>`<span class="emrow">${esc(e)}<a class="emcopy" role="button" tabindex="0" data-email="${esc(e)}" title="Copy ${esc(e)}" aria-label="Copy ${esc(e)}">⧉</a></span>`).join("")
+      ? p.emails.map(e=>`<span class="emrow"><a class="emlink" href="mailto:${esc(e)}">${esc(e)}</a><a class="emcopy" role="button" tabindex="0" data-email="${esc(e)}" title="Copy ${esc(e)}" aria-label="Copy ${esc(e)}">⧉</a></span>`).join("")
       : '<span class="muted">—</span>';
     return `
     <tr${p.unsub?' title="Unsubscribed — former contact"':''}>
