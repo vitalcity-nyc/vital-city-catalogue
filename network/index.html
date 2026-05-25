@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Vital City — Contact master search</title>
+<!-- Installable PWA (mobile home-screen app). These tags only affect home-screen launches; the desktop layout is unchanged. -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#050507">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VC Contacts">
 <link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
 <style>
   @font-face { font-family:"GascogneTS"; src:url("https://vital-city-nyc.github.io/vital-city-design-system/fonts/GascogneTS-Light.ttf") format("truetype"); font-weight:200; font-style:normal; font-display:swap; }
@@ -1136,6 +1144,14 @@ function paintRows(){
     </tr>`;
   }).join("");
   measureSticky();
+}
+
+// ---- PWA: register the service worker so the tool is installable + works offline.
+// Scoped to /network/, so the public catalogue at the site root is unaffected. ----
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("sw.js").catch(()=>{});  // silent: PWA is a progressive enhancement
+  });
 }
 </script>
 </body>

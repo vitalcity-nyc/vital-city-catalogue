@@ -1,0 +1,17 @@
+{
+  "name": "Vital City — Contact Master Search",
+  "short_name": "VC Contacts",
+  "description": "Everyone in Vital City's orbit — subscribers, contributors, contacts and donors — searchable by type and category.",
+  "id": "/vital-city-catalogue/network/",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#050507",
+  "background_color": "#f7f7f4",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
