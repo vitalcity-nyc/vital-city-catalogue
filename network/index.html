@@ -408,6 +408,7 @@
         <button class="btn primary" id="edSave">Save</button>
         <button class="btn" id="edCancel">Cancel</button>
         <button class="btn" id="edEmailCard" title="Open your mail app with this contact's full details in the message">✉ Email this card</button>
+        <button class="btn" id="edCopyLink" title="Copy a link that opens this person's card (needs the passphrase to view)">🔗 Copy link</button>
         <button class="btn" id="edDelete" style="margin-left:auto;border-color:var(--vc-magenta);color:var(--vc-magenta)">Delete entry</button>
         <span class="lbl-note">Saved for everyone automatically — shows for you now, for everyone on the next daily refresh.</span>
       </div>
@@ -468,6 +469,10 @@
 <script>
 const $=s=>document.querySelector(s);
 function debounce(fn,ms){let t;return function(...a){clearTimeout(t);t=setTimeout(()=>fn.apply(this,a),ms);};}
+// Short, non-reversible id for a person, derived from their key (email/name). Used in
+// shareable per-contact links so a raw email never ends up in a URL. (cyrb53 hash.)
+function cyrb53(str,seed=0){let h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(let i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507);h1^=Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507);h2^=Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0);}
+function pidFor(key){return cyrb53(key||"").toString(36);}
 const CATS=["VC contributor","VC advisor","journalist","academic","foundation leadership","nonprofit leadership","city gov","current nyc.gov","state gov","fed gov","judge"];
 const SPECS=["criminal justice","housing","transit","budget","urban planning","education","public health","economy","technology","politics & government","race & equity","culture","architecture"];
 function nameParts(n){
@@ -662,6 +667,7 @@ function init(){
   $("#edCancel").addEventListener("click",closeEdit);
   $("#edDelete").addEventListener("click",()=>{ if(editKey) deleteEntry(editKey); });
   $("#edEmailCard").addEventListener("click",emailCard);
+  $("#edCopyLink").addEventListener("click",copyCardLink);
   $("#editModal").addEventListener("click",e=>{if(e.target.id==="editModal")closeEdit();});
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(!k)return;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
   $("#sortMenu").addEventListener("change",e=>{const [k,d]=e.target.value.split(":");sortKey=k;sortDir=+d;render();});
@@ -868,7 +874,7 @@ function openEdit(key){
   $("#edEmails").value=(p.emails||[]).join("\n");
   $("#edTypes").value=(p.types||[]).join(", "); $("#edTopics").value=(p.topics||[]).join(", ");
   $("#edNote").value=p.note||"";
-  $("#edAddFlags").style.display="none"; $("#edUpdateNote").style.display="none"; $("#edDelete").style.display=""; $("#edEmailCard").style.display="";
+  $("#edAddFlags").style.display="none"; $("#edUpdateNote").style.display="none"; $("#edDelete").style.display=""; $("#edEmailCard").style.display=""; $("#edCopyLink").style.display="";
   $("#editModal").style.display="flex"; $("#edName").focus();
 }
 function openAdd(){
@@ -878,7 +884,7 @@ function openAdd(){
   $("#edMem").checked=false; $("#edAuth").checked=false; $("#edDon").checked=false; $("#edDamt").value="";
   $("#edDamtWrap").style.display="none";
   if(SHEET_URL){ $("#edSheetLink").href=SHEET_URL; $("#edSheetLink").style.display=""; } else { $("#edSheetLink").style.display="none"; }
-  $("#edAddFlags").style.display="block"; $("#edUpdateNote").style.display="block"; $("#edDelete").style.display="none"; $("#edEmailCard").style.display="none";
+  $("#edAddFlags").style.display="block"; $("#edUpdateNote").style.display="block"; $("#edDelete").style.display="none"; $("#edEmailCard").style.display="none"; $("#edCopyLink").style.display="none";
   $("#editModal").style.display="flex"; $("#edName").focus();
 }
 function readFields(){
@@ -912,6 +918,13 @@ function saveEdit(){
   applyOverrideTo(p,f); closeEdit(); render();
 }
 function closeEdit(){ $("#editModal").style.display="none"; editKey=null; addMode=false; }
+function copyCardLink(){
+  if(!editKey) return;
+  const url=location.origin+location.pathname+"#"+encodeURIComponent(JSON.stringify({person:pidFor(editKey)}));
+  navigator.clipboard.writeText(url)
+    .then(()=>toast("Link to this contact card copied — opens for anyone with the passphrase"))
+    .catch(()=>toast("Copy failed"));
+}
 function emailCard(){
   const p=PEOPLE.find(x=>personKey(x)===editKey); if(!p) return;
   const L=["Name: "+(p.n||"")];
@@ -1005,6 +1018,12 @@ function applyHash(){
   if(!location.hash||location.hash.length<2) return false;
   try{ const o=JSON.parse(decodeURIComponent(location.hash.slice(1)));
     applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,star:!!o.st,wiki:!!o.wk,sortKey:o.sk||"last",sortDir:o.sd||1});
+    // A per-contact link (#{"person":"<id>"}) opens that person's card.
+    if(o.person){
+      const p=PEOPLE.find(x=>pidFor(personKey(x))===o.person);
+      if(p) openEdit(personKey(p));
+      else toast("That contact link could not be found — they may have been removed.");
+    }
     return true;
   }catch(e){ return false; }
 }
