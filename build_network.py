@@ -789,6 +789,10 @@ def main():
                 continue
             if o.get("n"):
                 p["n"], p["ns"] = o["n"], "given"
+            if o.get("fn"):
+                p["fn"] = o["fn"]
+            if o.get("ln"):
+                p["ln"] = o["ln"]
             if "inst" in o:
                 p["inst"] = o["inst"]
             if o.get("emails"):
@@ -816,7 +820,8 @@ def main():
             if not name and not emails:
                 continue
             people.append({
-                "n": name, "ns": "given", "e": primary_email(emails), "emails": emails,
+                "n": name, "fn": o.get("fn") or "", "ln": o.get("ln") or "",
+                "ns": "given", "e": primary_email(emails), "emails": emails,
                 "inst": o.get("inst") or "", "role": "",
                 "types": list(o.get("types") or []), "topics": list(o.get("topics") or []),
                 "mem": 1 if o.get("mem") else 0, "since": "",

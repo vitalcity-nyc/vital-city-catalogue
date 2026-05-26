@@ -62,6 +62,8 @@
   .modalbox label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);margin:12px 0 0}
   .modalbox input,.modalbox textarea{display:block;width:100%;font:inherit;font-size:14px;padding:8px 10px;margin-top:4px;border:1px solid var(--vc-black);border-radius:0;background:#fff;text-transform:none;letter-spacing:0;color:var(--vc-black);font-weight:300}
   .modalbox .lbl-note{font-weight:400;text-transform:none;letter-spacing:0;color:var(--vc-charcoal)}
+  .namerow{display:flex;gap:10px}
+  .namerow label{flex:1;margin-top:12px}
   .addflags{display:flex;flex-direction:column;gap:5px;margin-top:5px}
   .addflags .fl{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--vc-black);margin:0}
   .addflags .fl input{display:inline-block;width:auto;margin:0;padding:0}
@@ -383,7 +385,10 @@
   <div id="editModal" class="modal" style="display:none">
     <div class="modalbox">
       <h3 id="edTitle">Edit person</h3>
-      <label>Name<input id="edName" type="text"></label>
+      <div class="namerow">
+        <label>First name<input id="edFirst" type="text"></label>
+        <label>Last name<input id="edLast" type="text"></label>
+      </div>
       <label>Institution<input id="edInst" type="text"></label>
       <label>Emails <span class="lbl-note">(one per line)</span><textarea id="edEmails" rows="3"></textarea></label>
       <label>Types <span class="lbl-note">(comma-separated)</span><input id="edTypes" type="text"></label>
@@ -495,6 +500,10 @@ function nameParts(n){
   if(!rest.length) rest=t.slice(1);
   return {first:t[0], last:rest.join(" ")};
 }
+// First/last name for a person: prefer an explicit split the user saved (p.fn/p.ln);
+// otherwise fall back to the heuristic split of the full name.
+function firstName(p){ return p.fn || nameParts(p.n).first; }
+function lastName(p){ return p.ln || nameParts(p.n).last; }
 // Normalize a name part for sorting: lowercase, drop punctuation/accents so
 // "O'Brien", "“Gary”" etc. sort by their letters, not by leading symbols.
 function sortName(s){return (s||"").toLowerCase().normalize("NFKD").replace(/[^a-z0-9 ]+/g,"").trim();}
@@ -834,6 +843,8 @@ function personKey(p){ return p.e || ("name:"+(p.n||"").toLowerCase()); }
 function realPrimary(emails){ return (emails||[]).find(e=>!e.endsWith("vitalcitynyc.org"))||(emails&&emails[0])||""; }
 function applyOverrideTo(p,o){
   if(o.n){ p.n=o.n; p.ns="given"; }
+  if("fn" in o) p.fn=o.fn;
+  if("ln" in o) p.ln=o.ln;
   if("inst" in o) p.inst=o.inst;
   if(o.emails){ p.emails=o.emails; p.e=realPrimary(o.emails); }
   if(o.types) p.types=o.types;
@@ -844,7 +855,7 @@ function applyOverrideTo(p,o){
 // Build a full person record from a manual-add override (key not in the dataset).
 function makePerson(key,o){
   const emails=(o.emails||[]).slice();
-  return {n:o.n||"", ns:"given", e:realPrimary(emails)||(key.indexOf("name:")===0?"":key),
+  return {n:o.n||"", fn:o.fn||"", ln:o.ln||"", ns:"given", e:realPrimary(emails)||(key.indexOf("name:")===0?"":key),
     emails:emails, inst:o.inst||"", role:"", types:(o.types||[]).slice(), topics:(o.topics||[]).slice(),
     mem:o.mem?1:0, since:"", auth:o.auth?1:0, arts:0, aname:o.auth?(o.n||""):"",
     don:o.don?1:0, damt:+o.damt||0, dcnt:o.don?1:0, dlast:"", unsub:0, src:["manual"], added:true};
@@ -879,7 +890,7 @@ function openEdit(key){
   const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
   editKey=key; addMode=false;
   $("#edTitle").textContent="Contact details";
-  $("#edName").value=p.n||""; $("#edInst").value=p.inst||"";
+  $("#edFirst").value=firstName(p)||""; $("#edLast").value=lastName(p)||""; $("#edInst").value=p.inst||"";
   $("#edEmails").value=(p.emails||[]).join("\n");
   $("#edTypes").value=(p.types||[]).join(", "); $("#edTopics").value=(p.topics||[]).join(", ");
   $("#edNote").value=p.note||"";
@@ -890,21 +901,22 @@ function openEdit(key){
   // Show "Revert to guess" only for a confirmed name that came from an edit/confirm
   // (not for manually-added people, whose names were never guesses).
   $("#edRevertGuess").style.display=(p.ns!=="guess" && !p.added && ovNow[key] && ovNow[key].n && !ovNow[key].add)?"":"none";
-  $("#editModal").style.display="flex"; $("#edName").focus();
+  $("#editModal").style.display="flex"; $("#edFirst").focus();
 }
 function openAdd(){
   editKey=null; addMode=true;
   $("#edTitle").textContent="Add a person";
-  $("#edName").value=""; $("#edInst").value=""; $("#edEmails").value=""; $("#edTypes").value=""; $("#edTopics").value=""; $("#edNote").value="";
+  $("#edFirst").value=""; $("#edLast").value=""; $("#edInst").value=""; $("#edEmails").value=""; $("#edTypes").value=""; $("#edTopics").value=""; $("#edNote").value="";
   $("#edMem").checked=false; $("#edAuth").checked=false; $("#edDon").checked=false; $("#edDamt").value="";
   $("#edDamtWrap").style.display="none";
   if(SHEET_URL){ $("#edSheetLink").href=SHEET_URL; $("#edSheetLink").style.display=""; } else { $("#edSheetLink").style.display="none"; }
   $("#edAddFlags").style.display="block"; $("#edUpdateNote").style.display="block"; $("#edDelete").style.display="none"; $("#edEmailCard").style.display="none"; $("#edCopyLink").style.display="none"; $("#edRevertGuess").style.display="none";
-  $("#editModal").style.display="flex"; $("#edName").focus();
+  $("#editModal").style.display="flex"; $("#edFirst").focus();
 }
 function readFields(){
+  const first=$("#edFirst").value.trim(), last=$("#edLast").value.trim();
   return {
-    n:$("#edName").value.trim(), inst:$("#edInst").value.trim(),
+    n:(first+" "+last).trim(), fn:first, ln:last, inst:$("#edInst").value.trim(),
     emails:$("#edEmails").value.split(/[\n,]/).map(s=>s.trim().toLowerCase()).filter(Boolean),
     types:$("#edTypes").value.split(",").map(s=>s.trim()).filter(Boolean),
     topics:$("#edTopics").value.split(",").map(s=>s.trim()).filter(Boolean),
@@ -930,9 +942,9 @@ function saveEdit(){
   const fSave=Object.assign({}, f);
   // Don't silently confirm a gray (guessed) name just because the card was saved
   // without touching the name. Only an actual name change (or the ✓ button) confirms it.
-  if(p.ns==="guess" && fSave.n===p.n) delete fSave.n;
+  if(p.ns==="guess" && fSave.n===p.n){ delete fSave.n; delete fSave.fn; delete fSave.ln; }
   const ov=loadOverrides(); ov[editKey]=Object.assign({}, ov[editKey], fSave);   // merge (keeps star)
-  if(!("n" in fSave) && ov[editKey]) delete ov[editKey].n;   // keep the stored override gray-friendly too
+  if(!("n" in fSave) && ov[editKey]){ delete ov[editKey].n; delete ov[editKey].fn; delete ov[editKey].ln; }   // keep the stored override gray-friendly too
   localStorage.setItem(OVKEY,JSON.stringify(ov));
   pushOverride(editKey,ov[editKey]);
   applyOverrideTo(p,fSave); closeEdit(); render();
@@ -942,9 +954,10 @@ function revertGuess(){
   if(!editKey) return;
   const p=PEOPLE.find(x=>personKey(x)===editKey); if(!p) return;
   const ov=loadOverrides();
-  if(ov[editKey]){ delete ov[editKey].n; if(Object.keys(ov[editKey]).length===0) delete ov[editKey]; }
+  if(ov[editKey]){ delete ov[editKey].n; delete ov[editKey].fn; delete ov[editKey].ln; if(Object.keys(ov[editKey]).length===0) delete ov[editKey]; }
   localStorage.setItem(OVKEY,JSON.stringify(ov));
   pushOverride(editKey, ov[editKey]||{});   // backend replaces the stored row, so the name override is cleared everywhere
+  delete p.fn; delete p.ln;                  // drop the explicit split so it falls back to the email guess
   p.ns="guess";                              // back to a gray, unconfirmed guess (the name text stays)
   closeEdit(); render(); toast("Name set back to a gray guess");
 }
@@ -1139,9 +1152,9 @@ function copyEmails(){
 function csvCell(v){v=v==null?"":String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
 function exportCSV(){
   const rows=sortRows(filtered());
-  const cols=["name","email","institution","role","types","specialties","subscriber","subscribed_since","author","articles","donor","donation_total","donation_count","last_donation","engagement_rating","open_rate","notable_wikipedia","starred","notes"];
+  const cols=["first_name","last_name","name","email","institution","role","types","specialties","subscriber","subscribed_since","author","articles","donor","donation_total","donation_count","last_donation","engagement_rating","open_rate","notable_wikipedia","starred","notes"];
   const lines=[cols.join(",")];
-  rows.forEach(p=>lines.push([p.n,(p.emails||[]).join("; "),p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0,p.don?"yes":"no",p.damt||0,p.dcnt||0,p.dlast||"",p.erate||0,(p.eopen||0)+"%",p.wiki?"yes":"no",p.star?"yes":"no",p.note||""].map(csvCell).join(",")));
+  rows.forEach(p=>lines.push([firstName(p),lastName(p),p.n,(p.emails||[]).join("; "),p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0,p.don?"yes":"no",p.damt||0,p.dcnt||0,p.dlast||"",p.erate||0,(p.eopen||0)+"%",p.wiki?"yes":"no",p.star?"yes":"no",p.note||""].map(csvCell).join(",")));
   const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download=`vital-city-network-${new Date().toISOString().slice(0,10)}.csv`;
@@ -1150,8 +1163,8 @@ function exportCSV(){
 function sortRows(rows){
   return rows.sort((a,b)=>{
     let va,vb;
-    if(sortKey==="last"){const A=nameParts(a.n),B=nameParts(b.n);va=sortName(A.last)?sortName(A.last)+"|"+sortName(A.first):"￿";vb=sortName(B.last)?sortName(B.last)+"|"+sortName(B.first):"￿";}
-    else if(sortKey==="first"){const A=nameParts(a.n),B=nameParts(b.n);va=sortName(A.first)?sortName(A.first)+"|"+sortName(A.last):"￿";vb=sortName(B.first)?sortName(B.first)+"|"+sortName(B.last):"￿";}
+    if(sortKey==="last"){va=sortName(lastName(a))?sortName(lastName(a))+"|"+sortName(firstName(a)):"￿";vb=sortName(lastName(b))?sortName(lastName(b))+"|"+sortName(firstName(b)):"￿";}
+    else if(sortKey==="first"){va=sortName(firstName(a))?sortName(firstName(a))+"|"+sortName(lastName(a)):"￿";vb=sortName(firstName(b))?sortName(firstName(b))+"|"+sortName(lastName(b)):"￿";}
     else if(sortKey==="types"){va=(a.types||[]).join(" ");vb=(b.types||[]).join(" ");}
     else if(sortKey==="mem"){va=a.mem;vb=b.mem;}
     else if(sortKey==="eng"){va=(a.erate||0)*1000+(a.eopen||0);vb=(b.erate||0)*1000+(b.eopen||0);}
@@ -1184,7 +1197,7 @@ function render(){
 // infinite-scroll handler can append just the new page instead of re-serializing
 // every row already in the DOM.
 function rowHTML(p){
-  const np=nameParts(p.n), g=(p.ns==='guess'?' guess':'')+(p.unsub?' unsub':'')+(p.wiki?' wiki':'');
+  const np={first:firstName(p), last:lastName(p)}, g=(p.ns==='guess'?' guess':'')+(p.unsub?' unsub':'')+(p.wiki?' wiki':'');
   // hover help: explain a gray (guessed) name and a notable (underlined) name; otherwise prompt the click-to-view
   const nmTitle=p.wiki?' title="Notable — appears to have an English Wikipedia page (a rough signal of public profile). Click to view this person\'s details."'
                 :(p.ns==='guess'?' title="This name is an educated guess from the email address. Click to view/fix details, the ✓ to confirm it, or ✎ to edit."'
