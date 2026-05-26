@@ -37,14 +37,14 @@
   <a class="back" href="index.html">← Back to the search tool</a>
   <div class="wm">Vital City</div>
   <h1>Contact master search — how it works</h1>
-  <p class="lede">A single, searchable view of everyone in Vital City's orbit. It pulls together four lists, matches the same person across them, and lets you slice the result any way you like and pull out contact or email lists.</p>
+  <p class="lede">A single, searchable view of everyone in Vital City's orbit. It pulls together four lists, matches the same person across them and lets you slice the result any way you like and pull out contact or email lists.</p>
 
   <h2>What's in it</h2>
   <p>Each person is one row, built by merging four sources (matched by email, then by name):</p>
   <table>
     <tr><th>Source</th><th>What it adds</th></tr>
     <tr><td><b>Newsletter subscribers</b> (from Ghost)</td><td>The <span class="pill b-mem">Subscriber</span> badge + the year they joined. <b>"Subscriber" means the free email list</b> — not the same as a donor.</td></tr>
-    <tr><td><b>Contacts</b> (the Google Sheet your team maintains)</td><td>The <span class="pill">type</span> tags: journalist, academic, funder, gov, judge, architect, nonprofit, contributor, advisor + specialty domains (criminal justice, housing, transit, budget, urban planning, education, public health, economy, technology, politics &amp; government, race &amp; equity, culture).</td></tr>
+    <tr><td><b>Contacts</b> (the Google Sheet your team maintains)</td><td>The <span class="pill">type</span> tags: VC contributor, VC advisor, journalist, academic, foundation leadership, nonprofit leadership, city gov, current nyc.gov, state gov, fed gov, judge — plus specialty areas (criminal justice, housing, transit, budget, urban planning, education, public health, economy, technology, politics &amp; government, race &amp; equity, culture, architecture).</td></tr>
     <tr><td><b>Donors</b> (from Donorbox)</td><td>The <span class="pill b-don">$ amount</span> badge (total given) and the date of their most recent gift.</td></tr>
     <tr><td><b>Authors</b> (vitalcitynyc.org)</td><td>The "N pieces" badge (articles written).</td></tr>
   </table>
@@ -72,12 +72,28 @@
   <ul>
     <li><b>Type / specialty</b> (left checkboxes): tick any combination — they're OR'd together (e.g. <i>journalist</i> + <i>academic</i> shows either). The little <b>ⓘ</b> next to each heading explains that these are partly inferred/extrapolated, so treat them as approximate.</li>
     <li><b>Subscribed between</b> (left): filter to people who joined the newsletter within a date range.</li>
-    <li><b>Search box</b>: matches name, email or institution.</li>
+    <li><b>Search box</b>: matches name, email, institution or notes.</li>
+    <li><b>★ Starred</b> and <b>Notable</b> checkboxes (top bar) narrow to just your starred contacts, or just people flagged notable (see below).</li>
     <li><b>The banner numbers are clickable shortcuts</b> — click "subscribers", "donors", "authors" or "other" to turn that filter on (click again to turn it off); combine several. <b>Reset all</b> returns to the full list.</li>
-    <li>Sort any column by clicking its header — an arrow (▲/▼) shows the direction. <b>Last name</b> is the default (compound surnames like "Jones Austin" stay together; middle initials and quoted nicknames are dropped); people with no last name sort to the bottom.</li>
     <li>A <b>VC contributor</b> chip shows <b>×N</b> for the number of pieces and is a <b>link</b> — click it to open the public <a href="../">article catalogue</a> filtered to that author's pieces.</li>
-    <li>People can have <b>several emails</b> — all are shown and searchable.</li>
+    <li>People can have <b>several emails</b> — all are shown and searchable. Hover an email to get a one-click <b>copy</b> button; every address is also a <b>mailto:</b> link.</li>
   </ul>
+
+  <h3>Sorting</h3>
+  <p>Use the <b>Sort</b> menu in the toolbar to order the list:</p>
+  <ul>
+    <li><b>Last name</b> (the default) and <b>First name</b> — alphabetical. Compound surnames like "Jones Austin" stay together; middle initials and quoted nicknames are dropped; people with no name sort to the bottom.</li>
+    <li><b>Recently subscribed</b> / <b>Longest subscribed</b> — by the date someone joined the newsletter (newest or oldest first). Pair <b>Recently subscribed</b> with the <b>Subscribers</b> filter for a clean "newest members" list.</li>
+    <li><b>Recently donated</b> — by the date of each person's most recent gift. Pair it with the <b>Donors</b> filter for "who gave most recently".</li>
+    <li><b>Most engaged</b> — by email engagement (see below). <b>Donation size</b> — by lifetime total given.</li>
+  </ul>
+  <p>You can also sort by clicking any <b>column header</b> (an arrow ▲/▼ shows the direction); the Sort menu stays in sync. People who lack the value you're sorting by — e.g. non-donors when sorting by gift date — fall to the bottom.</p>
+
+  <h3>Email engagement (the ●●○○○ meter)</h3>
+  <p>Under each subscriber you'll see a small meter like <b>●●●○○ 72%</b>, pulled from Mailchimp. The <b>dots</b> are Mailchimp's 1–5 <i>engagement rating</i> (how often that person opens and clicks). The <b>percentage</b> is their average newsletter open rate. The two can differ — a highly rated reader who joined recently may still show a low historical open %. Sort by <b>Most engaged</b> to rank your most active readers first.</p>
+
+  <h3>Notable (Wikipedia) flag</h3>
+  <p>Names shown with a <b><span style="text-decoration:underline;text-decoration-color:var(--cerulean);text-decoration-thickness:2px;text-underline-offset:3px">cerulean underline</span></b> are flagged <b>notable</b> — they appear to have an English Wikipedia page. The match is deliberately conservative: a hit only counts when the Wikipedia summary also contains a context clue for <i>this</i> person (a word from their institution, a keyword for their type/specialty or "New York"), so an unrelated same-named person doesn't get tagged. Tick the <b>Notable</b> checkbox to see only these. It's a rough signal of public profile, not a judgment — and it's only ever checked against named, known contacts, never anonymous subscribers.</p>
 
   <h2>Unsubscribed (former contacts)</h2>
   <p>People who left the newsletter are kept <b>separate</b> and <b style="color:#c8102e">shown in red</b>. They're <b>hidden by default</b> — tick <b>Include unsubscribed</b> to mix them in, or click the red <b>unsubscribed</b> banner number to see only them. The other banner counts reflect <i>current</i> contacts only. This list <b>syncs automatically from Mailchimp each day</b>, so when someone unsubscribes there they drop off the subscriber list on the next refresh.</p>
@@ -89,8 +105,27 @@
     <li><b>Email group</b> — pick <b>Bcc / To / Cc</b>, then it opens your default mail app with the subset's addresses in that field. (Big lists may exceed what a mail app accepts — use Copy emails for those.)</li>
   </ul>
 
+  <h2>Saving and sharing a view</h2>
+  <ul>
+    <li><b>Save current view</b> — name any filter + sort combination (e.g. "Housing reporters '24+") and it's saved on your device, one click to reapply.</li>
+    <li><b>Copy link to this view</b> — copies a link that reopens the exact same filters, sort and search for anyone with the passphrase. (The current view is also kept in the page address as you go, so a normal bookmark works too.)</li>
+    <li><b>Needs review</b> — a guided queue of records that could use a human check: educated-guess names, missing institutions and possible duplicates. The tool already de-duplicates automatically (matching the same person across lists by email and name), so this is a short clean-up list, not a pile.</li>
+  </ul>
+
+  <h2>Dark mode &amp; using it on your phone</h2>
+  <ul>
+    <li><b>Dark mode</b> — toggle it from the <b>🌙 Dark mode</b> link in the top bar; your choice is remembered.</li>
+    <li><b>On a phone</b>, the table reflows into one tidy <b>card per person</b> (name, then the fields that person actually has) instead of a cramped, side-scrolling grid.</li>
+    <li><b>Install it as an app.</b> The tool is an installable web app. On <b>iPhone (Safari)</b>: Share → <b>Add to Home Screen</b>. On <b>Android (Chrome)</b>: menu → <b>Install app</b> / Add to Home screen. It then opens full-screen with its own icon, like a native app, and still asks for the passphrase. It even opens (from its cached copy) when you're offline, showing the last data it loaded.</li>
+  </ul>
+
   <h2>Fixing or cutting an entry</h2>
-  <p>Click <b>Edit</b> on any row to change that person: <b>name, institution, emails, types and specialties</b> — or <b>Delete entry</b> (the delete button lives inside the edit window, so it can't be hit by accident). A <span class="g">gray italic</span> name is an educated guess from the email (e.g. <code>aaron@naparstek.com</code> → <span class="g">Aaron Naparstek</span>); the <b>✓</b> next to one confirms it's right (turns it black).</p>
+  <p>Click <b>Edit</b> (the <b>✎</b> on any row) to change that person: <b>name, institution, emails, types and specialties</b>, add a private <b>note</b>, or <b>Delete entry</b> (the delete button lives inside the edit window, so it can't be hit by accident). A <span class="g">gray italic</span> name is an educated guess from the email (e.g. <code>aaron@naparstek.com</code> → <span class="g">Aaron Naparstek</span>); the <b>✓</b> next to one confirms it's right (turns it black).</p>
+  <ul>
+    <li><b>Notes</b> — anything you type in the note field is saved, searchable and shown as a small <b>📝</b> on the row (hover to read it).</li>
+    <li><b>Star a contact</b> — click the <b>☆</b> at the start of any row to flag people you want to find fast; the <b>★ Starred</b> filter shows just those.</li>
+    <li><b>Email this contact card</b> — from the edit window you can email a tidy summary of that person (name, institution, emails, types, giving) to yourself or a colleague.</li>
+  </ul>
   <div class="note"><b>Your edits stick automatically.</b> Every edit, confirmation and deletion is saved to a shared store (a Google Sheet behind the scenes), not just your browser — so it persists for everyone and survives every future refresh. You no longer have to export anything. (The change shows for you immediately; it appears for everyone else on the next daily refresh.)</div>
 
   <h2>How the data updates — what's automatic vs. manual</h2>
