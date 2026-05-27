@@ -191,7 +191,8 @@
   .emlink{color:inherit;text-decoration:none}
   .emlink:hover{text-decoration:underline;color:var(--vc-cerulean)}
   .emlink.emsub{font-weight:700}                                   /* the newsletter subscription email */
-  .emlink.emrecent{text-decoration:underline;text-decoration-color:var(--vc-green);text-decoration-thickness:2px;text-underline-offset:2px}  /* most recently active */
+  .emtag{display:inline-block;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:1px 5px;margin-left:6px;background:var(--vc-green);color:#fff;border-radius:2px;white-space:nowrap;vertical-align:middle}
+  .emtag.emtag-rec{background:var(--vc-cerulean)}                  /* subscribed + most recently opened */
   .emcopy{visibility:hidden;cursor:pointer;color:var(--vc-cerulean);font-size:12px;text-decoration:none;font-weight:700}
   tr:hover .emcopy{visibility:visible}
   .emcopy:hover{color:var(--vc-orange)}
@@ -379,7 +380,7 @@
             <th data-k="eng" title="Subscriber status + email engagement from Mailchimp. The dots (●●○○○) are Mailchimp's 1–5 engagement rating; the % is the subscriber's average newsletter open rate. Click to rank most-engaged first.">Subscriber</th>
             <th data-k="damt" title="Total this person has given (and the date of their most recent gift). Click to sort by amount, biggest first.">Donor</th>
             <th data-k="inst" title="The person's organization or employer. Click to sort A–Z.">Institution</th>
-            <th data-k="e" title="All known email addresses for this person. Hover an address for a one-click copy button; click an address to start an email. Click this header to sort.">Email</th>
+            <th data-k="e" title="All known email addresses for this person. A green '✉ newsletter' tag marks the address they're subscribed through (blue '· last opened' = the one they most recently opened the newsletter from). Hover an address for a one-click copy button; click it to start an email.">Email</th>
           </tr></thead>
           <tbody id="rows"></tbody>
         </table>
@@ -1302,18 +1303,22 @@ function rowHTML(p){
     }
     return `<span class="pill" data-type="${esc(t)}" title="Click to filter the list to everyone tagged '${esc(t)}'.">${esc(t)}${x}</span>`;
   }).join("")||'<span class="muted">—</span>';
-  // When a person has several emails, bold the one(s) they subscribe to the newsletter
-  // through, and underline whichever was most recently active (opened/visited).
+  // When a person has several emails, label the one(s) they subscribe to the newsletter
+  // through with a clear green "newsletter" tag — and the most recently opened one with
+  // "· last opened". (Only Ghost-confirmed subscription addresses get the tag.)
   const multiE=(p.emails&&p.emails.length>1);
   const subSet=new Set(multiE?(p.sub_emails||[]):[]);
   const recentE=multiE?(p.recent_email||""):"";
   const emailCell=(p.emails&&p.emails.length)
     ? p.emails.map(e=>{
         const isSub=subSet.has(e), isRecent=(e===recentE);
-        const cls="emlink"+(isSub?" emsub":"")+(isRecent?" emrecent":"");
-        const tip=isSub?(isRecent?"Newsletter subscription email — most recently active":"Newsletter subscription email")
+        const cls="emlink"+(isSub?" emsub":"");
+        const tip=isSub?(isRecent?"This is a newsletter subscription address — and the one this person most recently opened the newsletter from.":"This person is subscribed to the newsletter through this address.")
                        :("Click to start an email to "+esc(e)+" in your mail app");
-        return `<span class="emrow"><a class="${cls}" href="mailto:${esc(e)}" title="${tip}">${esc(e)}</a><a class="emcopy" role="button" tabindex="0" data-email="${esc(e)}" title="Copy ${esc(e)} to the clipboard" aria-label="Copy ${esc(e)}">⧉</a></span>`;
+        const tag=isSub
+          ? `<span class="emtag${isRecent?' emtag-rec':''}" title="${tip}">✉ newsletter${isRecent?' · last opened':''}</span>`
+          : "";
+        return `<span class="emrow"><a class="${cls}" href="mailto:${esc(e)}" title="${tip}">${esc(e)}</a>${tag}<a class="emcopy" role="button" tabindex="0" data-email="${esc(e)}" title="Copy ${esc(e)} to the clipboard" aria-label="Copy ${esc(e)}">⧉</a></span>`;
       }).join("")
     : '<span class="muted">—</span>';
   // mark empty cells so the phone card view can hide them (no "DONOR —" clutter)
