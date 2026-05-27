@@ -1,5 +1,34 @@
 [
   {
+    "title": "The LIRR and the Lost Art of the Labor Fight",
+    "slug": "fred-naiden-interview-lirr-strike-labor",
+    "url": "https://www.vitalcitynyc.org/fred-naiden-interview-lirr-strike-labor/",
+    "type": "q&a",
+    "type_basis": "tag:podcast",
+    "published_date": "2026-05-27",
+    "published_at": "2026-05-27T16:49:28.000+00:00",
+    "updated_at": "2026-05-27T16:49:28.000+00:00",
+    "primary_author": "Jamie Rubin",
+    "authors": [
+      "Jamie Rubin"
+    ],
+    "topics": [
+      "Podcast",
+      "Transit",
+      "Labor"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "Former TWU Local 100 motorman Fred Naiden on the legacy of the 1980 LIRR strike",
+    "excerpt": "Former TWU Local 100 motorman Fred Naiden on the legacy of the 1980 LIRR strike",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/05/Cropping-Tool--99-.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 139,
+    "reading_minutes": 1,
+    "id": "6a1601a25179a30001d0cd3e"
+  },
+  {
     "title": "The Big Picture",
     "slug": "rubber-meets-road-lighting-summary",
     "url": "https://www.vitalcitynyc.org/rubber-meets-road-lighting-summary/",
@@ -8713,6 +8742,37 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
+    "title": "Donald Trump vs. the Rule of Law, and New York City",
+    "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
+    "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:02.000+00:00",
+    "primary_author": "Harry Siegel",
+    "authors": [
+      "Harry Siegel"
+    ],
+    "topics": [
+      "Politics",
+      "Repercussions",
+      "Corruption"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
+    "excerpt": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abefupiqrldabuxc_gettyimages-2200636545_edited-png-auto-format-compress-1776259704417.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1560,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a404b"
+  },
+  {
     "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
     "slug": "trumps-bizarro-new-deal",
     "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
@@ -8742,37 +8802,6 @@
     "word_count": 1619,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a41d5"
-  },
-  {
-    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
-    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
-    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Meryl Chertoff",
-    "authors": [
-      "Meryl Chertoff"
-    ],
-    "topics": [
-      "Government Operations",
-      "Repercussions",
-      "City Planning"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "The Sharpie and the damage done",
-    "excerpt": "The Sharpie and the damage done",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1313,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a404c"
   },
   {
     "title": "What You Can Do About Trump",
@@ -8807,6 +8836,37 @@
     "id": "69a04c0ad4006a00010a404a"
   },
   {
+    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
+    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
+    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Meryl Chertoff",
+    "authors": [
+      "Meryl Chertoff"
+    ],
+    "topics": [
+      "Government Operations",
+      "Repercussions",
+      "City Planning"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "The Sharpie and the damage done",
+    "excerpt": "The Sharpie and the damage done",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1313,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a404c"
+  },
+  {
     "title": "Is It Time for Cities to Go It Alone?",
     "slug": "is-it-time-for-cities-to-go-it-alone",
     "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
@@ -8836,37 +8896,6 @@
     "word_count": 1697,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4049"
-  },
-  {
-    "title": "Donald Trump vs. the Rule of Law, and New York City",
-    "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
-    "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": "Harry Siegel",
-    "authors": [
-      "Harry Siegel"
-    ],
-    "topics": [
-      "Politics",
-      "Repercussions",
-      "Corruption"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
-    "excerpt": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abefupiqrldabuxc_gettyimages-2200636545_edited-png-auto-format-compress-1776259704417.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1560,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a404b"
   },
   {
     "title": "A Real New York Mayoral Election",
@@ -11231,37 +11260,6 @@
     "id": "69a04c0ad4006a00010a41dc"
   },
   {
-    "title": "Fix the Subway, Not Society",
-    "slug": "fix-the-subway-not-society",
-    "url": "https://www.vitalcitynyc.org/fix-the-subway-not-society/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-01-22",
-    "published_at": "2025-01-22T21:10:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:14.000+00:00",
-    "primary_author": "Peter Moskos",
-    "authors": [
-      "Peter Moskos"
-    ],
-    "topics": [
-      "Where We Go From Here",
-      "Subway Crime",
-      "History"
-    ],
-    "issues": [
-      "crime-looking-back-at-2024-and-ahead-to-2025"
-    ],
-    "issue_numbers": [],
-    "summary": "Lessons from the past on how we do — and don’t — enforce laws underground.",
-    "excerpt": "Lessons from the past on how we do — and don’t — enforce laws underground.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5e8sjbqstj99v_c_hfh0d1_cropped-auto-format-compress-1776259722501.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1962,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a41dd"
-  },
-  {
     "title": "On Fear Itself",
     "slug": "on-fear-itself-worry-about-crime-has-taken-on-a-life-of-its-own",
     "url": "https://www.vitalcitynyc.org/on-fear-itself-worry-about-crime-has-taken-on-a-life-of-its-own/",
@@ -11325,35 +11323,35 @@
     "id": "69a04c0ad4006a00010a4285"
   },
   {
-    "title": "The Stubbornness of Sticky Fingers",
-    "slug": "what-can-we-do-about-shoplifting-a-new-urban-plague",
-    "url": "https://www.vitalcitynyc.org/what-can-we-do-about-shoplifting-a-new-urban-plague/",
+    "title": "Fix the Subway, Not Society",
+    "slug": "fix-the-subway-not-society",
+    "url": "https://www.vitalcitynyc.org/fix-the-subway-not-society/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-01-22",
-    "published_at": "2025-01-22T21:05:00.000+00:00",
+    "published_at": "2025-01-22T21:10:00.000+00:00",
     "updated_at": "2026-04-15T13:37:14.000+00:00",
-    "primary_author": "Megan McArdle",
+    "primary_author": "Peter Moskos",
     "authors": [
-      "Megan McArdle"
+      "Peter Moskos"
     ],
     "topics": [
       "Where We Go From Here",
-      "Crime",
-      "Technology"
+      "Subway Crime",
+      "History"
     ],
     "issues": [
       "crime-looking-back-at-2024-and-ahead-to-2025"
     ],
     "issue_numbers": [],
-    "summary": "What can we do about shoplifting, a new urban plague?",
-    "excerpt": "What can we do about shoplifting, a new urban plague?",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5ez95bqstj99v7l_2gyypny_cropped-auto-format-compress-1776259723037.jpg",
+    "summary": "Lessons from the past on how we do — and don’t — enforce laws underground.",
+    "excerpt": "Lessons from the past on how we do — and don’t — enforce laws underground.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5e8sjbqstj99v_c_hfh0d1_cropped-auto-format-compress-1776259722501.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 1574,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a426d"
+    "word_count": 1962,
+    "reading_minutes": 9,
+    "id": "69a04c0ad4006a00010a41dd"
   },
   {
     "title": "Broken Windows Politics",
@@ -11419,34 +11417,35 @@
     "id": "69a04c0ad4006a00010a4078"
   },
   {
-    "title": "A Better Conversation on Guns",
-    "slug": "a-better-conversation-on-guns",
-    "url": "https://www.vitalcitynyc.org/a-better-conversation-on-guns/",
+    "title": "The Stubbornness of Sticky Fingers",
+    "slug": "what-can-we-do-about-shoplifting-a-new-urban-plague",
+    "url": "https://www.vitalcitynyc.org/what-can-we-do-about-shoplifting-a-new-urban-plague/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-01-22",
-    "published_at": "2025-01-22T21:00:00.000+00:00",
+    "published_at": "2025-01-22T21:05:00.000+00:00",
     "updated_at": "2026-04-15T13:37:14.000+00:00",
-    "primary_author": "Megan Kang",
+    "primary_author": "Megan McArdle",
     "authors": [
-      "Megan Kang"
+      "Megan McArdle"
     ],
     "topics": [
       "Where We Go From Here",
-      "Gun Violence"
+      "Crime",
+      "Technology"
     ],
     "issues": [
       "crime-looking-back-at-2024-and-ahead-to-2025"
     ],
     "issue_numbers": [],
-    "summary": "For the U.S. to make lasting progress against firearm violence, it must change the way it talks about — and talks to — people who carry.",
-    "excerpt": "For the U.S. to make lasting progress against firearm violence, it must change the way it talks about — and talks to — people who carry.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5eycjbqstj99v6d_gettyimages-483461597_cropped-auto-format-compress-1776259722872.jpg",
+    "summary": "What can we do about shoplifting, a new urban plague?",
+    "excerpt": "What can we do about shoplifting, a new urban plague?",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5ez95bqstj99v7l_2gyypny_cropped-auto-format-compress-1776259723037.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 2430,
-    "reading_minutes": 11,
-    "id": "69a04c0ad4006a00010a4228"
+    "word_count": 1574,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a426d"
   },
   {
     "title": "The Recovery From COVID-19 Pandemic Gun Violence",
@@ -11480,6 +11479,36 @@
     "word_count": 1225,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a4077"
+  },
+  {
+    "title": "A Better Conversation on Guns",
+    "slug": "a-better-conversation-on-guns",
+    "url": "https://www.vitalcitynyc.org/a-better-conversation-on-guns/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-01-22",
+    "published_at": "2025-01-22T21:00:00.000+00:00",
+    "updated_at": "2026-04-15T13:37:14.000+00:00",
+    "primary_author": "Megan Kang",
+    "authors": [
+      "Megan Kang"
+    ],
+    "topics": [
+      "Where We Go From Here",
+      "Gun Violence"
+    ],
+    "issues": [
+      "crime-looking-back-at-2024-and-ahead-to-2025"
+    ],
+    "issue_numbers": [],
+    "summary": "For the U.S. to make lasting progress against firearm violence, it must change the way it talks about — and talks to — people who carry.",
+    "excerpt": "For the U.S. to make lasting progress against firearm violence, it must change the way it talks about — and talks to — people who carry.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5eycjbqstj99v6d_gettyimages-483461597_cropped-auto-format-compress-1776259722872.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2430,
+    "reading_minutes": 11,
+    "id": "69a04c0ad4006a00010a4228"
   },
   {
     "title": "Toward a New Discipline: Macro-Criminology",
