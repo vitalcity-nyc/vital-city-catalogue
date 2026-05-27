@@ -416,7 +416,7 @@
       <div class="modalbtns">
         <button class="btn primary" id="edSave" title="Save your changes. They're stored for everyone automatically — you see them now, others on the next daily refresh.">Save</button>
         <button class="btn" id="edCancel" title="Close without saving any changes.">Cancel</button>
-        <button class="btn" id="edEmailCard" title="Open your mail app with this contact's full details in the message">✉ Email this card</button>
+        <button class="btn" id="edEmailCard" title="Copy this contact's full details to the clipboard (and open a mail draft if you have a desktop mail app) so you can email it to someone.">✉ Email this card</button>
         <button class="btn" id="edCopyLink" title="Copy a link that opens this person's card (needs the passphrase to view)">🔗 Copy link</button>
         <button class="btn" id="edRevertGuess" style="display:none" title="Turn this name back into a gray, unconfirmed guess (undoes a confirmation). The name text stays; it just goes back to looking like an educated guess.">↩ Revert to guess</button>
         <button class="btn" id="edDelete" style="margin-left:auto;border-color:var(--vc-magenta);color:var(--vc-magenta)" title="Remove this person from the tool for everyone. (If they still come from a live source like Ghost or Donorbox, they'll return on the next refresh.)">Delete entry</button>
@@ -979,7 +979,16 @@ function emailCard(){
   if(p.auth)st.push((p.arts?p.arts+" ":"")+"VC contributor"); if(p.don)st.push("donor ($"+Math.round(p.damt).toLocaleString()+(p.dlast?", last "+p.dlast:"")+")");
   if(st.length) L.push("Status: "+st.join(" · "));
   if(p.note) L.push("Notes: "+p.note);
-  window.location.href="mailto:?subject="+encodeURIComponent("Vital City contact: "+(p.n||p.e||""))+"&body="+encodeURIComponent(L.join("\n"));
+  const subject="Vital City contact: "+(p.n||p.e||""), body=L.join("\n");
+  // Copy the card text first so it always works, even with no desktop mail app
+  // (e.g. if you use Gmail in the browser). Then try to open a mail app too.
+  navigator.clipboard.writeText(subject+"\n\n"+body).catch(()=>{});
+  // Use a transient link rather than location.href so the page doesn't blank out
+  // when there's no mailto handler registered.
+  const a=document.createElement("a");
+  a.href="mailto:?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+  a.style.display="none"; document.body.appendChild(a); a.click(); a.remove();
+  toast("Card copied to clipboard — paste it into any email. (If you have a mail app, a draft should also open.)");
 }
 function toggleStar(key){
   const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
