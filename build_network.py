@@ -827,6 +827,16 @@ def main():
                 p["note"] = o["note"]
             if "star" in o:
                 p["star"] = 1 if o.get("star") else 0
+            # Merge overrides carry the combined status of the absorbed records, since the
+            # records that held that status get deleted. These only ever turn a flag ON.
+            if o.get("merged"):
+                if o.get("mem"): p["mem"] = 1
+                if o.get("auth"): p["auth"] = 1
+                if o.get("don"): p["don"] = 1
+                if o.get("damt"): p["damt"] = max(p.get("damt", 0.0), float(o["damt"]))
+                if o.get("dcnt"): p["dcnt"] = max(p.get("dcnt", 0), int(o["dcnt"]))
+                if o.get("arts"): p["arts"] = max(p.get("arts", 0), int(o["arts"]))
+                if o.get("aname") and not p.get("aname"): p["aname"] = o["aname"]
         people = [p for p in people if not p.get("_deleted")]
         if deleted_keys:
             print(f"removed {deleted_keys} entries flagged deleted in people_overrides.json", file=__import__("sys").stderr)
@@ -856,6 +866,14 @@ def main():
             added += 1
         if added:
             print(f"added {added} manually-entered people from people_overrides.json", file=__import__("sys").stderr)
+
+    # A current subscriber can't also be "unsubscribed" — reconcile after all edits/merges.
+    for p in people:
+        if p.get("mem") and p.get("unsub"):
+            p["unsub"] = 0
+            p["udate"] = ""
+            if "unsub" in p.get("src", []):
+                p["src"].remove("unsub")
 
     # ---- drop people with no way to act on them ----
     # No email AND not a subscriber, author, donor or unsubscribed = just a name

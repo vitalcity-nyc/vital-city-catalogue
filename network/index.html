@@ -156,7 +156,9 @@
   .svadd{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border:1px dashed var(--vc-charcoal);background:transparent;color:var(--vc-charcoal);cursor:pointer}
   .svadd:hover{border-color:var(--vc-black);color:var(--vc-black)}
   .dupgroup{border:1px solid var(--vc-cloud);padding:8px 10px;margin:8px 0}
-  .dupgroup .gh{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px}
+  .dupgroup .gh{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .mergebtn{font-size:11px;font-weight:700;text-transform:none;letter-spacing:0;padding:3px 9px;border:1px solid var(--vc-black);background:var(--vc-white);color:var(--vc-black);cursor:pointer;white-space:nowrap}
+  .mergebtn:hover{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
   .dupperson{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:3px 0;border-top:1px solid var(--vc-paper)}
   .dupperson a{color:var(--vc-cerulean);font-weight:700;text-decoration:none;cursor:pointer}
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--vc-black);color:#fff;padding:10px 18px;font-size:13px;font-weight:700;z-index:300;opacity:0;transition:opacity .2s}
@@ -624,7 +626,18 @@ function init(){
     if(a.dataset.act==="dupes"){ showDuplicates(); return; } clearAll(); reviewMode=a.dataset.act; render(); });
   $("#dupClose").addEventListener("click",()=>$("#dupModal").style.display="none");
   $("#dupModal").addEventListener("click",e=>{if(e.target.id==="dupModal")$("#dupModal").style.display="none";});
-  $("#dupList").addEventListener("click",e=>{const a=e.target.closest("a[data-key]");if(!a)return;$("#dupModal").style.display="none";openEdit(a.dataset.key);});
+  $("#dupList").addEventListener("click",e=>{
+    const mb=e.target.closest("button[data-merge]");
+    if(mb){ let keys=[]; try{keys=JSON.parse(mb.dataset.merge);}catch(_){}
+      const recs=keys.map(k=>PEOPLE.find(x=>personKey(x)===k)).filter(Boolean);
+      const nm=recs.map(r=>r.n).find(Boolean)||"these records";
+      if(confirm(`Merge ${recs.length} records for "${nm}" into one?\n\nEmails, types and notes are combined, and subscriber/donor/author status is kept if any record has it. This can't be auto-undone.`)){
+        mergePeople(keys); showDuplicates();   // re-render the (now smaller) list
+      }
+      return;
+    }
+    const a=e.target.closest("a[data-key]");if(!a)return;$("#dupModal").style.display="none";openEdit(a.dataset.key);
+  });
   $("#emGo").addEventListener("click",doEmailGroup);
   $("#emCancel").addEventListener("click",()=>$("#emailModal").style.display="none");
   $("#emCopyInstead").addEventListener("click",()=>{ $("#emailModal").style.display="none"; navigator.clipboard.writeText(pendingEmails.join(", ")).then(()=>toast(`Copied ${pendingEmails.length.toLocaleString()} emails to clipboard`)).catch(()=>toast("Copy failed")); });
@@ -888,6 +901,54 @@ function deleteEntry(key){
     PEOPLE.push(p); buildStats(); syncToggles(); render(); toast("Restored");
   });
 }
+// Merge two or more records for the same person into one. Combines emails, types,
+// notes and statuses (subscriber/donor/author all win if any record has them), keeps a
+// confirmed name, and deletes the absorbed records — persisted for everyone.
+function mergePeople(keys){
+  keys=[...new Set(keys)];
+  const recs=keys.map(k=>PEOPLE.find(x=>personKey(x)===k)).filter(Boolean);
+  if(recs.length<2){ toast("Need at least two records to merge."); return; }
+  const emails=[...new Set(recs.flatMap(r=>r.emails||[]))];
+  const pick=f=>{ for(const r of recs){ if(r[f]) return r[f]; } return ""; };
+  const givenName=recs.filter(r=>r.ns==="given"&&r.n).map(r=>r.n)[0];
+  const n=givenName||recs.map(r=>r.n).filter(Boolean).sort((a,b)=>b.length-a.length)[0]||"";
+  const m=Object.assign({},recs[0],{
+    n, ns:(recs.some(r=>r.ns==="given"&&r.n)?"given":"guess"),
+    fn:pick("fn"), ln:pick("ln"), inst:pick("inst"),
+    emails, e:realPrimary(emails),
+    types:[...new Set(recs.flatMap(r=>r.types||[]))],
+    topics:[...new Set(recs.flatMap(r=>r.topics||[]))],
+    mem:recs.some(r=>r.mem)?1:0, auth:recs.some(r=>r.auth)?1:0,
+    arts:Math.max(0,...recs.map(r=>r.arts||0)), aname:pick("aname"),
+    don:recs.some(r=>r.don)?1:0,
+    damt:recs.reduce((s,r)=>s+(r.damt||0),0),
+    dcnt:recs.reduce((s,r)=>s+(r.dcnt||0),0),
+    dlast:recs.map(r=>r.dlast||"").sort().pop()||"",
+    since:recs.map(r=>r.since||"").filter(Boolean).sort()[0]||"",
+    note:[...new Set(recs.map(r=>r.note).filter(Boolean))].join(" · "),
+    star:recs.some(r=>r.star)?1:0, wiki:recs.some(r=>r.wiki)?1:0,
+    sub_emails:[...new Set(recs.flatMap(r=>r.sub_emails||[]))],
+    recent_email:recs.map(r=>r.recent_email).find(Boolean)||"",
+  });
+  m.unsub = m.mem?0:(recs.every(r=>r.unsub)?1:0);
+  if(!m.sub_emails.length) delete m.sub_emails;
+  if(!m.recent_email) delete m.recent_email;
+  const survKey=personKey(m);
+  PEOPLE=PEOPLE.filter(x=>!keys.includes(personKey(x)));
+  PEOPLE.push(m);
+  const ov=loadOverrides();
+  ov[survKey]=Object.assign({}, ov[survKey], {
+    n, fn:m.fn, ln:m.ln, inst:m.inst, emails, types:m.types, topics:m.topics,
+    note:m.note, star:m.star, merged:true,
+    mem:m.mem, auth:m.auth, don:m.don, damt:m.damt, dcnt:m.dcnt, arts:m.arts, aname:m.aname,
+  });
+  keys.forEach(k=>{ if(k!==survKey) ov[k]={deleted:true}; });
+  localStorage.setItem(OVKEY,JSON.stringify(ov));
+  pushOverride(survKey, ov[survKey]);
+  keys.forEach(k=>{ if(k!==survKey) pushOverride(k,{deleted:true}); });
+  buildStats(); syncToggles(); render();
+  toast(`Merged ${recs.length} records into ${n||m.e}`);
+}
 let editKey=null, addMode=false;
 function openEdit(key){
   const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
@@ -1121,14 +1182,15 @@ function findDuplicates(){
 function showDuplicates(){
   const groups=findDuplicates();
   $("#dupSummary").textContent = groups.length
-    ? `${groups.length.toLocaleString()} possible duplicate group${groups.length===1?"":"s"}${groups.length>80?" (showing first 80)":""}. Open ✎ to fix/merge emails or delete a record.`
+    ? `${groups.length.toLocaleString()} possible duplicate group${groups.length===1?"":"s"}${groups.length>80?" (showing first 80)":""}. Click "Merge" to combine a group into one record, or ✎ to edit one.`
     : "No likely duplicates found.";
   $("#dupList").innerHTML = groups.slice(0,80).map(gr=>{
+    const keys=gr.people.map(personKey);
     const rows=gr.people.map(p=>{
       const tags=[p.mem?"sub":"",p.don?"donor":"",p.auth?"author":""].filter(Boolean).join(" · ");
       return `<div class="dupperson"><span><b>${esc(p.n||"—")}</b>${tags?' · '+tags:''} <span style="color:var(--vc-charcoal)">${esc((p.emails||[]).join(", "))||"no email"}</span></span><a data-key="${esc(personKey(p))}">✎ edit</a></div>`;
     }).join("");
-    return `<div class="dupgroup"><div class="gh">${esc(gr.why)}</div>${rows}</div>`;
+    return `<div class="dupgroup"><div class="gh">${esc(gr.why)}<button class="btn mergebtn" data-merge="${esc(JSON.stringify(keys))}" title="Combine these ${gr.people.length} records into one — keeps every email, type and note, and the strongest status (subscriber/donor/author). Saved for everyone.">⤵ Merge these ${gr.people.length}</button></div>${rows}</div>`;
   }).join("");
   $("#dupModal").style.display="flex";
 }
