@@ -114,5 +114,15 @@ jobs:
             echo "no changes to publish"
           else
             git commit -m "Daily Ghost refresh $(date -u '+%Y-%m-%d')"
-            git push
+            # Resilient publish: retry transient GitHub push errors (e.g. "fatal error in
+            # commit_refs") and rebase past any commits that landed since checkout (a manual
+            # push or an overlapping run). On a data-file conflict the fresh build wins (-X theirs).
+            ok=
+            for i in 1 2 3 4 5; do
+              if git push; then ok=1; echo "pushed on attempt $i"; break; fi
+              echo "push attempt $i failed; syncing with origin and retrying…"
+              git pull --rebase --autostash -X theirs origin main || git rebase --abort || true
+              sleep 8
+            done
+            [ -n "$ok" ] || { echo "ERROR: could not push after 5 attempts."; exit 1; }
           fi
