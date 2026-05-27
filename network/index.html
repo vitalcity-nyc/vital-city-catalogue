@@ -188,6 +188,8 @@
   .emrow{display:flex;align-items:center;gap:5px}
   .emlink{color:inherit;text-decoration:none}
   .emlink:hover{text-decoration:underline;color:var(--vc-cerulean)}
+  .emlink.emsub{font-weight:700}                                   /* the newsletter subscription email */
+  .emlink.emrecent{text-decoration:underline;text-decoration-color:var(--vc-green);text-decoration-thickness:2px;text-underline-offset:2px}  /* most recently active */
   .emcopy{visibility:hidden;cursor:pointer;color:var(--vc-cerulean);font-size:12px;text-decoration:none;font-weight:700}
   tr:hover .emcopy{visibility:visible}
   .emcopy:hover{color:var(--vc-orange)}
@@ -1224,8 +1226,19 @@ function rowHTML(p){
     }
     return `<span class="pill" data-type="${esc(t)}" title="Click to filter the list to everyone tagged '${esc(t)}'.">${esc(t)}${x}</span>`;
   }).join("")||'<span class="muted">—</span>';
+  // When a person has several emails, bold the one(s) they subscribe to the newsletter
+  // through, and underline whichever was most recently active (opened/visited).
+  const multiE=(p.emails&&p.emails.length>1);
+  const subSet=new Set(multiE?(p.sub_emails||[]):[]);
+  const recentE=multiE?(p.recent_email||""):"";
   const emailCell=(p.emails&&p.emails.length)
-    ? p.emails.map(e=>`<span class="emrow"><a class="emlink" href="mailto:${esc(e)}" title="Click to start an email to ${esc(e)} in your mail app">${esc(e)}</a><a class="emcopy" role="button" tabindex="0" data-email="${esc(e)}" title="Copy ${esc(e)} to the clipboard" aria-label="Copy ${esc(e)}">⧉</a></span>`).join("")
+    ? p.emails.map(e=>{
+        const isSub=subSet.has(e), isRecent=(e===recentE);
+        const cls="emlink"+(isSub?" emsub":"")+(isRecent?" emrecent":"");
+        const tip=isSub?(isRecent?"Newsletter subscription email — most recently active":"Newsletter subscription email")
+                       :("Click to start an email to "+esc(e)+" in your mail app");
+        return `<span class="emrow"><a class="${cls}" href="mailto:${esc(e)}" title="${tip}">${esc(e)}</a><a class="emcopy" role="button" tabindex="0" data-email="${esc(e)}" title="Copy ${esc(e)} to the clipboard" aria-label="Copy ${esc(e)}">⧉</a></span>`;
+      }).join("")
     : '<span class="muted">—</span>';
   // mark empty cells so the phone card view can hide them (no "DONOR —" clutter)
   const bl=c=>c?'':' blank';

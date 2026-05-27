@@ -151,6 +151,7 @@ WEBMAIL = {"gmail.com","googlemail.com","yahoo.com","ymail.com","hotmail.com","o
 
 
 DOMCOUNT = {}   # email-domain -> # of distinct people using it (filled in main; for the shared-domain fallback)
+SUB_INFO = {}   # email -> {"sub": bool (active Ghost newsletter sub), "seen": last_seen ISO} (filled during member ingest)
 
 
 def infer_institution(emails):
@@ -543,6 +544,12 @@ def main():
             set_name(p, recorded, True) if recorded else set_name(p, guess, False)
             since = (row.get("created_at") or "")[:10]
             if since and not p["since"]: p["since"] = since
+            # Record which emails are *actively* subscribed in Ghost + their last activity,
+            # for the resubscribe fix and for marking the subscription email(s) in the UI.
+            if email:
+                sub = str(row.get("subscribed") or "").strip().lower() in ("1", "true", "yes")
+                seen = (row.get("last_seen") or "").strip()
+                SUB_INFO[email] = {"sub": sub, "seen": seen}
             index(p)
 
     # (Subscribers come from Ghost only — Mailchimp subscribed list intentionally
@@ -762,9 +769,23 @@ def main():
     people = merge_people(people)
     print(f"merged {before - len(people)} duplicate-name records", file=__import__("sys").stderr)
 
-    for p in people:                 # unsubscribed wins: a former contact is not a current subscriber
-        if p["unsub"]:
-            p["mem"] = 0
+    # Current Ghost subscription wins over a stale Mailchimp unsubscribe: if someone
+    # unsubscribed and later came back (Ghost now lists an active subscription on one of
+    # their emails), clear the old unsubscribe so they show as a subscriber again.
+    revived = 0
+    for p in people:
+        sub_here = any(SUB_INFO.get(e, {}).get("sub") for e in p["emails"])
+        if p["unsub"] and sub_here:
+            p["unsub"] = 0
+            p["udate"] = ""
+            if "unsub" in p["src"]:
+                p["src"].remove("unsub")
+            p["mem"] = 1
+            revived += 1
+        elif p["unsub"]:
+            p["mem"] = 0          # genuinely unsubscribed, not currently in Ghost — a former contact
+    if revived:
+        print(f"revived {revived} resubscribed members (Ghost shows them active again)", file=__import__("sys").stderr)
 
     # ---- apply exported in-tool edits (every-field) permanently ----
     # private/people_overrides.json: {personKey: {n, inst, emails, types, topics}}
@@ -844,6 +865,22 @@ def main():
     dropped = [p for p in people if not keep(p)]
     people = [p for p in people if keep(p)]
     print(f"dropped {len(dropped)} no-contact-info entries", file=__import__("sys").stderr)
+
+    # ---- mark the newsletter-subscription email(s) per person (only when they have several) ----
+    # The UI bolds these and underlines the most recently active one.
+    marked = 0
+    for p in people:
+        if len(p["emails"]) <= 1:
+            continue
+        sub_e = [e for e in p["emails"] if SUB_INFO.get(e, {}).get("sub")]
+        if sub_e:
+            p["sub_emails"] = sub_e
+            best = max(((SUB_INFO[e].get("seen") or ""), e) for e in sub_e)
+            if best[0]:                       # only underline a "most recent" if Ghost has activity data
+                p["recent_email"] = best[1]
+            marked += 1
+    if marked:
+        print(f"marked subscription emails on {marked} multi-email people", file=__import__("sys").stderr)
 
     # ---- influence flag (Wikipedia, from wiki_influence.py cache, keyed by name) ----
     wiki_path = PRIV / "wiki_cache.json"

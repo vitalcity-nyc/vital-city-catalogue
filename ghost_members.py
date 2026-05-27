@@ -54,11 +54,17 @@ def fetch_members():
 def write_csv(members, path):
     with open(path, "w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["email", "name", "created_at"])
+        w.writerow(["email", "name", "created_at", "subscribed", "last_seen"])
         for m in members:
+            nl = m.get("newsletters") or []
+            # "subscribed" = actively subscribed to a newsletter right now (a resubscribe
+            # flips this back on); used downstream so a returning member shows as a subscriber.
+            subscribed = 1 if any((n.get("status") == "active") for n in nl) else 0
             w.writerow([(m.get("email") or "").strip(),
                         (m.get("name") or "").strip(),
-                        m.get("created_at") or ""])
+                        m.get("created_at") or "",
+                        subscribed,
+                        m.get("last_seen_at") or ""])   # most recent open/visit, for the "recently active" mark
 
 
 def load_emails(path):
