@@ -44,7 +44,7 @@
   .wm{font-weight:900;letter-spacing:.22em;text-transform:uppercase;font-size:12px}
   header.mast h1{font-family:var(--vc-sans);font-weight:900;font-size:26px;margin:6px 0 2px}
   .sub{color:var(--vc-charcoal);font-size:13px}
-  .confbar{background:var(--vc-black);color:#fff;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;padding:6px 30px;font-weight:700}
+  .confbar{background:var(--vc-black);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.1em;padding:4px 30px;font-weight:700}
 
   .stats{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid var(--vc-black);background:var(--vc-paper)}
   .stat.active{background:var(--vc-black)}
@@ -84,7 +84,7 @@
   .stat.clickable:not(.inc):not(.exc):not(.active):hover{background:var(--vc-white)}
   .stat.clickable:not(.inc):not(.exc):not(.active):hover .lbl{color:var(--vc-orange)}
   .stat.inc:hover,.stat.exc:hover,.stat.active:hover{filter:brightness(0.92)}
-  .activitybar{padding:7px 30px;border-bottom:1px solid var(--vc-cloud);background:var(--vc-paper);font-size:11.5px;color:var(--vc-charcoal);font-weight:400;line-height:1.5}
+  .activitybar{padding:7px 30px;background:var(--vc-paper);font-size:11.5px;color:var(--vc-charcoal);font-weight:400;line-height:1.5}
   .activitybar .albl{text-transform:uppercase;letter-spacing:.09em;font-weight:700;margin-right:6px}
   .activitybar b{color:var(--vc-black);font-weight:700}
   .activitybar .up{color:var(--vc-green)}.activitybar .down{color:#c8102e}.activitybar .gift{color:var(--vc-orange)}
@@ -96,7 +96,13 @@
   .seg button.on{background:var(--vc-black);color:#fff}
   .controls input[type=search],.controls select{font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--vc-black);background:#fff;border-radius:0}
   .controls input[type=search]{flex:1 1 220px;min-width:180px}
-  .controls label.chk{font-size:12px;display:inline-flex;align-items:center;gap:6px;color:var(--vc-charcoal);cursor:pointer;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  .controls label.chk{font-size:12px;display:inline-flex;align-items:center;gap:5px;color:var(--vc-charcoal);cursor:pointer;text-transform:uppercase;letter-spacing:.05em;font-weight:700;padding:6px 11px;border:1px solid var(--vc-cloud);border-radius:999px;background:var(--vc-white);white-space:nowrap}
+  .controls label.chk:hover{border-color:var(--vc-charcoal)}
+  .controls label.chk input{position:absolute;opacity:0;width:0;height:0}
+  .controls label.chk:has(input:checked){background:var(--vc-green);border-color:var(--vc-green);color:#fff}
+  .controls label.chk:has(input:checked) span{text-decoration-color:#fff!important;color:#fff}
+  .refinehint{font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  .refine{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center}
   .toggles{display:inline-flex;flex-wrap:wrap;gap:8px}
   .tg{font:inherit;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:8px 13px;border:1px solid var(--vc-black);background:var(--vc-white);color:var(--vc-charcoal);cursor:pointer}
   .tg.on{background:var(--vc-green);border-color:var(--vc-green);color:#fff}
@@ -115,6 +121,8 @@
   .btn:hover{background:var(--vc-black);color:#fff}
   .btn.primary{background:var(--vc-black);color:#fff}
   .btn.primary:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:var(--vc-black)}
+  .btn.ghost{border:none;background:transparent;color:var(--vc-charcoal);padding:8px 6px}
+  .btn.ghost:hover{background:transparent;color:var(--vc-black);text-decoration:underline}
   .facetbulk{float:right;font-size:10px;font-weight:400;text-transform:none;letter-spacing:0}
   .facetbulk a{color:var(--vc-cerulean);text-decoration:none}
   .facetbulk a:hover{text-decoration:underline}
@@ -193,13 +201,14 @@
   .emlink.emsub{font-weight:700}                                   /* the newsletter subscription email */
   .emtag{display:inline-block;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:1px 5px;margin-left:6px;background:var(--vc-green);color:#fff;border-radius:2px;white-space:nowrap;vertical-align:middle}
   .emtag.emtag-rec{background:var(--vc-cerulean)}                  /* subscribed + most recently opened */
-  .emcopy{visibility:hidden;cursor:pointer;color:var(--vc-cerulean);font-size:12px;text-decoration:none;font-weight:700}
-  tr:hover .emcopy{visibility:visible}
-  .emcopy:hover{color:var(--vc-orange)}
+  .emcopy{opacity:.35;cursor:pointer;color:var(--vc-cerulean);font-size:12px;text-decoration:none;font-weight:700;transition:opacity .12s}
+  tr:hover .emcopy,.emcopy:focus{opacity:1}
+  .emcopy:hover{color:var(--vc-orange);opacity:1}
   .confirm{cursor:pointer;color:var(--vc-green);margin-left:5px;font-size:13px;font-weight:700;text-decoration:none}
   .confirm:hover{color:var(--vc-black)}
-  .howto{position:absolute;right:30px;top:24px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-cerulean);text-decoration:none}
-  .howto:hover{text-decoration:underline}
+  .mastlinks{position:absolute;right:30px;top:20px;display:flex;align-items:center;gap:14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .mastlinks a{color:var(--vc-cerulean);text-decoration:none;white-space:nowrap}
+  .mastlinks a:hover{text-decoration:underline}
   header.mast{position:relative}
   .hint{padding:8px 30px 0;font-size:11.5px;color:var(--vc-charcoal)}
   .hint .g{font-style:italic;color:var(--vc-charcoal)}
@@ -224,7 +233,7 @@
     table.people{min-width:660px}      /* scroll sideways instead of squishing on small screens */
     header.mast{padding:18px 16px 14px}
     .confbar,.controls,.resultrow,.activitybar,.savedviews,.hint,.tablewrap{padding-left:16px;padding-right:16px}
-    .confbar a{float:none!important;display:inline-block;margin:6px 14px 0 0}   /* stack links below text, not overlapping */
+    .mastlinks{position:static;right:auto;top:auto;flex-wrap:wrap;gap:10px 14px;margin:0 0 10px}   /* flow above the wordmark instead of overlapping the title */
     .controls,.resultrow{position:static}        /* drop sticky on small screens — scroll naturally */
     table.people th{position:static}
   }
@@ -269,6 +278,10 @@
   html.dark .stat.active .num,html.dark .stat.active .lbl{color:#fff}
   html.dark #tOther.on{background:var(--vc-cerulean);border-color:var(--vc-cerulean)}
   html.dark .tg{background:var(--vc-white);color:var(--vc-charcoal)}
+  html.dark .controls label.chk{background:var(--vc-white);border-color:var(--vc-cloud)}
+  html.dark .controls label.chk:has(input:checked){background:var(--vc-green);border-color:var(--vc-green);color:#fff}
+  html.dark .btn.ghost{background:transparent;color:var(--vc-charcoal)}
+  html.dark .btn.ghost:hover{background:transparent;color:var(--vc-black)}
   html.dark .gatebox{background:var(--vc-white)}
   html.dark .gatebox button{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
   html.dark .gatebox button:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:#161719}
@@ -296,12 +309,16 @@
 <div id="app">
   <div class="toast" id="toast"></div>
   <header class="mast">
-    <a class="howto" href="about.html" target="_blank" title="Open the full plain-English guide to this tool in a new tab — what every feature does and how the data updates.">How it works ↗</a>
+    <div class="mastlinks">
+      <a href="about.html" target="_blank" title="Open the full plain-English guide to this tool in a new tab — what every feature does and how the data updates.">How it works ↗</a>
+      <a href="#" id="themeToggle" title="Switch between light and dark color themes. Your choice is remembered on this device.">🌙 Dark mode</a>
+      <a href="#" id="forget" title="Forget the saved passphrase on this device and re-lock the tool. Use this on a shared or public computer when you're done.">Lock</a>
+    </div>
     <div class="wm">Vital City</div>
     <h1>Contact master search</h1>
     <div class="sub">Everyone in Vital City's orbit — newsletter subscribers, contributors, contacts and donors — searchable by type and category. Filter to any subset, then export it, copy its emails, or email the group.</div>
   </header>
-  <div class="confbar">Confidential · contains subscriber, donor and contact data · do not redistribute<a href="#" id="forget" style="float:right;color:#fff;text-decoration:underline" title="Forget the saved passphrase on this device and re-lock the tool. Use this on a shared or public computer when you're done.">Lock / forget password on this device</a><a href="#" id="themeToggle" style="float:right;color:#fff;text-decoration:underline;margin-right:18px" title="Switch between light and dark color themes. Your choice is remembered on this device.">🌙 Dark mode</a></div>
+  <div class="confbar">Confidential · contains subscriber, donor and contact data · do not redistribute</div>
   <div class="stats" id="stats"></div>
   <div class="activitybar" id="activityBar" title="A quick pulse of recent movement: new newsletter sign-ups, people who unsubscribed, and money raised (with the number of gifts) over the last 7 and 30 days. Refreshes daily."></div>
   <div class="controls">
@@ -312,14 +329,16 @@
       <button class="tg" id="tAuth" title="Click once to include, again to exclude (Not authors), again for off. Vital City contributors.">Authors</button>
       <button class="tg" id="tOther" title="People who are none of the three — not a subscriber, donor or author (often CRM contacts). Click once to include, again to exclude, again for off.">Other</button>
     </div>
-    <span class="toglegend">Click a category to cycle it: <span class="lg lg-inc">✓ include</span> → <span class="lg lg-exc">✕ exclude</span> → <span class="lg lg-off">off</span>. Turn on two or more to see the overlap.</span>
-    <label class="chk" id="repeatDonorWrap" style="display:none" title="Show only donors who have given more than once (appears when the Donors filter is on)."><input type="checkbox" id="fRepeatDonor"> Repeat donors (2+ gifts)</label>
+    <span class="toglegend">Click a category to cycle it: <span class="lg lg-inc">✓ include</span> → <span class="lg lg-exc">✕ exclude</span> → <span class="lg lg-off">off</span>.</span>
     <input type="search" id="q" placeholder="Search name, email, institution, notes…" autocomplete="off" aria-label="Search by name, email, institution or notes (press / to focus)" title="Type to narrow the list. Matches names, email addresses, institutions and your notes — and updates as you type. Shortcut: press / to jump here.">
-    <label class="chk" title="Show only contacts you've starred. Star anyone by clicking the ☆ at the start of their row."><input type="checkbox" id="fStar"> ★ Starred</label>
-    <label class="chk" title="Show only people flagged 'notable' — they appear to have an English Wikipedia page (matched conservatively using context clues, so it's a rough signal of public profile)."><input type="checkbox" id="fWiki"> <span style="text-decoration:underline;text-decoration-color:var(--vc-cerulean);text-decoration-thickness:2px;text-underline-offset:3px">Notable</span></label>
-    <label class="chk" title="Show only people who are subscribed to the newsletter under two or more email addresses (each tagged ✉ newsletter) — i.e. they're on the list more than once."><input type="checkbox" id="fMultiSub"> 2+ newsletter emails</label>
-    <label class="chk" title="Also show people who left the newsletter. They're hidden by default and appear in red when shown."><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
-    <button class="btn primary" id="clear" title="Reset every filter and return to the full list">Reset all</button>
+    <span class="refine"><span class="refinehint">Refine:</span>
+      <label class="chk" id="repeatDonorWrap" style="display:none" title="Show only donors who have given more than once (appears when the Donors filter is on)."><input type="checkbox" id="fRepeatDonor"> Repeat donors (2+ gifts)</label>
+      <label class="chk" title="Show only contacts you've starred. Star anyone by clicking the ☆ at the start of their row."><input type="checkbox" id="fStar"> ★ Starred</label>
+      <label class="chk" title="Show only people flagged 'notable' — they appear to have an English Wikipedia page (matched conservatively using context clues, so it's a rough signal of public profile)."><input type="checkbox" id="fWiki"> <span style="text-decoration:underline;text-decoration-color:var(--vc-cerulean);text-decoration-thickness:2px;text-underline-offset:3px">Notable</span></label>
+      <label class="chk" title="Show only people who are subscribed to the newsletter under two or more email addresses (each tagged ✉ newsletter) — i.e. they're on the list more than once."><input type="checkbox" id="fMultiSub"> 2+ newsletter emails</label>
+      <label class="chk" title="Also show people who left the newsletter. They're hidden by default and appear in red when shown."><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
+    </span>
+    <button class="btn ghost" id="clear" title="Reset every filter and return to the full list">Reset all</button>
   </div>
   <div class="savedviews" id="savedViews"></div>
   <div class="hint"><b>New here?</b> Hover over any button, column heading or tag for a plain-English explanation — or read the <a href="about.html" target="_blank" class="hintlink">full guide ↗</a>. Click anyone's <b>name</b> (or anywhere on their row) to view their full details — then edit or delete from there. <b>✓</b> confirms a <span class="g">gray</span> guessed name; click the <b>☆</b> to star someone. Press <kbd>?</kbd> for keyboard shortcuts. <a href="#" id="exportFixes" class="hintlink" title="Download a backup file of all the edits, confirmations and deletions made in this tool. Not normally needed — edits already save automatically.">Export edits →</a></div>
@@ -361,7 +380,7 @@
           </label>
           <button class="btn" id="addPerson" title="Manually add one new person">+ Add person</button>
           <button class="btn" id="needsReview" title="Records that could use a human check (incl. possible duplicates)">Needs review</button>
-          <button class="btn primary" id="export" title="Download everyone currently shown as a spreadsheet (.csv) — opens in Excel or Google Sheets. Respects your filters and sort.">Export CSV</button>
+          <button class="btn" id="export" title="Download everyone currently shown as a spreadsheet (.csv) — opens in Excel or Google Sheets. Respects your filters and sort.">Export CSV</button>
           <button class="btn" id="copyEmails" title="Copy the email addresses of everyone currently shown to your clipboard, ready to paste anywhere.">Copy emails</button>
           <select id="emailField" title="Which address field the emails go into when you click 'Email group': Bcc (recipients can't see each other — best for newsletters), To, or Cc."><option value="bcc">Bcc</option><option value="to">To</option><option value="cc">Cc</option></select>
           <button class="btn" id="emailGroup" title="Open a new message in your email app addressed to everyone currently shown (in the Bcc/To/Cc field you picked). For big lists, 'Copy emails' is more reliable.">Email group</button>
