@@ -378,7 +378,7 @@
             <th data-k="first" title="Click to sort by first name (A–Z). Click again to reverse.">First name</th>
             <th data-k="last" title="Click to sort by last name (A–Z). Click again to reverse. Compound surnames like 'Jones Austin' are kept together.">Last name</th>
             <th data-k="types" title="What this person is — their roles and areas (journalist, academic, city gov, VC contributor, etc.). Click a tag to filter the list to it. Click this header to sort.">Type(s)</th>
-            <th data-k="eng" title="Subscriber status + email engagement from Mailchimp. The dots (●●○○○) are Mailchimp's 1–5 engagement rating; the % is the subscriber's average newsletter open rate. Click to rank most-engaged first.">Subscriber</th>
+            <th data-k="eng" title="Subscriber status, plus their average newsletter open rate from Mailchimp (the share of our emails they open). Click to rank most-engaged first.">Subscriber</th>
             <th data-k="damt" title="Total this person has given (and the date of their most recent gift). Click to sort by amount, biggest first.">Donor</th>
             <th data-k="inst" title="The person's organization or employer. Click to sort A–Z.">Institution</th>
             <th data-k="e" title="All known email addresses for this person. A green '✉ newsletter' tag marks the address they're subscribed through (blue '· last opened' = the one they most recently opened the newsletter from). Hover an address for a one-click copy button; click it to start an email.">Email</th>
@@ -475,7 +475,7 @@
       <p style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.5">Tip: click a category (chip or big number) to cycle it <b>include → exclude → off</b>. Save a filter combo as a view, or copy a shareable link to it.</p>
       <h3 style="margin-top:14px">Reading the table</h3>
       <p style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.6">
-        <b><span style="color:var(--vc-green)">●●○○○</span> &amp; %</b> under a subscriber — their email engagement, pulled from Mailchimp. The <b>dots</b> are Mailchimp's 1–5 engagement rating (how often they open and click); the <b>percentage</b> is their average newsletter open rate. The two can differ — a highly rated reader who joined recently may still show a low historical open %.<br>
+        <b><span style="color:var(--vc-green)">72% opens</span></b> under a subscriber — their average newsletter open rate from Mailchimp (the share of our emails they open). Apple Mail's auto-open can inflate it, and a brand-new subscriber can show a high % off just a few emails.<br>
         <b><span style="text-decoration:underline;text-decoration-color:var(--vc-cerulean);text-decoration-thickness:2px;text-underline-offset:3px">Underlined name</span></b> — flagged as notable: this person appears to have an English Wikipedia page (matched conservatively using context clues). Use the <b>Notable</b> filter to see just these.
       </p>
       <div class="modalbtns"><button class="btn primary" id="helpClose">Got it</button></div>
@@ -1332,7 +1332,7 @@ function rowHTML(p){
       <td>${star} <span class="nm${g}"${nmTitle}>${esc(np.first)||'<span class="muted">—</span>'}</span></td>
       <td><span class="nm${g}"${nmTitle}>${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
       <td data-label="Type(s)" class="c-type${bl(p.types&&p.types.length)}">${types}</td>
-      <td data-label="Subscriber" class="c-mem${bl(p.unsub||p.mem)}">${p.unsub?'<span class="badge" style="background:#c8102e;color:#fff">Unsubscribed</span>':(p.mem?`<span class="badge b-mem">Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>${p.erate?`<span class="erate" title="Email engagement, from Mailchimp. Dots = Mailchimp's engagement rating for this subscriber (${p.erate} of 5 ● — based on how often they open & click). ${p.eopen}% = their average open rate across our newsletters; ${p.eclick}% = average click rate. Rating and open rate can differ: a 5/5 reader who only recently joined may still show a low historical open %.">${"●".repeat(p.erate)}${"○".repeat(5-p.erate)} ${p.eopen}%</span>`:''}`:'<span class="muted">—</span>')}</td>
+      <td data-label="Subscriber" class="c-mem${bl(p.unsub||p.mem)}">${p.unsub?'<span class="badge" style="background:#c8102e;color:#fff">Unsubscribed</span>':(p.mem?`<span class="badge b-mem">Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>${p.erate?`<span class="erate" title="Average newsletter open rate from Mailchimp — the share of our emails this subscriber opens${p.eclick?` (${p.eclick}% click rate)`:''}. Note: Apple Mail's auto-open can inflate open rates, and a brand-new subscriber can show a high % off just a few emails.">${p.eopen}% opens</span>`:''}`:'<span class="muted">—</span>')}</td>
       <td data-label="Donor" class="c-don${bl(p.don)}">${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>${p.dlast?`<div class="sub-d">last ${p.dlast}</div>`:''}`:'<span class="muted">—</span>'}</td>
       <td data-label="Institution" class="c-inst${bl(p.inst)}">${esc(p.inst)||'<span class="muted">—</span>'}</td>
       <td data-label="Email" class="em${p.unsub?' unsub':''}${bl(p.emails&&p.emails.length)}">${emailCell}</td>
