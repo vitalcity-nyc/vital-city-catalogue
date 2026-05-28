@@ -1,11 +1,11 @@
 [
   {
     "name": "Crime",
-    "post_count": 140
+    "post_count": 141
   },
   {
     "name": "History",
-    "post_count": 134
+    "post_count": 135
   },
   {
     "name": "Government Operations",
@@ -17,7 +17,7 @@
   },
   {
     "name": "City Planning",
-    "post_count": 101
+    "post_count": 102
   },
   {
     "name": "Justice",
@@ -29,19 +29,19 @@
   },
   {
     "name": "Housing",
-    "post_count": 66
+    "post_count": 67
   },
   {
     "name": "Gun Violence",
     "post_count": 66
   },
   {
-    "name": "Politics",
+    "name": "Police Reform",
     "post_count": 51
   },
   {
-    "name": "Police Reform",
-    "post_count": 50
+    "name": "Politics",
+    "post_count": 51
   },
   {
     "name": "Jails",
@@ -276,6 +276,10 @@
     "post_count": 7
   },
   {
+    "name": "Reality Check",
+    "post_count": 6
+  },
+  {
     "name": "Museums",
     "post_count": 6
   },
@@ -317,10 +321,6 @@
   },
   {
     "name": "Environment",
-    "post_count": 5
-  },
-  {
-    "name": "Reality Check",
     "post_count": 5
   },
   {

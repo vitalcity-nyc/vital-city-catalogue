@@ -437,6 +437,26 @@
     "website": null
   },
   {
+    "name": "John Hall",
+    "post_count": 9,
+    "slugs": [
+      "fix-public-policy-or-pay-a-price",
+      "just-the-facts-on-new-york-city-subway-crime",
+      "nypd-zone-strategy-crime-drop-analysis",
+      "real-crime-numbers-nyc-nypd",
+      "the-bronxs-crime-crisis",
+      "the-false-promise-of-police-crackdowns-in-new-york-city-roosevelt-island-queens-corridor",
+      "the-truth-about-youth-crime-rates-in-nyc",
+      "what-new-yorkers-should-know-about-nypd-staffing",
+      "what-the-data-show-about-subway-safety"
+    ],
+    "slug": "hall-john",
+    "bio": "is a retired police professional and a National Institute of Justice Law Enforcement Advancing Data and Science (LEADS) Scholar.",
+    "url": "https://www.vitalcitynyc.org/author/hall-john/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Nicole Gelinas",
     "post_count": 9,
     "slugs": [
@@ -472,25 +492,6 @@
     "slug": "schleicher-david",
     "bio": "is the Walter E. Meyer Professor of Property and Urban Law at Yale Law School.",
     "url": "https://www.vitalcitynyc.org/author/schleicher-david/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "John Hall",
-    "post_count": 8,
-    "slugs": [
-      "fix-public-policy-or-pay-a-price",
-      "just-the-facts-on-new-york-city-subway-crime",
-      "real-crime-numbers-nyc-nypd",
-      "the-bronxs-crime-crisis",
-      "the-false-promise-of-police-crackdowns-in-new-york-city-roosevelt-island-queens-corridor",
-      "the-truth-about-youth-crime-rates-in-nyc",
-      "what-new-yorkers-should-know-about-nypd-staffing",
-      "what-the-data-show-about-subway-safety"
-    ],
-    "slug": "hall-john",
-    "bio": "is a retired police professional and a National Institute of Justice Law Enforcement Advancing Data and Science (LEADS) Scholar.",
-    "url": "https://www.vitalcitynyc.org/author/hall-john/",
     "twitter": null,
     "website": null
   },
@@ -1191,6 +1192,19 @@
     "slug": "vergara-camilo-jose",
     "bio": "is a photographer who has spent more than 50 years documenting poor communities in New York City. He has more than 16,000 images in the Library of Congress.",
     "url": "https://www.vitalcitynyc.org/author/vergara-camilo-jose/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Lisa Chamberlain",
+    "post_count": 2,
+    "slugs": [
+      "19th-century-nimby-housing-development-nyc",
+      "revealing-hidden-signals-in-city-hotline-data"
+    ],
+    "slug": "chamberlain-lisa",
+    "bio": "is an urbanist, writer, and communications consultant at Strategies for City Builders. She previously reported on commercial real estate for The New York Times and led communications at the Centre for Urban Transformation at the World Economic Forum.",
+    "url": "https://www.vitalcitynyc.org/author/chamberlain-lisa/",
     "twitter": null,
     "website": null
   },
@@ -2157,6 +2171,18 @@
     "website": null
   },
   {
+    "name": "Stefan Al",
+    "post_count": 1,
+    "slugs": [
+      "19th-century-nimby-housing-development-nyc"
+    ],
+    "slug": "al-stefan",
+    "bio": "is an architect, urban planner, and director of the Urban Planning program at Hunter College, CUNY. He is the author of “Supertall” and “Dwelling on Earth: The Past and Future of the Places We Call Home.\"",
+    "url": "https://www.vitalcitynyc.org/author/al-stefan/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Nora McCarthy",
     "post_count": 1,
     "slugs": [
@@ -2513,18 +2539,6 @@
     "slug": "sikora-pete",
     "bio": "is the climate and inequality campaigns director for New York Communities for Change.",
     "url": "https://www.vitalcitynyc.org/author/sikora-pete/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Lisa Chamberlain",
-    "post_count": 1,
-    "slugs": [
-      "revealing-hidden-signals-in-city-hotline-data"
-    ],
-    "slug": "chamberlain-lisa",
-    "bio": "is an urbanist, writer, and communications consultant at Strategies for City Builders. She previously reported on commercial real estate for The New York Times and led communications at the Centre for Urban Transformation at the World Economic Forum.",
-    "url": "https://www.vitalcitynyc.org/author/chamberlain-lisa/",
     "twitter": null,
     "website": null
   },
@@ -3561,18 +3575,6 @@
     "website": null
   },
   {
-    "name": "Adam Cohen",
-    "post_count": 1,
-    "slugs": [
-      "trumps-bizarro-new-deal"
-    ],
-    "slug": "cohen-adam",
-    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
-    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Meryl Chertoff",
     "post_count": 1,
     "slugs": [
@@ -3593,6 +3595,18 @@
     "slug": "schragger-richard",
     "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
     "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Adam Cohen",
+    "post_count": 1,
+    "slugs": [
+      "trumps-bizarro-new-deal"
+    ],
+    "slug": "cohen-adam",
+    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
+    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
     "twitter": null,
     "website": null
   },
