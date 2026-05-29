@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28T16:28:03.767116+00:00",
+  "generated_at": "2026-05-29T12:09:40.288747+00:00",
   "site": "https://www.vitalcitynyc.org",
   "total_posts": 815,
   "total_authors": 446,
@@ -10,19 +10,6 @@
     "2026-05-28"
   ],
   "first_run": false,
-  "new_article_count": 2,
-  "new_articles": [
-    {
-      "title": "Did NYPD's Zone Strategy Cause Crime to Drop?",
-      "url": "https://www.vitalcitynyc.org/nypd-zone-strategy-crime-drop-analysis/",
-      "published_date": "2026-05-28",
-      "primary_author": "John Hall"
-    },
-    {
-      "title": "What New York Can Learn from the NIMBYs of the 19th Century",
-      "url": "https://www.vitalcitynyc.org/19th-century-nimby-housing-development-nyc/",
-      "published_date": "2026-05-28",
-      "primary_author": "Stefan Al"
-    }
-  ]
+  "new_article_count": 0,
+  "new_articles": []
 }

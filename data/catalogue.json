@@ -7,7 +7,7 @@
     "type_basis": "html:3-chart-embeds",
     "published_date": "2026-05-28",
     "published_at": "2026-05-28T14:32:13.000+00:00",
-    "updated_at": "2026-05-28T14:32:13.000+00:00",
+    "updated_at": "2026-05-29T00:09:15.000+00:00",
     "primary_author": "John Hall",
     "authors": [
       "John Hall"
@@ -24,7 +24,7 @@
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/05/Cropping-Tool---2026-05-28T095930.989.png",
     "featured": false,
     "visibility": "public",
-    "word_count": 2258,
+    "word_count": 2257,
     "reading_minutes": 10,
     "id": "6a184a5537478a0001c37f7e"
   },
@@ -36,7 +36,7 @@
     "type_basis": "default",
     "published_date": "2026-05-28",
     "published_at": "2026-05-28T13:40:10.000+00:00",
-    "updated_at": "2026-05-28T13:40:10.000+00:00",
+    "updated_at": "2026-05-29T00:08:33.000+00:00",
     "primary_author": "Stefan Al",
     "authors": [
       "Stefan Al",
@@ -54,7 +54,7 @@
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/05/Cropping-Tool---2026-05-28T093213.102.png",
     "featured": false,
     "visibility": "public",
-    "word_count": 1435,
+    "word_count": 1437,
     "reading_minutes": 6,
     "id": "6a18439c37478a0001c37f52"
   },
@@ -270,7 +270,7 @@
     "type_basis": "title:framing-page",
     "published_date": "2026-05-20",
     "published_at": "2026-05-20T14:54:51.000+00:00",
-    "updated_at": "2026-05-21T19:19:43.000+00:00",
+    "updated_at": "2026-05-29T00:24:07.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer"
@@ -8801,37 +8801,6 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
-    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
-    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
-    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Meryl Chertoff",
-    "authors": [
-      "Meryl Chertoff"
-    ],
-    "topics": [
-      "Government Operations",
-      "Repercussions",
-      "City Planning"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "The Sharpie and the damage done",
-    "excerpt": "The Sharpie and the damage done",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1313,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a404c"
-  },
-  {
     "title": "Donald Trump vs. the Rule of Law, and New York City",
     "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
     "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
@@ -8861,6 +8830,37 @@
     "word_count": 1560,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a404b"
+  },
+  {
+    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
+    "slug": "trumps-bizarro-new-deal",
+    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Adam Cohen",
+    "authors": [
+      "Adam Cohen"
+    ],
+    "topics": [
+      "History",
+      "Repercussions",
+      "Government Operations"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1619,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a41d5"
   },
   {
     "title": "What You Can Do About Trump",
@@ -8926,35 +8926,35 @@
     "id": "69a04c0ad4006a00010a4049"
   },
   {
-    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
-    "slug": "trumps-bizarro-new-deal",
-    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
+    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
+    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
+    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
     "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Adam Cohen",
+    "primary_author": "Meryl Chertoff",
     "authors": [
-      "Adam Cohen"
+      "Meryl Chertoff"
     ],
     "topics": [
-      "History",
+      "Government Operations",
       "Repercussions",
-      "Government Operations"
+      "City Planning"
     ],
     "issues": [
       "trump-100-days-and-beyond"
     ],
     "issue_numbers": [],
-    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
+    "summary": "The Sharpie and the damage done",
+    "excerpt": "The Sharpie and the damage done",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 1619,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a41d5"
+    "word_count": 1313,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a404c"
   },
   {
     "title": "A Real New York Mayoral Election",
