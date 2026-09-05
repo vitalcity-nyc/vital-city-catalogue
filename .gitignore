@@ -17,3 +17,4 @@ launchd.network.err.log
 private/
 *.xlsx
 growth/live/live.enc
+data/tweet_suggestions.json
