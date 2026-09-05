@@ -1,0 +1,80 @@
+name: tweet-suggester
+
+# Watches vitalcitynyc.org for newly published pieces and DMs Josh 2-3 suggested
+# posts for each one. Effectively event-driven: it polls hourly through the hours
+# Vital City actually publishes, and the seen-list means a run with nothing new
+# exits in seconds without spending anything.
+#
+# Cadence reasoning: of 474 pieces published since January 2025, 100% went out on
+# a weekday and 96% between 07:00 and 19:00 Eastern. Wednesday and Thursday carry
+# 67% of them, but a Wednesday/Thursday-only schedule would miss the other third.
+# Hourly across the weekday window catches everything within an hour of publication.
+#
+# The repo is public, so Actions minutes are free. The only cost is one Claude call
+# per genuinely new piece, about two cents.
+
+on:
+  schedule:
+    # Hourly, 13:00-23:00 UTC, Mon-Fri. GitHub cron does not observe daylight
+    # saving, so this window is 09:00-19:00 Eastern in summer and 08:00-18:00 in
+    # winter. Both cover the publishing hours above.
+    - cron: "0 13-23 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Lookback window in days"
+        default: "7"
+      dry_run:
+        description: "List new pieces without drafting (spends nothing)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tweet-suggester
+  cancel-in-progress: false
+
+jobs:
+  suggest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check the style screen still works
+        run: python3 tweet_suggester.py --self-test
+
+      - name: Scan and draft
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_DM_TO: ${{ secrets.SLACK_DM_TO }}
+        run: |
+          python3 tweet_suggester.py \
+            --days "${{ github.event.inputs.days || 7 }}" \
+            ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '--slack' }}
+
+      - name: Remember what has been suggested
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          if git diff --quiet -- data/tweet_suggester_seen.json; then
+            echo "nothing new this run"
+            exit 0
+          fi
+          git config user.name  "vital-city-bot"
+          git config user.email "actions@github.com"
+          git add data/tweet_suggester_seen.json
+          git commit -m "Suggested posts for new pieces [skip ci]"
+          # network-refresh commits to the same branch twice a day; rebase rather
+          # than fail a run whose Slack message has already gone out.
+          for i in 1 2 3; do
+            git pull --rebase --quiet && git push --quiet && exit 0
+            echo "push attempt $i failed, retrying"
+            sleep 5
+          done
+          exit 1
