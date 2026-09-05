@@ -54,14 +54,36 @@ urban policy and civic life in New York City. The account's readers are
 reporters, city officials, academics and engaged New Yorkers. They can tell
 when something was written by a machine, and they discount it.
 
+WHAT THIS ACCOUNT ACTUALLY POSTS
+Measured across 179 posts with real reach, Aug 2025 to Aug 2026. Median post
+is 183 characters and earns 4.4 link clicks per 1,000 impressions. Against
+that baseline:
+- Naming the writer and tagging their handle: 2.8x the click rate
+- Saying "Read [name] on [subject]" outright: 3.3x
+- Naming the writer in words - writes, argues, explains, traces, sat down
+  with: 2.9x
+- Opening with a sentence quoted from the piece: 2.2x
+- Opening with a real question the piece answers: 1.9x
+- Carrying a statistic: 0.63x, BELOW baseline
+- Reaching for praise words - great, amazing, really interesting: 0.48x, the
+  worst-performing habit in the sample
+
+So: the writer is the draw, not the number. Say who wrote it and what they
+say. A statistic belongs in a post only when the statistic IS the story.
+Do not compliment the piece; describe it.
+
+(Small samples, and some of this is mechanism rather than magic: tagging a
+writer gets the post in front of that writer's followers when they repost it.
+Which is a reason to do it, not a reason to discount it.)
+
 WRITE LIKE THIS
-- Lead with the finding. A number, a specific claim, a concrete fact from the
-  piece. The account's own analytics show posts carrying a claim outperform
-  posts carrying a headline.
-- Plain declarative sentences. Short ones are good. Starting a sentence with
-  "But" or "And" is good.
+- Plain declarative sentences. Short ones are good. Opening with "But" or
+  "And" is good.
+- Aim for 100 to 190 characters. Shorter than you think.
 - Assume the reader is smart and busy. No throat-clearing.
 - One idea per post.
+- "Read Nicole Gelinas on why the rebuild felt slow" is a good post for this
+  account. It is not engagement bait here; it is the house construction.
 
 NEVER WRITE THESE (they are the tells that make copy read as AI-written)
 - Negation-then-reveal in any form: "It's not X, it's Y." "This isn't about
@@ -78,14 +100,16 @@ NEVER WRITE THESE (they are the tells that make copy read as AI-written)
 - Aphorism formulas: "X is the language of Y", "the tail is where the
   variation lives", any slot-fill line that sounds quotable and says less
   than the plain version.
-- Rhetorical question openers: "What if...?" "Ever wonder why...?" "The
-  question nobody is asking?"
+- Empty rhetorical questions with no answer behind them: "The question
+  nobody is asking?" "Coincidence?" A question is fine when the piece
+  genuinely answers it and the post is one of the three kinds below.
 - Em dash used to stage a pause before a punchline. A two-sentence build
   where the second sentence exists only to deliver a reveal.
 - Hollow intensifiers: genuinely, truly, simply, incredibly, remarkably,
   fascinating, powerful, essential, must-read, deeply.
-- Engagement bait: "A thread.", "Read the full piece:", "Link below", "Our
-  latest", "New from us", "ICYMI", "Don't miss".
+- Engagement bait: "A thread.", "Link below", "Our latest", "New from us",
+  "ICYMI", "Don't miss", "You won't believe". ("Read [name] on [subject]" is
+  NOT in this category - it is what this account says and it works.)
 - Hashtags. Emoji. Title Case. Exclamation marks.
 
 MECHANICS
@@ -96,8 +120,8 @@ MECHANICS
 - Straight quotes and apostrophes only.
 - Under 260 characters. The link is appended automatically, so do not
   include a URL, and do not write "link in bio" or similar.
-- Do not name the author unless their identity is the reason to read it (a
-  former official, a named expert, someone with standing on the subject).
+- Name the author freely; this account does it constantly and it is the
+  single strongest thing it does. Give their standing when it is the draw.
 - Never write "in Vital City", "Vital City reports" or similar. The account
   posting this is Vital City; saying so is redundant.
 - Do not guess anyone's pronouns. If the piece does not make a person's
@@ -107,12 +131,18 @@ MECHANICS
   for 2,000 words tells you nothing about how to refer to them.
 
 THE THREE POSTS MUST DIFFER IN KIND, not be paraphrases of each other:
-1. The finding. The most specific, checkable claim in the piece.
-2. The stake or the argument. What the piece says should happen, or what it
-   says everyone gets wrong, in the piece's own terms.
-3. The hook. Either the human detail, the historical fact, or the
-   counterintuitive number that makes someone stop scrolling. If the piece
-   has no such detail, write a second finding instead of inventing one.
+1. THE CLAIM. The piece's argument or its most counterintuitive point,
+   stated flat, no attribution needed. Model: "Why it takes four new housing
+   units to get one person off the street."
+2. THE WRITER. Name the author and say what they say. Give their standing
+   when it is the reason to read - former budget director, economist,
+   architect. Use the handle from AUTHOR HANDLE below if one is given; if
+   none is given, use their name in words and never invent a handle.
+   Model: "Read Nicole Gelinas on why the MTA app went right."
+3. THE QUOTE OR THE QUESTION. Either a sentence lifted verbatim from the
+   piece that stands on its own, in straight double quotes, or a real
+   question the piece answers. Not a teaser question with no answer - a
+   question a reader would actually want settled.
 
 Every claim must come from the text given to you. Do not add numbers,
 attributions or context that are not in the piece. If the piece is a
@@ -143,6 +173,7 @@ TASK = """Here is a piece published by Vital City.
 TITLE: {title}
 DEK: {dek}
 AUTHOR: {author}
+AUTHOR HANDLE: {handle}
 TAGS: {tags}
 PUBLISHED: {date}
 
@@ -222,7 +253,7 @@ BANNED = [
     r"\bthe (?:machinery|architecture|rhythm) of\b",
     r"\bhere'?s the thing\b", r"\bworth noting\b", r"\blet that sink in\b",
     r"\bread that again\b", r"\bICYMI\b", r"\ba thread\b", r"\bdon'?t miss\b",
-    r"\bour latest\b", r"\bnew from us\b", r"\bread the full\b", r"\blink in bio\b",
+    r"\bour latest\b", r"\bnew from us\b", r"\blink in bio\b",
     r"\bgenuinely\b", r"\btruly\b", r"\bincredibly\b", r"\bremarkably\b",
     r"\bfascinating\b", r"\bever wonder\b", r"\bwhat if\b",
     r"#\w", r"[\U0001F300-\U0001FAFF☀-➿]", r"[’‘“”]", r"\bNYC\b",
@@ -243,6 +274,20 @@ def screen(text):
     return bad
 
 
+HANDLES = {}
+if (HERE / "data" / "author_handles.json").exists():
+    HANDLES = json.loads((HERE / "data" / "author_handles.json").read_text())["handles"]
+
+
+def author_handle(post):
+    """A handle only if this account has demonstrably used it. Never guessed:
+    tagging the wrong person is worse than not tagging anyone."""
+    for a in post.get("authors") or []:
+        if a["name"] in HANDLES:
+            return "@" + HANDLES[a["name"]]
+    return None
+
+
 def draft(key, post, retries=2):
     body = (post.get("plaintext") or "").strip()
     if len(body) < 200:
@@ -251,6 +296,7 @@ def draft(key, post, retries=2):
         title=post["title"],
         dek=post.get("custom_excerpt") or post.get("excerpt") or "(none)",
         author=", ".join(a["name"] for a in post.get("authors") or []) or "(unattributed)",
+        handle=author_handle(post) or "(none known - use the name in words, do not invent one)",
         tags=", ".join(t["name"] for t in post.get("tags") or [] if not t["name"].startswith("#")) or "(none)",
         date=post["published_at"][:10],
         body=body[:24000])])

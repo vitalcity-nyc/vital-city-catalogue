@@ -1,0 +1,33 @@
+{
+ "handles": {
+  "Aaron Chalfin": "aaronchalfin",
+  "Aaron Stagoff": "aaron_stagoff",
+  "Alon Levy": "alon_levy",
+  "Andrew Rigie": "andrewrigie",
+  "Anthony Flint": "anthonyflint",
+  "Brandon del Pozo": "brandondelpozo",
+  "Brenden Beck": "brendenbeck",
+  "Daniel Loehr": "danielloehr",
+  "Eric Goldwyn": "ericgoldwyn",
+  "Eric Klinenberg": "ericklinenberg",
+  "Errol Louis": "errollouis",
+  "Gabe Paley": "gabepaley",
+  "Greg Berman": "gregberman50",
+  "John K. Roman": "johnkroman",
+  "John Surico": "johnsurico",
+  "Majora Carter": "majoracarter",
+  "Marc A. Levin": "marcalevin",
+  "Megan Gafford": "megan_gafford",
+  "Nicole Gelinas": "nicolegelinas",
+  "Paul Reeping": "paulreeping",
+  "Paul Salama": "paul_salama",
+  "Peter Moskos": "petermoskos",
+  "Richard Buery Jr.": "richardbuery",
+  "Richard Florida": "richard_florida",
+  "Sage Lattman": "sagelattman",
+  "Sean Campion": "seancampion",
+  "Tahra Hoops": "tahrahoops",
+  "Ted Knudsen": "ted_knudsen"
+ },
+ "note": "Handles the Vital City account has actually used, matched to catalogue author names by exact normalized-name equality. Never guess a handle; if an author is absent here, use their name in words instead."
+}
