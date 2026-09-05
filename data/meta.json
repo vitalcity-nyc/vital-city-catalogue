@@ -1,15 +1,64 @@
 {
-  "generated_at": "2026-09-05T11:15:05.816218+00:00",
+  "generated_at": "2026-09-05T23:10:45.733708+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 899,
-  "total_authors": 495,
-  "total_issues": 29,
-  "total_topics": 214,
+  "total_posts": 906,
+  "total_authors": 497,
+  "total_issues": 31,
+  "total_topics": 216,
   "date_range": [
     "2021-09-15",
-    "2026-09-01"
+    "2026-09-05"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 8,
+  "new_articles": [
+    {
+      "title": "That Very Blue Day",
+      "url": "https://www.vitalcitynyc.org/colum-mccann-9-11-25-years-later/",
+      "published_date": "2026-09-05",
+      "primary_author": null
+    },
+    {
+      "title": "A City Forgets. Maybe It’s Supposed To.",
+      "url": "https://www.vitalcitynyc.org/how-nyc-changed-since-9-11/",
+      "published_date": "2026-09-05",
+      "primary_author": null
+    },
+    {
+      "title": "The City We Remember, the City We Become",
+      "url": "https://www.vitalcitynyc.org/9-11-a-muslim-american-reflection/",
+      "published_date": "2026-09-05",
+      "primary_author": null
+    },
+    {
+      "title": "How It Felt As It Happened",
+      "url": "https://www.vitalcitynyc.org/how-it-felt-as-it-happened-september-11/",
+      "published_date": "2026-09-05",
+      "primary_author": null
+    },
+    {
+      "title": "Much More Than Two Towers",
+      "url": "https://www.vitalcitynyc.org/evolution-nyc-architecture-world-trade-center/",
+      "published_date": "2026-09-05",
+      "primary_author": null
+    },
+    {
+      "title": "The Terrorist Threat, Then and Now",
+      "url": "https://www.vitalcitynyc.org/nyc-terrorist-threat-before-and-after-9-11/",
+      "published_date": "2026-09-05",
+      "primary_author": null
+    },
+    {
+      "title": "Downtown Manhattan, Split in Two",
+      "url": "https://www.vitalcitynyc.org/downtown-manhattan-after-september-11/",
+      "published_date": "2026-09-05",
+      "primary_author": null
+    },
+    {
+      "title": "Guns, My Family and Me",
+      "url": "https://www.vitalcitynyc.org/guns-my-family-and-me/",
+      "published_date": "2025-09-10",
+      "primary_author": null
+    }
+  ]
 }

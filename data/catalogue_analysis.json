@@ -1,27 +1,76 @@
 {
   "meta": {
-    "generated_at": "2026-09-05T11:15:05.816218+00:00",
+    "generated_at": "2026-09-05T23:10:45.733708+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 899,
-    "total_authors": 495,
-    "total_issues": 29,
-    "total_topics": 214,
+    "total_posts": 906,
+    "total_authors": 497,
+    "total_issues": 31,
+    "total_topics": 216,
     "date_range": [
       "2021-09-15",
-      "2026-09-01"
+      "2026-09-05"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 8,
+    "new_articles": [
+      {
+        "title": "That Very Blue Day",
+        "url": "https://www.vitalcitynyc.org/colum-mccann-9-11-25-years-later/",
+        "published_date": "2026-09-05",
+        "primary_author": null
+      },
+      {
+        "title": "A City Forgets. Maybe It\u2019s Supposed To.",
+        "url": "https://www.vitalcitynyc.org/how-nyc-changed-since-9-11/",
+        "published_date": "2026-09-05",
+        "primary_author": null
+      },
+      {
+        "title": "The City We Remember, the City We Become",
+        "url": "https://www.vitalcitynyc.org/9-11-a-muslim-american-reflection/",
+        "published_date": "2026-09-05",
+        "primary_author": null
+      },
+      {
+        "title": "How It Felt As It Happened",
+        "url": "https://www.vitalcitynyc.org/how-it-felt-as-it-happened-september-11/",
+        "published_date": "2026-09-05",
+        "primary_author": null
+      },
+      {
+        "title": "Much More Than Two Towers",
+        "url": "https://www.vitalcitynyc.org/evolution-nyc-architecture-world-trade-center/",
+        "published_date": "2026-09-05",
+        "primary_author": null
+      },
+      {
+        "title": "The Terrorist Threat, Then and Now",
+        "url": "https://www.vitalcitynyc.org/nyc-terrorist-threat-before-and-after-9-11/",
+        "published_date": "2026-09-05",
+        "primary_author": null
+      },
+      {
+        "title": "Downtown Manhattan, Split in Two",
+        "url": "https://www.vitalcitynyc.org/downtown-manhattan-after-september-11/",
+        "published_date": "2026-09-05",
+        "primary_author": null
+      },
+      {
+        "title": "Guns, My Family and Me",
+        "url": "https://www.vitalcitynyc.org/guns-my-family-and-me/",
+        "published_date": "2025-09-10",
+        "primary_author": null
+      }
+    ]
   },
-  "total_pieces": 899,
+  "total_pieces": 906,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 187
+    "2026": 194
   },
   "by_month": {
     "2021-09": 1,
@@ -78,12 +127,12 @@
     "2026-06": 44,
     "2026-07": 22,
     "2026-08": 16,
-    "2026-09": 1
+    "2026-09": 8
   },
   "by_type": [
     [
       "opinion/commentary",
-      725
+      733
     ],
     [
       "q&a",
@@ -91,7 +140,7 @@
     ],
     [
       "data analysis",
-      48
+      47
     ],
     [
       "podcast",
@@ -120,11 +169,11 @@
       145
     ],
     [
-      "City Government",
-      141
+      "History",
+      143
     ],
     [
-      "History",
+      "City Government",
       141
     ],
     [
@@ -149,15 +198,15 @@
     ],
     [
       "Gun Violence",
-      66
-    ],
-    [
-      "Police Reform",
-      57
+      65
     ],
     [
       "Economics",
-      55
+      56
+    ],
+    [
+      "Police Reform",
+      56
     ],
     [
       "Politics",
@@ -188,15 +237,15 @@
       31
     ],
     [
-      "data",
-      30
-    ],
-    [
       "Budget",
       29
     ],
     [
       "Podcast",
+      29
+    ],
+    [
+      "data",
       29
     ],
     [
@@ -216,11 +265,11 @@
       23
     ]
   ],
-  "n_topics_total": 214,
+  "n_topics_total": 216,
   "by_credential_pieces": [
     [
       "Academic",
-      222
+      221
     ],
     [
       "Nonprofit / advocacy",
@@ -228,7 +277,7 @@
     ],
     [
       "Journalist / media",
-      99
+      102
     ],
     [
       "Vital City (institutional)",
@@ -236,7 +285,7 @@
     ],
     [
       "Other / unclassified",
-      91
+      93
     ],
     [
       "Government / public official",
@@ -248,15 +297,15 @@
     ],
     [
       "Think tank / research institute",
-      51
+      52
     ],
     [
       "Architecture / design / planning",
-      31
+      32
     ],
     [
       "Legal practitioner",
-      29
+      30
     ],
     [
       "Survey / reader poll",
@@ -274,7 +323,7 @@
     ],
     [
       "Other / unclassified",
-      104
+      106
     ],
     [
       "Nonprofit / advocacy",
@@ -290,7 +339,7 @@
     ],
     [
       "Think tank / research institute",
-      28
+      27
     ],
     [
       "Business / private sector",
@@ -298,7 +347,7 @@
     ],
     [
       "Legal practitioner",
-      18
+      19
     ],
     [
       "Architecture / design / planning",
@@ -319,8 +368,8 @@
   ],
   "top_topics_for_stack": [
     "Crime",
-    "City Government",
     "History",
+    "City Government",
     "Government Operations",
     "City Planning",
     "Housing",
@@ -335,18 +384,18 @@
       "2025": 31,
       "2026": 21
     },
-    "City Government": {
-      "2023": 4,
-      "2024": 20,
-      "2025": 54,
-      "2026": 63
-    },
     "History": {
       "2022": 12,
       "2023": 28,
       "2024": 38,
       "2025": 51,
-      "2026": 12
+      "2026": 14
+    },
+    "City Government": {
+      "2023": 4,
+      "2024": 20,
+      "2025": 54,
+      "2026": 63
     },
     "Government Operations": {
       "2022": 1,
@@ -384,17 +433,17 @@
     }
   },
   "wc_stats": {
-    "n": 889,
-    "median": 1618,
-    "mean": 1893,
+    "n": 896,
+    "median": 1614,
+    "mean": 1892,
     "p90": 2840,
     "max": 30332,
-    "p10": 906,
-    "p25": 1266,
-    "p75": 2139,
-    "p95": 3846,
+    "p10": 908,
+    "p25": 1269,
+    "p75": 2137,
+    "p95": 3843,
     "no_count": 10,
-    "core_1000_2499": 652,
+    "core_1000_2499": 658,
     "under_500": 43,
     "over_5000": 24
   },
@@ -409,7 +458,7 @@
     ],
     [
       "1,000-1,999",
-      518
+      524
     ],
     [
       "2,000-2,999",
@@ -417,7 +466,7 @@
     ],
     [
       "3,000-4,999",
-      55
+      56
     ],
     [
       "5,000+",
@@ -456,12 +505,12 @@
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 139
+        "n": 140
       },
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 164
+        "n": 169
       },
       {
         "floor": 1750,
@@ -471,12 +520,12 @@
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 67
+        "n": 68
       },
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 67
+        "n": 66
       },
       {
         "floor": 2500,
@@ -491,7 +540,7 @@
       {
         "floor": 3000,
         "label": "3,000",
-        "n": 13
+        "n": 14
       },
       {
         "floor": 3250,
@@ -534,23 +583,23 @@
       "year": "2025",
       "n": 287,
       "p25": 1292,
-      "median": 1649,
-      "p75": 2122,
+      "median": 1634,
+      "p75": 2111,
       "max": 14800
     },
     {
       "year": "2026",
-      "n": 182,
-      "p25": 1221,
-      "median": 1631,
-      "p75": 2383,
+      "n": 189,
+      "p25": 1258,
+      "median": 1635,
+      "p75": 2385,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 761,
+    "1": 769,
     "2": 109,
-    "3": 26,
+    "3": 25,
     "4": 1,
     "8": 1,
     "10": 1
@@ -563,7 +612,7 @@
     },
     {
       "name": "Elizabeth Glazer",
-      "posts": 47,
+      "posts": 48,
       "credential": "Government / public official"
     },
     {
@@ -582,18 +631,23 @@
       "credential": "Journalist / media"
     },
     {
+      "name": "Harry Siegel",
+      "posts": 15,
+      "credential": "Journalist / media"
+    },
+    {
+      "name": "Vishaan Chakrabarti",
+      "posts": 15,
+      "credential": "Architecture / design / planning"
+    },
+    {
       "name": "A Survey",
       "posts": 15,
       "credential": "Survey / reader poll"
     },
     {
-      "name": "Vishaan Chakrabarti",
-      "posts": 14,
-      "credential": "Architecture / design / planning"
-    },
-    {
-      "name": "Harry Siegel",
-      "posts": 14,
+      "name": "Ted Alcorn",
+      "posts": 13,
       "credential": "Journalist / media"
     },
     {
@@ -607,19 +661,14 @@
       "credential": "Academic"
     },
     {
-      "name": "Ted Alcorn",
-      "posts": 12,
-      "credential": "Journalist / media"
+      "name": "Nicole Gelinas",
+      "posts": 11,
+      "credential": "Think tank / research institute"
     },
     {
       "name": "Brandon del Pozo",
       "posts": 11,
       "credential": "Academic"
-    },
-    {
-      "name": "Nicole Gelinas",
-      "posts": 10,
-      "credential": "Think tank / research institute"
     },
     {
       "name": "David Schleicher",
@@ -632,14 +681,14 @@
       "credential": "Government / public official"
     },
     {
-      "name": "Paul Reeping",
-      "posts": 8,
-      "credential": "Think tank / research institute"
-    },
-    {
       "name": "Bradley Tusk",
       "posts": 8,
       "credential": "Business / private sector"
+    },
+    {
+      "name": "Paul Reeping",
+      "posts": 7,
+      "credential": "Think tank / research institute"
     },
     {
       "name": "John K. Roman",
@@ -657,7 +706,7 @@
       "credential": "Academic"
     }
   ],
-  "n_issues": 29,
+  "n_issues": 31,
   "cadence": {
     "by_year": [
       {
@@ -707,64 +756,64 @@
       },
       {
         "year": "2026",
-        "weeks": 34.9,
-        "pieces": 187,
+        "weeks": 35.4,
+        "pieces": 194,
         "outside_issues": 136,
-        "per_week_all": 5.36,
-        "per_week_outside_issues": 3.9,
+        "per_week_all": 5.48,
+        "per_week_outside_issues": 3.84,
         "partial": true
       }
     ],
-    "total_weeks": 258.9,
-    "all_time_per_week": 3.47,
-    "all_time_per_week_outside_issues": 1.61,
+    "total_weeks": 259.4,
+    "all_time_per_week": 3.49,
+    "all_time_per_week_outside_issues": 1.6,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.9,
-    "current_per_week_all": 5.36,
+    "current_per_week_outside_issues": 3.84,
+    "current_per_week_all": 5.48,
     "robustness": {
       "drop_window_days": 3,
-      "issue_tagged_pieces": 483,
+      "issue_tagged_pieces": 490,
       "published_away_from_drop": 63,
-      "share_of_issue_pieces": 13.0,
-      "current_year_strict": 3.9,
-      "current_year_loose": 4.07,
-      "all_time_strict": 1.61,
+      "share_of_issue_pieces": 12.9,
+      "current_year_strict": 3.84,
+      "current_year_loose": 4.01,
+      "all_time_strict": 1.6,
       "all_time_loose": 1.85,
-      "all_time_all": 3.47
+      "all_time_all": 3.49
     }
   },
   "rhythm": {
-    "n_dated": 899,
+    "n_dated": 906,
     "by_weekday": [
       {
         "day": "Mon",
         "pieces": 53,
-        "share": 5.9
+        "share": 5.8
       },
       {
         "day": "Tue",
         "pieces": 160,
-        "share": 17.8
+        "share": 17.7
       },
       {
         "day": "Wed",
         "pieces": 434,
-        "share": 48.3
+        "share": 47.9
       },
       {
         "day": "Thu",
         "pieces": 175,
-        "share": 19.5
+        "share": 19.3
       },
       {
         "day": "Fri",
         "pieces": 60,
-        "share": 6.7
+        "share": 6.6
       },
       {
         "day": "Sat",
-        "pieces": 17,
-        "share": 1.9
+        "pieces": 24,
+        "share": 2.6
       },
       {
         "day": "Sun",
@@ -773,9 +822,9 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 48.3,
-    "midweek_share": 85.5,
-    "weekend_pieces": 17,
+    "top_day_share": 47.9,
+    "midweek_share": 84.9,
+    "weekend_pieces": 24,
     "by_month": [
       {
         "month": "January",
@@ -836,9 +885,9 @@
       {
         "month": "September",
         "abbr": "Sep",
-        "pieces": 96,
+        "pieces": 103,
         "occurrences": 6,
-        "per_occurrence": 16.0
+        "per_occurrence": 17.2
       },
       {
         "month": "October",
