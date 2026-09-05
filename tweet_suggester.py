@@ -355,9 +355,22 @@ def format_slack(results):
 
 
 def post_slack(text):
+    """Two ways in, because a webhook URL is far quicker to create than a bot
+    token and either one gets the digest delivered. Webhook wins if both are set."""
+    hook = os.environ.get("SLACK_WEBHOOK_URL")
+    if hook:
+        req = urllib.request.Request(hook, data=json.dumps({"text": text}).encode(),
+                                     headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            if r.status != 200:
+                raise Abort(f"Slack webhook returned {r.status}")
+        log("posted to Slack via webhook")
+        return
+
     tok, to = os.environ.get("SLACK_BOT_TOKEN"), os.environ.get("SLACK_DM_TO")
     if not tok or not to:
-        raise Abort("SLACK_BOT_TOKEN / SLACK_DM_TO not set - the digest has nowhere to go.")
+        raise Abort("No Slack destination. Set SLACK_WEBHOOK_URL, or both "
+                    "SLACK_BOT_TOKEN and SLACK_DM_TO.")
     r = http_json("https://slack.com/api/chat.postMessage", timeout=30,
         headers={"Authorization": f"Bearer {tok}",
                  "Content-Type": "application/json; charset=utf-8"},
