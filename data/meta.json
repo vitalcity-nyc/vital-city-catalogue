@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-08T17:43:48.456233+00:00",
+  "generated_at": "2026-09-08T23:12:45.835599+00:00",
   "site": "https://www.vitalcitynyc.org",
   "total_posts": 906,
   "total_authors": 500,
@@ -10,37 +10,6 @@
     "2026-09-05"
   ],
   "first_run": false,
-  "new_article_count": 5,
-  "new_articles": [
-    {
-      "title": "What We Know and Don’t Know About Guns",
-      "url": "https://www.vitalcitynyc.org/what-we-know-and-dont-know-about-guns/",
-      "published_date": "2025-09-10",
-      "primary_author": null
-    },
-    {
-      "title": "Gun Culture Then and Now",
-      "url": "https://www.vitalcitynyc.org/gun-culture-then-and-now/",
-      "published_date": "2025-09-10",
-      "primary_author": null
-    },
-    {
-      "title": "My Seven Guns: A Personal Inventory",
-      "url": "https://www.vitalcitynyc.org/my-seven-guns-a-personal-inventory/",
-      "published_date": "2025-09-10",
-      "primary_author": null
-    },
-    {
-      "title": "What We Know and Don’t Know About Guns",
-      "url": "https://www.vitalcitynyc.org/what-we-know-and-dont-know-about-guns/",
-      "published_date": "2025-09-10",
-      "primary_author": null
-    },
-    {
-      "title": "The Case Against Futility",
-      "url": "https://www.vitalcitynyc.org/the-case-against-futility-in-gun-regulation/",
-      "published_date": "2025-09-10",
-      "primary_author": null
-    }
-  ]
+  "new_article_count": 0,
+  "new_articles": []
 }
