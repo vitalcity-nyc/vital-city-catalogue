@@ -39,7 +39,8 @@ SOURCES = [
     "name_overrides.csv",      # optional
     "people_overrides.json",   # optional (in-tool edits)
     "wiki_cache.json",         # optional (Wikipedia influence cache)
-    "events/2025-11-fundraiser.csv",  # house-party invite list (RSVP statuses)
+    "events/2025-11-fundraiser.csv",  # house-party guest list (Paperless export, RSVP statuses)
+    "events/2026-09-fundraiser.csv",  # house-party guest list (name,email,status)
 ]
 
 

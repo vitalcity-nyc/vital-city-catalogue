@@ -312,6 +312,11 @@
   .b-press{background:var(--vc-cerulean);color:#fff}
   .b-pros{border:1px solid var(--vc-green);color:#fff;background:var(--vc-green)}
   .b-wiki{border:1px solid var(--vc-cerulean);color:var(--vc-cerulean);background:var(--vc-white)}
+  /* House-party invitations. A separate thing from prospect, donor, press or
+     notable, so a separate look: warm ochre, nothing else on the page uses it. */
+  .b-hp{border:1px solid #b8860b;color:#7a5a08;background:#fbf3dc}
+  .b-hp.att{background:#b8860b;color:#fff}
+  .b-hp.con{border-style:dashed;background:var(--vc-white)}
   .muted{color:var(--vc-cloud)}
   /* ---- responsive ---- */
   .modalbox{max-width:92vw}
@@ -472,6 +477,15 @@
           <option value="confirmed_any">Confirmed — a name we trust</option>
           <option value="confirmed_full">…of those, the complete ones (first AND last)</option>
           <option value="confirmed_partial">…of those, only half a name (first OR last)</option>
+        </select>
+        <div class="menusec">House parties<span class="menunote">who has been on a fundraiser guest list. Its own category: separate from donor, prospect and press.</span></div>
+        <select id="fHouse" aria-label="Filter by house-party invitation" title="Built from the guest lists in private/events/. 'Invited' means they were sent an invitation (opened, viewed, no reply, regrets or attended). 'Considered' means they are on a working list for a coming party but have not been invited yet. Type an event name such as 'Sep 2026' in the search box to narrow to one party.">
+          <option value="any">(any)</option>
+          <option value="ever">Invited or attended, any party</option>
+          <option value="attended">Attended a party</option>
+          <option value="noshow">Invited, never attended</option>
+          <option value="considered">Considered for a coming party, not yet invited</option>
+          <option value="never">Never on a guest list</option>
         </select>
         <div class="menusec">Engagement<span class="menunote">the subsets the Growth dashboard surfaces · refreshes daily</span></div>
         <select id="fEngagement" aria-label="Filter by newsletter engagement" title="Active = opened a Vital City newsletter in the last 30 days (MAU) or year (AAU). Power readers = top decile by composite engagement. At-risk = opened in the last year but not the last 30 days — a re-engagement target. Sunset candidates = 1-2★ + 6mo+ tenure + no recent open, i.e. pruning candidates.">
@@ -726,6 +740,16 @@ function nameParts(n){
 // otherwise fall back to the heuristic split of the full name.
 function firstName(p){ return p.fn || nameParts(p.n).first; }
 function lastName(p){ return p.ln || nameParts(p.n).last; }
+// House-party badge, shared by the table row and the person card. Three looks
+// for three facts: attended (solid), invited (outlined), considered (dashed).
+function hpBadge(p){
+  if(!(p.hp&&p.hp.length)) return "";
+  const real=p.hp.filter(h=>h.status!=="considered"), att=p.hp.some(h=>h.status==="attended");
+  const cls = att ? "att" : (real.length ? "" : "con");
+  const txt = att ? "HOUSE PARTY · ATTENDED" : (real.length ? "HOUSE PARTY · INVITED" : "HOUSE PARTY · CONSIDERED");
+  const tip = p.hp.map(h=>`${h.label}: ${h.status}${h.raw&&h.raw!==h.status?" ("+h.raw+")":""}`).join(" · ");
+  return `<span class="badge b-hp ${cls}" title="${esc(tip)}">${txt}</span> `;
+}
 function nameQuality(p){
   // Mirror of the Python classifier — categorize each person by how
   // trustworthy their name is. Used by the "Name:" filter dropdown so
@@ -946,6 +970,7 @@ function activeFilterCount(){
   ["#fRepeatDonor","#fStar","#fWiki","#fMultiSub","#fNoEmail","#fUnsub","#fProspect","#fProspectNew"].forEach(s=>{ if($(s).checked) n++; });
   if($("#fName").value!=="any") n++;
   if($("#fEngagement").value!=="any") n++;
+  if($("#fHouse").value!=="any") n++;
   return n;
 }
 function syncMenuChrome(shown){
@@ -971,6 +996,7 @@ function viewInForce(v){
   const nm=v.name&&v.name!=="any" ? v.name : (v.noName ? "needs_work" : "any");
   if(nm!==cur.name) return false;
   if((v.engagement||"any")!==cur.engagement) return false;
+  if((v.house||"any")!==(cur.house||"any")) return false;
   for(const k of ["q","dFrom","dTo"]) if((v[k]||"")!==(cur[k]||"")) return false;
   for(const k of ["repeat","star","wiki","prospect","prospectNew","multisub","noEmail","unsub","onlyUnsub"]) if(!!v[k]!==!!cur[k]) return false;
   if(v.sortKey && (v.sortKey!==cur.sortKey || (v.sortDir||1)!==cur.sortDir)) return false;
@@ -1023,6 +1049,7 @@ function init(){
     render();
   });
   $("#fEngagement").addEventListener("change",render);
+  $("#fHouse").addEventListener("change",render);
   $("#fUnsub").addEventListener("change",()=>{onlyUnsub=false;render();});
   $("#export").addEventListener("click",exportCSV);
   $("#copyEmails").addEventListener("click",copyEmails);
@@ -1288,6 +1315,18 @@ function filtered(){
       }
     }
     {
+      const hf=$("#fHouse").value;
+      if(hf && hf!=="any"){
+        const hp=p.hp||[], real=hp.filter(h=>h.status!=="considered");
+        const att=hp.some(h=>h.status==="attended");
+        if(hf==="ever" && !real.length) return false;
+        else if(hf==="attended" && !att) return false;
+        else if(hf==="noshow" && !(real.length && !att)) return false;
+        else if(hf==="considered" && !(hp.length && !real.length)) return false;
+        else if(hf==="never" && hp.length) return false;
+      }
+    }
+    {
       const nf=$("#fName").value;
       if(nf && nf!=="any"){
         const nq=nameQuality(p);
@@ -1303,7 +1342,7 @@ function filtered(){
     if(cats.length){const have=new Set([...(p.types||[]),...(p.topics||[])]);if(!cats.some(c=>have.has(c)))return false;}
     if(reviewMode==="guessed" && !(p.ns==="guess" && (p.auth||p.don||(p.types&&p.types.length)))) return false;
     if(reviewMode==="noinst" && (p.inst || !(p.auth||p.don||(p.types&&p.types.length)))) return false;
-    if(q){const hay=`${p.n} ${(p.emails||[]).join(" ")} ${p.inst} ${p.note||""}`.toLowerCase();if(!hay.includes(q))return false;}
+    if(q){const hay=`${p.n} ${(p.emails||[]).join(" ")} ${p.inst} ${p.note||""} ${(p.hp||[]).map(h=>h.label+" "+h.status).join(" ")}`.toLowerCase();if(!hay.includes(q))return false;}
     return true;
   });
 }
@@ -1433,6 +1472,7 @@ function openDetail(key){
     ||'<span class="muted">No institution on file</span>';
 
   const B=[];
+  if(p.hp&&p.hp.length) B.push(hpBadge(p).trim());
   if(p.ns==="guess") B.push(`<span class="badge" style="background:var(--vc-cloud);color:var(--vc-black)" title="This name was inferred from the email address, not confirmed by a person.">GUESSED NAME</span>`);
   if((p.pros||0)>=4) B.push(`<span class="badge b-pros" title="Likely fundraising prospect — ${(p.prosw||"").replace(/"/g,"&quot;")}. A description of fit, not a wealth estimate. Sitting officials, role mailboxes, students and staff are excluded from this flag.">$ PROSPECT</span>`);
   if(p.wiki) B.push(`<span class="badge b-wiki" title="Appears to have an English Wikipedia page — matched conservatively from context clues, so a rough signal of public profile, not a verified fact.">&#9733; NOTABLE</span>`);
@@ -1466,6 +1506,7 @@ function openDetail(key){
      ${(p.d30c||p.d7c)?`<div class="dtRow" style="margin-top:8px"><dt>Recent opens</dt><dd>${p.d7c?`${p.d7c} in the last 7 days`:""}${(p.d7c&&p.d30c)?" &middot; ":""}${p.d30c?`${p.d30c} in the last 30 days`:""}</dd></div>`:""}
      ${row("Subscribed",p.since?esc(p.since):"")}
      ${row("Unsubscribed",p.udate?esc(p.udate):"")}
+     ${row("House parties",(p.hp||[]).map(h=>esc(h.label)+" — "+esc(h.status)+(h.raw&&h.raw!==h.status?" ("+esc(h.raw)+")":"")).join("<br>"))}
      <div class="dtCav">Engagement score = Mailchimp rating &times; 20 + open rate, out of 200.
        Open rate is inflated by Apple Mail's automatic opens, and a brand-new subscriber can show
        a high percentage off very few sends &mdash; click rate is the more reliable half.</div>`:"";
@@ -1676,6 +1717,16 @@ function describeFilters(){
     if(nf && nfLabels[nf]) parts.push(nfLabels[nf]);
   }
   {
+    const hf=$("#fHouse").value, hfLabels={
+      "ever":"<b>house party:</b> invited or attended",
+      "attended":"<b>house party:</b> attended",
+      "noshow":"<b>house party:</b> invited, never attended",
+      "considered":"<b>house party:</b> considered, not yet invited",
+      "never":"<b>house party:</b> never on a guest list",
+    };
+    if(hf && hfLabels[hf]) parts.push(hfLabels[hf]);
+  }
+  {
     const ef=$("#fEngagement").value, efLabels={
       "mau":"<b>active 30d</b>",
       "aau":"<b>active 1y</b>",
@@ -1697,7 +1748,7 @@ const VKEY="vc_views";
 function loadViews(){ try{return JSON.parse(localStorage.getItem(VKEY)||"[]");}catch(e){return [];} }
 function currentState(){ return {want:Object.assign({},want), cats:[...selectedCats], q:$("#q").value,
   dFrom:$("#dFrom").value, dTo:$("#dTo").value, repeat:$("#fRepeatDonor").checked, star:$("#fStar").checked,
-  wiki:$("#fWiki").checked, prospect:$("#fProspect").checked, prospectNew:$("#fProspectNew").checked, multisub:$("#fMultiSub").checked, noEmail:$("#fNoEmail").checked, unsub:$("#fUnsub").checked, onlyUnsub:onlyUnsub, name:$("#fName").value, engagement:$("#fEngagement").value, sortKey:sortKey, sortDir:sortDir}; }
+  wiki:$("#fWiki").checked, prospect:$("#fProspect").checked, prospectNew:$("#fProspectNew").checked, multisub:$("#fMultiSub").checked, noEmail:$("#fNoEmail").checked, unsub:$("#fUnsub").checked, onlyUnsub:onlyUnsub, name:$("#fName").value, engagement:$("#fEngagement").value, house:$("#fHouse").value, sortKey:sortKey, sortDir:sortDir}; }
 function applyState(s){
   want=Object.assign({mem:0,don:0,auth:0,press:0}, s.want||{});
   selectedCats=new Set(s.cats||[]);
@@ -1708,7 +1759,7 @@ function applyState(s){
   // merge carry noName:true AND name:"any" (currentState always emitted both) —
   // so test noName explicitly rather than falling back on an empty name.
   const _nm=s.name&&s.name!=="any" ? s.name : (s.noName ? "needs_work" : "any");
-  $("#fName").value=_nm; $("#fEngagement").value=s.engagement||"any";
+  $("#fName").value=_nm; $("#fEngagement").value=s.engagement||"any"; $("#fHouse").value=s.house||"any";
   if(s.sortKey){ sortKey=s.sortKey; sortDir=s.sortDir||1; }
   syncToggles(); $("#fRepeatDonor").checked=!!s.repeat;
   document.querySelectorAll(".facet").forEach(l=>{const on=selectedCats.has(l.dataset.cat);l.classList.toggle("on",on);const cb=l.querySelector("input");if(cb)cb.checked=on;});
@@ -1747,6 +1798,7 @@ function updateHash(){
   if(s.noEmail)o.ne=1;   // was missing, so a reload or a shared link silently dropped it
   if(s.name && s.name!=="any") o.nm=s.name;
   if(s.engagement && s.engagement!=="any") o.eg=s.engagement;
+  if(s.house && s.house!=="any") o.hp=s.house;
   if(s.sortKey!=="last"||s.sortDir!==1){o.sk=s.sortKey;o.sd=s.sortDir;}
   const h=Object.keys(o).length?"#"+encodeURIComponent(JSON.stringify(o)):location.pathname;
   history.replaceState(null,"",h);
@@ -1754,7 +1806,7 @@ function updateHash(){
 function applyHash(){
   if(!location.hash||location.hash.length<2) return false;
   try{ const o=JSON.parse(decodeURIComponent(location.hash.slice(1)));
-    applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0,press:o.pr||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,star:!!o.st,wiki:!!o.wk,multisub:!!o.ms,noEmail:!!o.ne,noName:!!o.nn,name:o.nm||"any",engagement:o.eg||"any",sortKey:o.sk||"last",sortDir:o.sd||1});
+    applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0,press:o.pr||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,star:!!o.st,wiki:!!o.wk,multisub:!!o.ms,noEmail:!!o.ne,noName:!!o.nn,name:o.nm||"any",engagement:o.eg||"any",house:o.hp||"any",sortKey:o.sk||"last",sortDir:o.sd||1});
     // A per-contact link (#{"person":"<id>"}) opens that person's card.
     if(o.person){
       const p=PEOPLE.find(x=>pidFor(personKey(x))===o.person);
@@ -1849,9 +1901,9 @@ function copyEmails(){
 function csvCell(v){v=v==null?"":String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
 function exportCSV(){
   const rows=sortRows(filtered());
-  const cols=["first_name","last_name","name","email","institution","role","types","specialties","subscriber","subscribed_since","author","articles","press","press_outlet","press_twitter","donor","donation_total","donation_count","last_donation","engagement_rating","open_rate","notable_wikipedia","starred","notes"];
+  const cols=["first_name","last_name","name","email","institution","role","types","specialties","subscriber","subscribed_since","author","articles","press","press_outlet","press_twitter","donor","donation_total","donation_count","last_donation","engagement_rating","open_rate","notable_wikipedia","starred","house_parties","notes"];
   const lines=[cols.join(",")];
-  rows.forEach(p=>lines.push([firstName(p),lastName(p),p.n,(p.emails||[]).join("; "),p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0,p.press?"yes":"no",p.poutlet||"",p.ptw||"",p.don?"yes":"no",p.damt||0,p.dcnt||0,p.dlast||"",p.erate||0,(p.eopen||0)+"%",p.wiki?"yes":"no",p.star?"yes":"no",p.note||""].map(csvCell).join(",")));
+  rows.forEach(p=>lines.push([firstName(p),lastName(p),p.n,(p.emails||[]).join("; "),p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0,p.press?"yes":"no",p.poutlet||"",p.ptw||"",p.don?"yes":"no",p.damt||0,p.dcnt||0,p.dlast||"",p.erate||0,(p.eopen||0)+"%",p.wiki?"yes":"no",p.star?"yes":"no",(p.hp||[]).map(h=>h.label+": "+h.status).join("; "),p.note||""].map(csvCell).join(",")));
   const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download=`vital-city-network-${new Date().toISOString().slice(0,10)}.csv`;
@@ -1950,7 +2002,7 @@ function rowHTML(p){
     <tr data-key="${key}"${p.unsub?' title="Unsubscribed — former contact. Click to view details."':''}>
       <td>${star} <span class="nm${g}"${nmTitle}>${esc(np.first)||'<span class="muted">—</span>'}</span></td>
       <td><span class="nm${g}"${nmTitle}>${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
-      <td data-label="Type(s)" class="c-type${bl((p.types&&p.types.length)||p.press||p.wiki||(p.pros||0)>=4)}">${(p.pros||0)>=4?`<span class="badge b-pros" title="Likely fundraising prospect — ${esc(p.prosw||"")}. Describes fit, not wealth. Sitting officials, role mailboxes, students and staff are excluded from this flag.">$ PROSPECT</span> `:''}${p.wiki?`<span class="badge b-wiki" title="Notable — appears to have an English Wikipedia page (matched conservatively from context clues, so it's a rough signal of public profile, not a verified fact).">★ NOTABLE</span> `:''}${p.press?`<span class="badge b-press" title="Curated press contact${p.poutlet?' · '+esc(p.poutlet):''}${p.ptw?' · '+esc(p.ptw):''}">PRESS</span> `:''}${types}</td>
+      <td data-label="Type(s)" class="c-type${bl((p.types&&p.types.length)||p.press||p.wiki||(p.pros||0)>=4||(p.hp&&p.hp.length))}">${(p.pros||0)>=4?`<span class="badge b-pros" title="Likely fundraising prospect — ${esc(p.prosw||"")}. Describes fit, not wealth. Sitting officials, role mailboxes, students and staff are excluded from this flag.">$ PROSPECT</span> `:''}${hpBadge(p)}${p.wiki?`<span class="badge b-wiki" title="Notable — appears to have an English Wikipedia page (matched conservatively from context clues, so it's a rough signal of public profile, not a verified fact).">★ NOTABLE</span> `:''}${p.press?`<span class="badge b-press" title="Curated press contact${p.poutlet?' · '+esc(p.poutlet):''}${p.ptw?' · '+esc(p.ptw):''}">PRESS</span> `:''}${types}</td>
       <td data-label="Subscriber" class="c-mem${bl(p.unsub||p.mem)}">${p.unsub?`<span class="badge" style="background:#c8102e;color:#fff"${p.udate?` title="Unsubscribed ${esc(p.udate)}"`:''}>Unsubscribed</span>${p.udate?`<div class="sub-d">on ${esc(p.udate)}</div>`:''}`:(p.mem?`<span class="badge b-mem"${p.since?` title="Subscribed ${esc(p.since)}"`:''}>Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>${p.since?`<div class="sub-d">since ${esc(p.since)}</div>`:''}${(p.erate||p.eopen)?`<span class="erate" title="Engagement score ${engScore(p)} of 200 — Mailchimp star rating (${p.erate||0} of 5) x 20, plus open rate (${p.eopen||0}%). This is what 'Most engaged' sorts by, and it's the same score the Growth dashboard uses to pick power readers.${p.eclick?` Click rate ${p.eclick}%.`:''} Note: Apple Mail's auto-open can inflate open rates, and a brand-new subscriber can show a high % off just a few emails.">★${p.erate||0} · ${p.eopen||0}% opens</span>`:''}`:'<span class="muted">—</span>')}</td>
       <td data-label="Donor" class="c-don${bl(p.don)}">${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>${p.dlast?`<div class="sub-d">last ${p.dlast}</div>`:''}`:'<span class="muted">—</span>'}</td>
       <td data-label="Institution" class="c-inst${bl(p.inst)}">${esc(p.inst)||'<span class="muted">—</span>'}</td>

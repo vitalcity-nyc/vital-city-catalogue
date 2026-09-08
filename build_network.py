@@ -13,6 +13,7 @@ Writes (gitignored — sensitive):
 
 The plaintext never ships; encrypt_people.py produces the public encrypted blob.
 """
+from datetime import datetime
 import csv, json, re, unicodedata
 from pathlib import Path
 import openpyxl
@@ -727,6 +728,29 @@ def load_crm():
     return out
 
 
+HP_RANK = {"attended": 4, "regrets": 3, "invited": 2, "considered": 1}
+
+def hp_status(raw):
+    """Collapse a vendor status to attended / regrets / invited / considered."""
+    r = (raw or "").strip().lower()
+    if r in ("attending", "attended", "checked in", "yes"): return "attended"
+    if r in ("regrets", "declined", "no", "not attending"): return "regrets"
+    if r in ("considered", "consider", "recommended"): return "considered"
+    if r in ("", "sent", "email opened", "page viewed", "bounced", "unsubscribed",
+             "on the list", "invited", "no reply", "maybe"): return "invited"
+    return "invited"
+
+def merge_hp(a, b):
+    """Union two guest-list histories by event, keeping the stronger status."""
+    out = {h["ev"]: dict(h) for h in a if h.get("ev")}
+    for h in b:
+        if not h.get("ev"): continue
+        cur = out.get(h["ev"])
+        if cur is None or HP_RANK.get(h["status"], 0) > HP_RANK.get(cur["status"], 0):
+            out[h["ev"]] = dict(h)
+    return sorted(out.values(), key=lambda h: h["ev"])
+
+
 def fold(q, p):
     """Fold person p into person q (q is kept). Combines flags, sums giving,
     unions categories/emails, prefers a real email and a confirmed name."""
@@ -734,6 +758,7 @@ def fold(q, p):
     q["unsub"] = q["unsub"] or p["unsub"]
     q["arts"] = max(q["arts"], p["arts"])
     q["alast"] = max(q.get("alast", ""), p.get("alast", ""))   # most recent VC contribution date
+    q["hp"] = merge_hp(q.get("hp") or [], p.get("hp") or [])
     q["damt"] = round(q["damt"] + p["damt"], 2)
     q["dcnt"] += p["dcnt"]
     q["d7"] = round(q["d7"] + p["d7"], 2); q["d7c"] += p["d7c"]
@@ -843,7 +868,7 @@ def main():
              "aname": "", "alast": "", "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "unsub": 0, "udate": "",
              "d7": 0.0, "d7c": 0, "d30": 0.0, "d30c": 0,
              "erate": 0, "eopen": 0, "eclick": 0, "wiki": 0,
-             "press": 0, "poutlet": "", "ptw": "", "src": []}
+             "press": 0, "poutlet": "", "ptw": "", "src": [], "hp": []}
         people.append(p)
         return p
 
@@ -1178,6 +1203,57 @@ def main():
                     rec["nyc"] = 1
                 if (row.get("oom") or "").strip() in ("1", "y", "yes", "true"):
                     rec["oom"] = 1
+
+    # ---- 5b. House-party guest lists (private/events/*.csv) ----
+    # One file per party, named YYYY-MM-<anything>.csv. Two shapes are read:
+    # a Paperless Post export (Full Name / Email/Phone Number / Status / Invited)
+    # and a plain one (name,email,status). Statuses collapse to four words --
+    # attended, regrets, invited, considered -- so the tool can answer "has this
+    # person ever been asked" without caring which vendor wrote the file.
+    # "considered" is a working-list entry, not an invitation, and the page
+    # keeps it visibly separate. Invitees the database has never seen are added
+    # as their own records, so a guest who never subscribed still shows up.
+    hp_matched = hp_added = 0
+    for ev_path in sorted((PRIV / "events").glob("*.csv")) if (PRIV / "events").exists() else []:
+        ev = ev_path.stem[:7]                         # YYYY-MM
+        try:
+            label = datetime.strptime(ev, "%Y-%m").strftime("%b %Y") + " house party"
+        except ValueError:
+            label = ev_path.stem + " house party"
+        with open(ev_path, newline="", encoding="utf-8-sig") as f:
+            for row in csv.DictReader(f):
+                g = {k.strip().lower(): (v or "").strip() for k, v in row.items() if k}
+                em = email_norm(g.get("email") or g.get("email/phone number") or "")
+                name = g.get("name") or g.get("full name") or ""
+                raw = g.get("status") or g.get("event_status") or ""
+                invited_flag = g.get("invited", "")
+                if not em or "@" not in em:
+                    continue
+                if "full name" in g and not raw and invited_flag not in ("1", "yes", "true"):
+                    continue                          # a plus-one row, never sent an invitation
+                status = hp_status(raw)
+                if status is None:
+                    continue
+                rec = {"ev": ev, "label": label, "status": status, "raw": raw or status}
+                q = by_email.get(em)
+                if q is None:
+                    q = {"n": name, "ns": "given" if name else "", "e": em, "emails": [em],
+                         "inst": "", "role": "", "types": [], "topics": [], "mem": 0, "since": "",
+                         "auth": 0, "arts": 0, "aname": "", "alast": "", "don": 0, "damt": 0.0,
+                         "dcnt": 0, "dlast": "", "unsub": 0, "udate": "", "d7": 0.0, "d7c": 0,
+                         "d30": 0.0, "d30c": 0, "erate": 0, "eopen": 0, "eclick": 0, "wiki": 0,
+                         "press": 0, "poutlet": "", "ptw": "", "src": ["house party"], "hp": []}
+                    people.append(q); by_email[em] = q; hp_added += 1
+                else:
+                    hp_matched += 1
+                    if not (q.get("n") or "").strip() and name:
+                        q["n"], q["ns"] = name, "given"   # a guest list is a confirmed name
+                q["hp"] = merge_hp(q.get("hp") or [], [rec])
+                if "house party" not in (q.get("src") or []):
+                    q.setdefault("src", []).append("house party")
+    if hp_matched or hp_added:
+        print(f"house parties: {hp_matched} guests matched to existing people, {hp_added} added as new records",
+              file=__import__("sys").stderr)
 
     # ---- consolidate duplicates: exact key, then nickname key (last) ----
     # Catches accents/middle initials (Synøve N. Andersen == Synove Andersen),
