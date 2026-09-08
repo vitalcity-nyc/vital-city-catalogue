@@ -218,6 +218,7 @@
      hairlines) rather than by a cloud background bleeding through gaps —
      so when the last row is partial (e.g. 7 cells in a 5-wide grid), the
      empty tracks stay card-colored instead of showing as a gray void. */
+  .perfcell.hero{background:var(--vc-paper2);box-shadow:inset 0 3px 0 0 var(--vc-chartreuse)}
   .perfgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;background:var(--vc-white);border-top:1px solid var(--vc-cloud);border-left:1px solid var(--vc-cloud)}
   .perfcell{background:var(--vc-white);padding:11px 14px;border-right:1px solid var(--vc-cloud);border-bottom:1px solid var(--vc-cloud)}
   .perfcell .pl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700}
@@ -583,25 +584,24 @@
         </ul>
       </div>
       <div class="sechead-title" id="sec-glance" style="margin:24px 0 4px">At a glance</div>
-      <div style="font-size:12.5px;color:var(--vc-charcoal);margin:0 0 12px;max-width:760px">The six tiles below are the ones the organization is steered by: net list change and how well reading converts to subscribing, then the donor base and the recurring income that makes it sustainable. Everything under &ldquo;also tracked&rdquo; is real but subsidiary &mdash; useful context, not the objective.</div>
+      <div style="font-size:12.5px;color:var(--vc-charcoal);margin:0 0 12px;max-width:760px">Two bands. The first is where things stand: list size, the engaged core, the donor base and the recurring income that makes the organization sustainable. Those numbers have no window &mdash; a list does not have a &ldquo;last 7 days.&rdquo; The second band is what moved, and the buttons change its window. Net list change leads it because growing the list is objective one, and only the net number says whether the list is growing.</div>
       <div class="kpis" id="kpis"></div>
-      <p class="alsolbl" id="kpisAlsoLbl" style="display:none">Also tracked</p>
-      <div class="kpis2" id="kpis2"></div>
-
-      <div class="card" id="askAI">
-        <h2>Ask your own questions of this data <span class="hint">download the full dataset and analyze it with Claude, ChatGPT or a spreadsheet</span></h2>
-        <div id="askAIBody"></div>
-      </div>
 
       <div class="card" id="weekPulse" style="display:none">
         <h2><span id="weekPulseTitle">Last 7 days</span>
           <span id="pulseWin" style="display:inline-flex;gap:5px;margin-left:10px;vertical-align:2px">
-            <button class="winbtn on" data-w="7">7 days</button><button class="winbtn" data-w="30">30 days</button><button class="winbtn" data-w="90">90 days</button><button class="winbtn" data-w="ytd">Year to date</button>
+            <button class="winbtn on" data-w="7">7 days</button><button class="winbtn" data-w="30">30 days</button><button class="winbtn" data-w="60">60 days</button><button class="winbtn" data-w="90">90 days</button><button class="winbtn" data-w="ytd">Year to date</button>
           </span>
           <span class="hint" id="weekPulseHint"></span></h2>
         <div class="perfgrid" id="weekPulseGrid"></div>
         <div id="weekPulseTop" style="margin-top:14px"></div>
         <div id="weekPulseNote" style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
+      </div>
+
+
+      <div class="card" id="askAI">
+        <h2>Ask your own questions of this data <span class="hint">download the full dataset and analyze it with Claude, ChatGPT or a spreadsheet</span></h2>
+        <div id="askAIBody"></div>
       </div>
 
       <div class="card" id="rangeReport">
@@ -1098,32 +1098,21 @@ function boot(data){
   const ig = data.instagram || {};
   const ga4 = data.ga4 || {};
   const kpis=[
-    // --- Objective 1: grow the newsletter ---
-    // Net change leads. Gross signups look healthy every month while the list
-    // stays flat; only the net number shows that, so it gets the hero slot.
-    {lbl:"Net list change · 30d", num:fmtDelta(netNew30), delta:`${fmtN(subs30)} joined \u00b7 ${fmtN(unsubs30)} left`,
-     cls:deltaClass(netNew30), hero:true,
-     tip:`Subscribers gained minus subscribers lost over the last 30 days: ${fmtN(subs30)} in, ${fmtN(unsubs30)} out.\n\nWhy it leads: growing the list is objective one, and this is the only tile that answers it. Gross signups have run healthy all year while the list has barely moved -- roughly a third of what comes in leaves again, and a one-off cleaning in May 2026 removed about 500 more.\n\nReconciliation note: this is a rolling 30-day window from Ghost's daily event feed, which lands first. Mailchimp's monthly close is a different source and a different window, and will not match exactly -- August 2026 closed at +39 on Mailchimp against +87 on this rolling basis. Use the Mailchimp monthly figure for reporting and this one for watching.`},
     (function(){
       // The 30-day net now has its own tile, so this one carries the long view:
       // the trailing six months off Mailchimp's monthly close, which is the
       // basis the monthly report uses.
-      const ser=(mc.monthly_signups||[]).filter(r=>r.cum_subs!=null);
+      // Completed months only: comparing a month that is three days old against
+      // six months back read as a 95-person decline on 8 September.
+      const thisMo=new Date().toISOString().slice(0,7);
+      const ser=(mc.monthly_signups||[]).filter(r=>r.cum_subs!=null && r.month<thisMo);
       const six=ser.length>=7 ? ser[ser.length-1].cum_subs-ser[ser.length-7].cum_subs : null;
+      const spansClean = ser.length>=7 && ser[ser.length-7].month<="2026-05" && ser[ser.length-1].month>="2026-05";
       return {lbl:"Subscribers",num:fmtN(total),
-       delta: six!=null ? `${fmtDelta(six)} over 6 months` : `net ${fmtDelta(netNew30)} in 30d`,
+       delta: six!=null ? `${fmtDelta(six)} over 6 months${spansClean?" · incl. May cleaning":""}` : `net ${fmtDelta(netNew30)} in 30d`,
+       flag: spansClean ? "~500 removed May 2026" : "",
        cls: six!=null ? deltaClass(six) : deltaClass(netNew30), hero:true,
      tip:"Unique people on the Mailchimp list right now — each individual counted once, even if signed up under multiple emails.\n\nWhy it matters: The newsletter list is Vital City's core owned audience and the organization's number-one growth goal. Every other metric on this page ultimately serves growing and engaging it.\n\nSource: Mailchimp for unsubscribes, Ghost for signups, reconciled weekly."};
-    })(),
-    (function(){
-      // Conversion, not volume: the number to move when traffic is falling.
-      const gt=data.ghost_traffic||{}, vis=gt.available?gt.visitors_30d:null;
-      if(!vis) return {lbl:"Signups per 1,000 visitors", num:"\u2014", delta:"needs Ghost traffic", cls:"na",
-        tip:"New subscribers per 1,000 unique visitors. Populates once Ghost analytics are connected."};
-      const r=subs30/vis*1000;
-      return {lbl:"Signups per 1,000 visitors", num:r.toFixed(2),
-        delta:`${fmtN(subs30)} signups \u00b7 ${fmtN(vis)} visitors`, cls:"flat",
-        tip:`How well reading converts into subscribing: ${fmtN(subs30)} signups against ${fmtN(vis)} unique visitors in the last 30 days.\n\nWhy it matters: this separates "traffic went up" from "we got better at asking." When traffic falls -- as it did in August 2026, when search dropped 39% in a month -- this is the number still under your control.\n\nCaveat: signups come from Ghost events and visitors from Ghost analytics, counted over the same 30 days but by different subsystems. Read it as a directional ratio, not a precise conversion rate.`};
     })(),
     // --- Objective 2: turn readers into donors ---
     (function(){
@@ -1172,7 +1161,7 @@ function boot(data){
       }
       const pct = (n && total) ? (n/total*100).toFixed(0)+"%" : "—";
       return {lbl:"Active subscribers · 30d", num: n!=null ? fmtN(n) : "—",
-              delta: n!=null ? `${pct} opened ≥1 email in last 30 days` : "data pending",
+              delta: n!=null ? `${pct} opened ≥1 email in 30d · ${fmtN((mc.aau||{}).active_users||0)} over a year` : "data pending",
               cls:"flat",
               tip:`Unique people who opened at least one Vital City newsletter in the last 30 days — a real union across every send in the window, deduped by email. Sometimes called MAU (monthly active users).\n\nWhy it matters: This is your genuinely reachable audience — the people actually reading, not just subscribed. List size flatters; this is the number that predicts how many will see your next send.\n\nNote: Apple Mail privacy auto-opens inflate this somewhat — click rate is the cleaner cut.`};
     })(),
@@ -1208,7 +1197,7 @@ function boot(data){
       const manualTxt = manual.length
         ? ` ${manual.map(m=>m.n).join(" and ")} ${manual.length>1?"are":"is"} hand-entered (as of ${manual[0].as_of||"a recent date"}) — their live counts aren't free to read (X's API is paid, Instagram's public count isn't reliably scrapeable); LinkedIn and Bluesky are pulled live.`
         : "";
-      return {tier:"also",lbl:"Social followers", num: counts.length ? fmtN(total) : "—",
+      return {lbl:"Social followers", num: counts.length ? fmtN(total) : "—",
               delta: counts.map(([k,n])=>`${fmtN(n)} ${k}`).join(" · "),
               cls:"flat",
               tip:`Combined followers across ${included.join(" + ")}.${manualTxt}\n\nWhy it matters: Followers are owned amplification reach beyond the inbox — the audience that can share Vital City's work into networks email never touches.\n\nPer-platform detail and coverage notes are in the Social reach card below.`};
@@ -1282,11 +1271,11 @@ function boot(data){
       // scraper came back empty". Seen 2026-09-08: a CI run returned 0/0 where
       // the run eleven days earlier found 10 confirmed and 15 unverified.
       if(!(sc.confirmed||0) && !(sc.unverified||0) && !((sc.citations||[]).length)){
-        return {tier:"also", lbl:"Policy & academic citations", num:"\u2014",
+        return {lbl:"Policy & academic citations", num:"\u2014",
           delta:"feed returned nothing", flag:"check the pull", cls:"na",
           tip:"The citation search came back completely empty, which is different from finding no citations.\n\nGoogle Scholar rate-limits and blocks automated queries from data-centre addresses, so a run on GitHub Actions can return nothing where the same code returns results from a laptop. Treat this as a broken feed until the pull is checked, not as a real zero."};
       }
-      return {tier:"also", lbl:"Policy & academic citations", num:fmtN(sc.confirmed||0),
+      return {lbl:"Policy & academic citations", num:fmtN(sc.confirmed||0),
         delta:`${fmtN(sc.unverified||0)} more unverified`, cls:"flat",
         tip:`Scholarly and policy citations of Vital City work, confirmed by fetching the citing document. ${fmtN(sc.unverified||0)} further candidates are unverified and should not be quoted externally until checked.\n\nWhy it is tracked: a citation is permanent, cannot be bought and is what funders respond to. Subsidiary to the two primary objectives, but the most durable evidence of influence on the page.`};
     })(),
@@ -1306,13 +1295,13 @@ function boot(data){
   };
   // Two tiers. The head tiles are the ones the organization is steered by; the
   // rest are real but subsidiary, so they sit underneath rather than alongside.
-  const live  = kpis.filter(Boolean);
-  const head  = live.filter(k=>k.tier!=="also");
-  const also  = live.filter(k=>k.tier==="also");
-  $("#kpis").innerHTML  = head.map(tile).join("");
-  $("#kpis2").innerHTML = also.map(tile).join("");
-  $("#kpisAlsoLbl").style.display = also.length ? "" : "none";
-  $("#kpis2").style.display       = also.length ? "" : "none";
+  // Only the stock tiles draw here. Tiles tagged tier:"also" are kept in the
+  // array for their tooltips and history but not rendered: the windowed ones
+  // (signups, visitors, raised) became the "what moved" band directly below,
+  // and the rest (1-year actives, engaged time, 1-year visitors) have their own
+  // cards further down the page.
+  const head = kpis.filter(Boolean).filter(k=>k.tier!=="also");
+  $("#kpis").innerHTML = head.map(tile).join("");
   // ----- Last 7 days rolling scorecard (weekly pulse, all categories)
   renderWeekPulse(data);
   (function(){
@@ -5187,6 +5176,10 @@ function renderWeekPulse(data, span){
   const weekFirst = firstOf(gt.traffic_series,"wk");
   const cur=win(curStart,curEnd), prev=win(prevStart,prevEnd);
   cur.net=cur.signups-cur.unsubs; prev.net=prev.signups-prev.unsubs;
+  // Conversion: signups per 1,000 visitors over the same window. The number
+  // still under our control when traffic falls, so it sits with the list tiles.
+  const spv=o=> (o.visitors!=null && o.visitors>0) ? o.signups/o.visitors*1000 : null;
+  cur.spv=spv(cur); prev.spv=spv(prev);
 
   // A typical week, not last week. The prior-7-days comparison has the same
   // flaw the 30-day tiles had: one strong week makes a normal week read as a
@@ -5241,18 +5234,24 @@ function renderWeekPulse(data, span){
   };
   if(norms.signups&&norms.unsubs)
     norms.net={val:norms.signups.val-norms.unsubs.val, months:norms.signups.months};
+  if(norms.signups&&norms.visitors&&norms.visitors.val>0)
+    norms.spv={val:norms.signups.val/norms.visitors.val*1000, months:Math.min(norms.signups.months,norms.visitors.months)};
 
   // Build tiles. goodDown=true means a DECREASE is the good outcome (unsubs).
   const fmtMoney=v=>"$"+fmtN(Math.round(v));
+  // Objective order: the list first, money second, output and reach last.
   const TILES=[
+    {k:"net",     lbl:"Net list change", fmt:v=>(v>0?"+":"")+fmtN(v), hero:true},
     {k:"signups", lbl:"New signups", fmt:fmtN},
     {k:"unsubs",  lbl:"Unsubscribes", fmt:fmtN, goodDown:true},
-    {k:"net",     lbl:"Net list change", fmt:v=>(v>0?"+":"")+fmtN(v)},
-    {k:"sends",   lbl:"Newsletter sends", fmt:fmtN, neutral:true},
+  ];
+  if(gt.available) TILES.push({k:"spv", lbl:"Signups per 1,000 visitors", fmt:v=>(+v).toFixed(2), dec:true});
+  TILES.push(
     {k:"raised",  lbl:"Raised", fmt:fmtMoney},
     {k:"gifts",   lbl:"Gifts", fmt:fmtN},
+    {k:"sends",   lbl:"Newsletter sends", fmt:fmtN, neutral:true},
     {k:"articles",lbl:"New articles", fmt:fmtN},
-  ];
+  );
   if(gt.available) TILES.push({k:"visitors", lbl:"Website visitors", fmt:fmtN});
 
   // Name lists behind the people-attached tiles, filtered to the 7d window.
@@ -5273,7 +5272,7 @@ function renderWeekPulse(data, span){
   const CLICK_MAX=200;   // safety; weekly counts are far below this
   const clickable={signups:1,unsubs:1,gifts:1};
 
-  const LIMIT={visitors:"visitors", articles:"articles", raised:"money", gifts:"money"};
+  const LIMIT={visitors:"visitors", spv:"visitors", articles:"articles", raised:"money", gifts:"money"};
   const cells=TILES.map(t=>{
     // Does this window reach back before the series begins?
     const lim=LIMIT[t.k];
@@ -5282,7 +5281,7 @@ function renderWeekPulse(data, span){
     else if(lim && covers[lim] && curStart<covers[lim]) short=covers[lim];
     if(short || cur[t.k]===null){
       const from=short||covers[lim]||"";
-      return `<div class="perfcell"><div class="pl">${esc(t.lbl)}</div><div class="pn" style="color:var(--vc-charcoal)">&mdash;</div>`+
+      return `<div class="perfcell${t.hero?' hero':''}"><div class="pl">${esc(t.lbl)}</div><div class="pn" style="color:var(--vc-charcoal)">&mdash;</div>`+
              `<div class="pd flat" title="This window starts before the data does, so a number here would undercount.">no data before ${esc(from)}</div></div>`;
     }
     const now=cur[t.k]||0, was=prev[t.k]||0;
@@ -5305,7 +5304,7 @@ function renderWeekPulse(data, span){
     if(!nm7 && (t.k==="raised"||t.k==="gifts") && covers.money && prevStart<covers.money) priorEmpty=true;
     if(priorEmpty){
       const numHtml0 = t.fmt(cur[t.k]||0);
-      return `<div class="perfcell"><div class="pl">${esc(t.lbl)}</div><div class="pn">${numHtml0}</div>`+
+      return `<div class="perfcell${t.hero?' hero':''}"><div class="pl">${esc(t.lbl)}</div><div class="pn">${numHtml0}</div>`+
              `<div class="pd flat" title="The comparison window predates this data, so there is nothing to compare against.">no comparable earlier period</div></div>`;
     }
     const base = nm7 ? nm7.val : was;
@@ -5317,11 +5316,11 @@ function renderWeekPulse(data, span){
       : `vs prior ${N} days`;
     const d=now-base;
     let cls="flat", dtxt;
-    if(Math.abs(d)<0.5){ dtxt=`typical ${(span==="ytd")?"stretch":N+"-day stretch"} ${baseLbl}`; }
+    if(Math.abs(d)<(t.dec?0.05:0.5)){ dtxt=`typical ${(span==="ytd")?"stretch":N+"-day stretch"} ${baseLbl}`; }
     else {
       const up=d>0, good = t.neutral ? null : (t.goodDown ? !up : up);
       cls = good===null ? "flat" : (good ? "up" : "down");
-      const dv = t.fmt===fmtMoney ? fmtMoney(Math.abs(d)) : fmtN(Math.round(Math.abs(d)));
+      const dv = t.fmt===fmtMoney ? fmtMoney(Math.abs(d)) : (t.dec ? t.fmt(Math.abs(d)) : fmtN(Math.round(Math.abs(d))));
       dtxt=`${up?"▲":"▼"} ${dv}${pctChg(now,base)} ${baseLbl}`;
     }
     const nm=clickable[t.k] && window._weekNames[t.k];
@@ -5329,7 +5328,7 @@ function renderWeekPulse(data, span){
     const numHtml = canClick
       ? `<span class="wpclick" onclick="showWeekNames('${t.k}')" title="Click to see the ${nm.list.length} ${esc(t.lbl.toLowerCase())} behind this number">${t.fmt(now)}</span>`
       : t.fmt(now);
-    return `<div class="perfcell"><div class="pl">${esc(t.lbl)}</div><div class="pn">${numHtml}</div><div class="pd ${cls}">${esc(dtxt)}</div></div>`;
+    return `<div class="perfcell${t.hero?' hero':''}"><div class="pl">${esc(t.lbl)}</div><div class="pn">${numHtml}</div><div class="pd ${cls}">${esc(dtxt)}</div></div>`;
   }).join("");
   $("#weekPulseGrid").innerHTML=cells;
 
@@ -5346,7 +5345,7 @@ function renderWeekPulse(data, span){
   // one and the heading says so rather than implying it matches the window.
   let tpSrc=gt.top_pages_7d||[], tpLbl="by site visits, excluding the homepage";
   if(span===30){ tpSrc=gt.top_pages_30d||[]; }
-  else if(span===90||span==="ytd"){
+  else if(span===60||span===90||span==="ytd"){
     tpSrc=gt.top_pages_since_launch||gt.top_pages_30d||[];
     tpLbl=`by site visits since ${esc(gt.top_pages_since||"launch")} — Ghost has no list matching this window`;
   }
@@ -5375,7 +5374,7 @@ function renderWeekPulse(data, span){
       lbl("Most subscriber-converting pieces", convLbl) + olist(convTop);
     tpEl.innerHTML = html;
   }
-  const LBL={7:"Last 7 days",30:"Last 30 days",90:"Last 90 days",ytd:"Year to date"};
+  const LBL={7:"Last 7 days",30:"Last 30 days",60:"Last 60 days",90:"Last 90 days",ytd:"Year to date"};
   const tt=$("#weekPulseTitle"); if(tt) tt.textContent=LBL[span]||`Last ${span} days`;
   const h=$("#weekPulseHint");
   if(h) h.textContent = (span==="ytd")
