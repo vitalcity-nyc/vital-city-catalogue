@@ -40,84 +40,6 @@
     "id": "6a887dcee065c6000149891c"
   },
   {
-    "title": "A City Forgets. Maybe It’s Supposed To.",
-    "slug": "how-nyc-changed-since-9-11",
-    "url": "https://www.vitalcitynyc.org/how-nyc-changed-since-9-11/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-09-05",
-    "published_at": "2026-09-05T16:00:36.000+00:00",
-    "updated_at": "2026-09-05T16:00:36.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Harry Siegel"
-    ],
-    "topics": [
-      "9/11",
-      "Looking Back, Looking Forward"
-    ],
-    "issues": [
-      "911-anniversary-issue",
-      "september-11-25th-anniversary-remembrance"
-    ],
-    "issue_numbers": [],
-    "summary": "The New York of today is a different city than the New York of 9/11.",
-    "excerpt": "The New York of today is a different city than the New York of 9/11.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/Cropping-Tool---2026-09-02T154343.594.png",
-    "feature_image_alt": null,
-    "feature_image_credit": "Martin Parr / Magnum Photos",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1691,
-    "reading_minutes": 7,
-    "id": "6a9888364488480001b6eea7"
-  },
-  {
-    "title": "The City We Remember, the City We Become",
-    "slug": "9-11-a-muslim-american-reflection",
-    "url": "https://www.vitalcitynyc.org/9-11-a-muslim-american-reflection/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-09-05",
-    "published_at": "2026-09-05T16:00:35.000+00:00",
-    "updated_at": "2026-09-05T16:00:34.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Asad Dandia"
-    ],
-    "topics": [
-      "9/11",
-      "Looking Back, Looking Forward"
-    ],
-    "issues": [
-      "911-anniversary-issue",
-      "september-11-25th-anniversary-remembrance"
-    ],
-    "issue_numbers": [],
-    "summary": "A Muslim American reflection on 9/11 and its aftermath",
-    "excerpt": "A Muslim American reflection on 9/11 and its aftermath",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/Cropping-Tool---2026-09-02T154256.624.png",
-    "feature_image_alt": null,
-    "feature_image_credit": "Peter Turnley / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1297,
-    "reading_minutes": 6,
-    "id": "6a98830a4488480001b6ee54"
-  },
-  {
     "title": "How It Felt As It Happened",
     "slug": "how-it-felt-as-it-happened-september-11",
     "url": "https://www.vitalcitynyc.org/how-it-felt-as-it-happened-september-11/",
@@ -158,86 +80,6 @@
     "id": "6a9880624488480001b6ee14"
   },
   {
-    "title": "Much More Than Two Towers",
-    "slug": "evolution-nyc-architecture-world-trade-center",
-    "url": "https://www.vitalcitynyc.org/evolution-nyc-architecture-world-trade-center/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-09-05",
-    "published_at": "2026-09-05T16:00:17.000+00:00",
-    "updated_at": "2026-09-05T16:00:16.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Vishaan Chakrabarti"
-    ],
-    "topics": [
-      "9/11",
-      "Architecture",
-      "Looking Back, Looking Forward"
-    ],
-    "issues": [
-      "911-anniversary-issue",
-      "september-11-25th-anniversary-remembrance"
-    ],
-    "issue_numbers": [],
-    "summary": "How the feel of New York has changed",
-    "excerpt": "How the feel of New York has changed",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/Cropping-Tool---2026-09-02T163041.032.png",
-    "feature_image_alt": null,
-    "feature_image_credit": "Josh Ethan Johnson",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1642,
-    "reading_minutes": 7,
-    "id": "6a98872b4488480001b6ee8f"
-  },
-  {
-    "title": "The Terrorist Threat, Then and Now",
-    "slug": "nyc-terrorist-threat-before-and-after-9-11",
-    "url": "https://www.vitalcitynyc.org/nyc-terrorist-threat-before-and-after-9-11/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-09-05",
-    "published_at": "2026-09-05T16:00:13.000+00:00",
-    "updated_at": "2026-09-05T16:00:12.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Michael Chertoff",
-      "Ron Rowe"
-    ],
-    "topics": [
-      "9/11",
-      "Looking Back, Looking Forward"
-    ],
-    "issues": [
-      "911-anniversary-issue",
-      "september-11-25th-anniversary-remembrance"
-    ],
-    "issue_numbers": [],
-    "summary": "New York City is under a different type of risk, but danger still looms large.",
-    "excerpt": "New York City is under a different type of risk, but danger still looms large.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/Cropping-Tool---2026-09-02T154218.681.png",
-    "feature_image_alt": null,
-    "feature_image_credit": "John Moore / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1550,
-    "reading_minutes": 7,
-    "id": "6a9886864488480001b6ee7c"
-  },
-  {
     "title": "Downtown Manhattan, Split in Two",
     "slug": "downtown-manhattan-after-september-11",
     "url": "https://www.vitalcitynyc.org/downtown-manhattan-after-september-11/",
@@ -275,6 +117,164 @@
     "word_count": 3210,
     "reading_minutes": 14,
     "id": "6a98810f4488480001b6ee2a"
+  },
+  {
+    "title": "A City Forgets. Maybe It’s Supposed To.",
+    "slug": "how-nyc-changed-since-9-11",
+    "url": "https://www.vitalcitynyc.org/how-nyc-changed-since-9-11/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-09-05",
+    "published_at": "2026-09-05T15:06:00.000+00:00",
+    "updated_at": "2026-09-08T15:07:23.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Harry Siegel"
+    ],
+    "topics": [
+      "9/11",
+      "Looking Back, Looking Forward"
+    ],
+    "issues": [
+      "911-anniversary-issue",
+      "september-11-25th-anniversary-remembrance"
+    ],
+    "issue_numbers": [],
+    "summary": "The New York of today is a different city than the New York of 9/11.",
+    "excerpt": "The New York of today is a different city than the New York of 9/11.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/Cropping-Tool---2026-09-02T154343.594.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Martin Parr / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1691,
+    "reading_minutes": 7,
+    "id": "6a9888364488480001b6eea7"
+  },
+  {
+    "title": "The City We Remember, the City We Become",
+    "slug": "9-11-a-muslim-american-reflection",
+    "url": "https://www.vitalcitynyc.org/9-11-a-muslim-american-reflection/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-09-05",
+    "published_at": "2026-09-05T15:04:00.000+00:00",
+    "updated_at": "2026-09-08T15:07:01.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Asad Dandia"
+    ],
+    "topics": [
+      "9/11",
+      "Looking Back, Looking Forward"
+    ],
+    "issues": [
+      "911-anniversary-issue",
+      "september-11-25th-anniversary-remembrance"
+    ],
+    "issue_numbers": [],
+    "summary": "A Muslim American reflection on 9/11 and its aftermath",
+    "excerpt": "A Muslim American reflection on 9/11 and its aftermath",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/Cropping-Tool---2026-09-02T154256.624.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Peter Turnley / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1297,
+    "reading_minutes": 6,
+    "id": "6a98830a4488480001b6ee54"
+  },
+  {
+    "title": "The Terrorist Threat, Then and Now",
+    "slug": "nyc-terrorist-threat-before-and-after-9-11",
+    "url": "https://www.vitalcitynyc.org/nyc-terrorist-threat-before-and-after-9-11/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-09-05",
+    "published_at": "2026-09-05T15:02:00.000+00:00",
+    "updated_at": "2026-09-08T15:06:39.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Michael Chertoff",
+      "Ron Rowe"
+    ],
+    "topics": [
+      "9/11",
+      "Looking Back, Looking Forward"
+    ],
+    "issues": [
+      "911-anniversary-issue",
+      "september-11-25th-anniversary-remembrance"
+    ],
+    "issue_numbers": [],
+    "summary": "New York City is under a different type of risk, but danger still looms large.",
+    "excerpt": "New York City is under a different type of risk, but danger still looms large.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/Cropping-Tool---2026-09-02T154218.681.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "John Moore / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1550,
+    "reading_minutes": 7,
+    "id": "6a9886864488480001b6ee7c"
+  },
+  {
+    "title": "Much More Than Two Towers",
+    "slug": "evolution-nyc-architecture-world-trade-center",
+    "url": "https://www.vitalcitynyc.org/evolution-nyc-architecture-world-trade-center/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-09-05",
+    "published_at": "2026-09-05T15:00:00.000+00:00",
+    "updated_at": "2026-09-08T15:06:16.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Vishaan Chakrabarti"
+    ],
+    "topics": [
+      "9/11",
+      "Architecture",
+      "Looking Back, Looking Forward"
+    ],
+    "issues": [
+      "911-anniversary-issue",
+      "september-11-25th-anniversary-remembrance"
+    ],
+    "issue_numbers": [],
+    "summary": "How the feel of New York has changed",
+    "excerpt": "How the feel of New York has changed",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/Cropping-Tool---2026-09-02T163041.032.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Josh Ethan Johnson",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1642,
+    "reading_minutes": 7,
+    "id": "6a98872b4488480001b6ee8f"
   },
   {
     "title": "Why the City Council Must Confirm John Mangin",
@@ -465,7 +465,7 @@
     "type_basis": "tag:data-stories",
     "published_date": "2026-08-25",
     "published_at": "2026-08-25T13:00:16.000+00:00",
-    "updated_at": "2026-08-25T20:46:42.000+00:00",
+    "updated_at": "2026-09-08T17:30:02.000+00:00",
     "primary_author": null,
     "authors": [
       "Vital City",
@@ -633,7 +633,7 @@
       },
       "total": 28
     },
-    "featured": false,
+    "featured": true,
     "visibility": "public",
     "word_count": 3238,
     "reading_minutes": 14,
@@ -3027,6 +3027,59 @@
     "id": "6a2825f0db63ad00019220d7"
   },
   {
+    "title": "Whither Wall Street?",
+    "slug": "wall-street-future-nyc",
+    "url": "https://www.vitalcitynyc.org/wall-street-future-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:07:00.000+00:00",
+    "updated_at": "2026-08-26T18:34:54.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Nicole Gelinas"
+    ],
+    "topics": [
+      "Economics",
+      "The Shape of the Economic Engine"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "New York can’t predict the future of its most lucrative industry, but it should pay more attention to the past.",
+    "excerpt": "New York can’t predict the future of its most lucrative industry, but it should pay more attention to the past.  ",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T133308.751.png",
+    "feature_image_alt": "The feet of a many in business slacks holding a rooster on a leash in Manhattan",
+    "feature_image_credit": "Mathias Wasik",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "29298823",
+          "src": "visualisation/29298823?1257272",
+          "url": "https://public.flourish.studio/visualisation/29298823/"
+        },
+        {
+          "id": "29298877",
+          "src": "visualisation/29298877?1257272",
+          "url": "https://public.flourish.studio/visualisation/29298877/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 2
+      },
+      "total": 2
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2381,
+    "reading_minutes": 10,
+    "id": "6a284e73db63ad0001922260"
+  },
+  {
     "title": "New York City’s Job Growth Has a Quality Problem",
     "slug": "nyc-job-quality-problem",
     "url": "https://www.vitalcitynyc.org/nyc-job-quality-problem/",
@@ -3096,59 +3149,6 @@
     "word_count": 2002,
     "reading_minutes": 9,
     "id": "6a28518cdb63ad00019222b5"
-  },
-  {
-    "title": "Whither Wall Street?",
-    "slug": "wall-street-future-nyc",
-    "url": "https://www.vitalcitynyc.org/wall-street-future-nyc/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-06-10",
-    "published_at": "2026-06-10T16:07:00.000+00:00",
-    "updated_at": "2026-08-26T18:34:54.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Nicole Gelinas"
-    ],
-    "topics": [
-      "Economics",
-      "The Shape of the Economic Engine"
-    ],
-    "issues": [
-      "issue-16"
-    ],
-    "issue_numbers": [
-      16
-    ],
-    "summary": "New York can’t predict the future of its most lucrative industry, but it should pay more attention to the past.",
-    "excerpt": "New York can’t predict the future of its most lucrative industry, but it should pay more attention to the past.  ",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T133308.751.png",
-    "feature_image_alt": "The feet of a many in business slacks holding a rooster on a leash in Manhattan",
-    "feature_image_credit": "Mathias Wasik",
-    "embeds": {
-      "flourish": [
-        {
-          "id": "29298823",
-          "src": "visualisation/29298823?1257272",
-          "url": "https://public.flourish.studio/visualisation/29298823/"
-        },
-        {
-          "id": "29298877",
-          "src": "visualisation/29298877?1257272",
-          "url": "https://public.flourish.studio/visualisation/29298877/"
-        }
-      ],
-      "iframes": [],
-      "counts": {
-        "flourish": 2
-      },
-      "total": 2
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2381,
-    "reading_minutes": 10,
-    "id": "6a284e73db63ad0001922260"
   },
   {
     "title": "New York Families Are Doing Better Than You’ve Heard",
@@ -3311,47 +3311,6 @@
     "id": "6a285c22db63ad000192237f"
   },
   {
-    "title": "Anchors of Opportunity?",
-    "slug": "nyc-public-housing-economics",
-    "url": "https://www.vitalcitynyc.org/nyc-public-housing-economics/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-06-10",
-    "published_at": "2026-06-10T16:03:00.000+00:00",
-    "updated_at": "2026-08-26T18:34:55.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Ingrid Gould Ellen"
-    ],
-    "topics": [
-      "Housing",
-      "The Shape of the Economic Engine",
-      "Economics"
-    ],
-    "issues": [
-      "issue-16"
-    ],
-    "issue_numbers": [
-      16
-    ],
-    "summary": "The economics of public housing",
-    "excerpt": "The economics of public housing ",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T100553.816.png",
-    "feature_image_alt": "A bundle if balloons lies wrapped in the branches of a tree above the roof of a NYCHA housing project",
-    "feature_image_credit": "Gabriella Angotti-Jones / The New York Times / Redux",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1913,
-    "reading_minutes": 8,
-    "id": "6a0e0a28a0bfc9000149cfe7"
-  },
-  {
     "title": "The Millionaire Exodus That Never Came",
     "slug": "mamdani-tax-increase-millionaire-exodus-fears",
     "url": "https://www.vitalcitynyc.org/mamdani-tax-increase-millionaire-exodus-fears/",
@@ -3392,6 +3351,47 @@
     "word_count": 2327,
     "reading_minutes": 10,
     "id": "6a2860d0db63ad00019223df"
+  },
+  {
+    "title": "Anchors of Opportunity?",
+    "slug": "nyc-public-housing-economics",
+    "url": "https://www.vitalcitynyc.org/nyc-public-housing-economics/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:03:00.000+00:00",
+    "updated_at": "2026-08-26T18:34:55.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Ingrid Gould Ellen"
+    ],
+    "topics": [
+      "Housing",
+      "The Shape of the Economic Engine",
+      "Economics"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "The economics of public housing",
+    "excerpt": "The economics of public housing ",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T100553.816.png",
+    "feature_image_alt": "A bundle if balloons lies wrapped in the branches of a tree above the roof of a NYCHA housing project",
+    "feature_image_credit": "Gabriella Angotti-Jones / The New York Times / Redux",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1913,
+    "reading_minutes": 8,
+    "id": "6a0e0a28a0bfc9000149cfe7"
   },
   {
     "title": "Time to Build Big Again",
@@ -6650,6 +6650,73 @@
     "id": "69a04c0ad4006a00010a42dd"
   },
   {
+    "title": "New York City’s Crime Puzzle",
+    "slug": "new-york-city-gun-violence-down-major-crime-high",
+    "url": "https://www.vitalcitynyc.org/new-york-city-gun-violence-down-major-crime-high/",
+    "type": "data analysis",
+    "type_basis": "html:5-chart-embeds",
+    "published_date": "2026-02-19",
+    "published_at": "2026-02-19T17:00:54.000+00:00",
+    "updated_at": "2026-08-26T18:35:19.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Marcos F. Soler"
+    ],
+    "topics": [
+      "Crime",
+      "Gun Violence",
+      "Where We Are"
+    ],
+    "issues": [
+      "crime-looking-back-at-2025-and-ahead-to-2026"
+    ],
+    "issue_numbers": [],
+    "summary": "Gun violence and homicides are way, way down. Overall major crime remains high. Why?",
+    "excerpt": "Gun violence and homicides are way, way down. Overall major crime remains high. Why?",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ay8-o1wlo0xkef9f_mg134036-auto-format-compress-1776259653298.jpg",
+    "feature_image_alt": "Houses and a vacant lot seen through a graffiti-covered chain-link fence",
+    "feature_image_credit": "Alex Webb / Magnum Photos",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "27610975",
+          "src": "visualisation/27610975?1271209",
+          "url": "https://public.flourish.studio/visualisation/27610975/"
+        },
+        {
+          "id": "27611025",
+          "src": "visualisation/27611025?1271209",
+          "url": "https://public.flourish.studio/visualisation/27611025/"
+        },
+        {
+          "id": "27611062",
+          "src": "visualisation/27611062?1271209",
+          "url": "https://public.flourish.studio/visualisation/27611062/"
+        },
+        {
+          "id": "27611151",
+          "src": "visualisation/27611151?1271209",
+          "url": "https://public.flourish.studio/visualisation/27611151/"
+        },
+        {
+          "id": "27611187",
+          "src": "visualisation/27611187?1271209",
+          "url": "https://public.flourish.studio/visualisation/27611187/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 5
+      },
+      "total": 5
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2840,
+    "reading_minutes": 12,
+    "id": "69a04c0ad4006a00010a42e4"
+  },
+  {
     "title": "The NYPD’s Crime-Reduction Strategy: Chief of Department Michael LiPetri in Conversation",
     "slug": "nypd-crime-strategy-questions-michael-lipetri",
     "url": "https://www.vitalcitynyc.org/nypd-crime-strategy-questions-michael-lipetri/",
@@ -6807,45 +6874,6 @@
     "id": "69a04c0ad4006a00010a42e7"
   },
   {
-    "title": "CompStat, Meet SafeStat",
-    "slug": "compstat-safestat-public-safety-nyc-mamdani",
-    "url": "https://www.vitalcitynyc.org/compstat-safestat-public-safety-nyc-mamdani/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-02-19",
-    "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-08-26T20:11:24.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Gloria Gong"
-    ],
-    "topics": [
-      "Police Reform",
-      "Where We’re Headed",
-      "Neighborhood Life"
-    ],
-    "issues": [
-      "crime-looking-back-at-2025-and-ahead-to-2026"
-    ],
-    "issue_numbers": [],
-    "summary": "As he works to build a Department of Community Safety, Mayor Mamdani should pioneer a new way to measure not just crime, but broader public safety.",
-    "excerpt": "As he works to build a Department of Community Safety, Mayor Mamdani should pioneer a new way to measure not just crime, but broader public safety.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/aypvi90yxlcxvohd_mathias-wasik-nyc-001-auto-format-compress-1776259654087.jpg",
-    "feature_image_alt": "Sunlight through a leaf-patterned tarp casts oval shadows on a sidewalk",
-    "feature_image_credit": "Mathias Wasik",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1895,
-    "reading_minutes": 8,
-    "id": "69a04c0ad4006a00010a42e2"
-  },
-  {
     "title": "The Invisible Thread That Connects Cases of Excessive Force and Low Clearance Rates",
     "slug": "ice-impunity-police-law-enforcement-accountability",
     "url": "https://www.vitalcitynyc.org/ice-impunity-police-law-enforcement-accountability/",
@@ -6883,6 +6911,45 @@
     "word_count": 1168,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a42e9"
+  },
+  {
+    "title": "CompStat, Meet SafeStat",
+    "slug": "compstat-safestat-public-safety-nyc-mamdani",
+    "url": "https://www.vitalcitynyc.org/compstat-safestat-public-safety-nyc-mamdani/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-02-19",
+    "published_at": "2026-02-19T17:00:54.000+00:00",
+    "updated_at": "2026-08-26T20:11:24.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Gloria Gong"
+    ],
+    "topics": [
+      "Police Reform",
+      "Where We’re Headed",
+      "Neighborhood Life"
+    ],
+    "issues": [
+      "crime-looking-back-at-2025-and-ahead-to-2026"
+    ],
+    "issue_numbers": [],
+    "summary": "As he works to build a Department of Community Safety, Mayor Mamdani should pioneer a new way to measure not just crime, but broader public safety.",
+    "excerpt": "As he works to build a Department of Community Safety, Mayor Mamdani should pioneer a new way to measure not just crime, but broader public safety.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/aypvi90yxlcxvohd_mathias-wasik-nyc-001-auto-format-compress-1776259654087.jpg",
+    "feature_image_alt": "Sunlight through a leaf-patterned tarp casts oval shadows on a sidewalk",
+    "feature_image_credit": "Mathias Wasik",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1895,
+    "reading_minutes": 8,
+    "id": "69a04c0ad4006a00010a42e2"
   },
   {
     "title": "The State of Crime in New York City: 2025 and Beyond",
@@ -7093,73 +7160,6 @@
     "word_count": 2897,
     "reading_minutes": 13,
     "id": "69a04c0ad4006a00010a42df"
-  },
-  {
-    "title": "New York City’s Crime Puzzle",
-    "slug": "new-york-city-gun-violence-down-major-crime-high",
-    "url": "https://www.vitalcitynyc.org/new-york-city-gun-violence-down-major-crime-high/",
-    "type": "data analysis",
-    "type_basis": "html:5-chart-embeds",
-    "published_date": "2026-02-19",
-    "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-08-26T18:35:19.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Marcos F. Soler"
-    ],
-    "topics": [
-      "Crime",
-      "Gun Violence",
-      "Where We Are"
-    ],
-    "issues": [
-      "crime-looking-back-at-2025-and-ahead-to-2026"
-    ],
-    "issue_numbers": [],
-    "summary": "Gun violence and homicides are way, way down. Overall major crime remains high. Why?",
-    "excerpt": "Gun violence and homicides are way, way down. Overall major crime remains high. Why?",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ay8-o1wlo0xkef9f_mg134036-auto-format-compress-1776259653298.jpg",
-    "feature_image_alt": "Houses and a vacant lot seen through a graffiti-covered chain-link fence",
-    "feature_image_credit": "Alex Webb / Magnum Photos",
-    "embeds": {
-      "flourish": [
-        {
-          "id": "27610975",
-          "src": "visualisation/27610975?1271209",
-          "url": "https://public.flourish.studio/visualisation/27610975/"
-        },
-        {
-          "id": "27611025",
-          "src": "visualisation/27611025?1271209",
-          "url": "https://public.flourish.studio/visualisation/27611025/"
-        },
-        {
-          "id": "27611062",
-          "src": "visualisation/27611062?1271209",
-          "url": "https://public.flourish.studio/visualisation/27611062/"
-        },
-        {
-          "id": "27611151",
-          "src": "visualisation/27611151?1271209",
-          "url": "https://public.flourish.studio/visualisation/27611151/"
-        },
-        {
-          "id": "27611187",
-          "src": "visualisation/27611187?1271209",
-          "url": "https://public.flourish.studio/visualisation/27611187/"
-        }
-      ],
-      "iframes": [],
-      "counts": {
-        "flourish": 5
-      },
-      "total": 5
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2840,
-    "reading_minutes": 12,
-    "id": "69a04c0ad4006a00010a42e4"
   },
   {
     "title": "Historic Declines, Contested Borders",
@@ -10010,22 +10010,22 @@
     "id": "69a04c0ad4006a00010a3ffa"
   },
   {
-    "title": "Mamdani’s Charter School Dilemma",
-    "slug": "mamdanis-charter-school-dilemma",
-    "url": "https://www.vitalcitynyc.org/mamdanis-charter-school-dilemma/",
+    "title": "A Housing Roadmap for New York’s Next Mayor",
+    "slug": "a-housing-roadmap-for-new-yorks-next-mayor",
+    "url": "https://www.vitalcitynyc.org/a-housing-roadmap-for-new-yorks-next-mayor/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-11-06",
     "published_at": "2025-11-06T15:08:46.000+00:00",
-    "updated_at": "2026-08-26T18:35:56.000+00:00",
+    "updated_at": "2026-08-26T18:35:55.000+00:00",
     "primary_author": null,
     "authors": [
-      "Joseph P. Viteritti"
+      "Alex Armlovich"
     ],
     "topics": [
-      "Education",
+      "Housing",
       "What to Do Now",
-      "Government Operations"
+      "City Planning"
     ],
     "issues": [
       "issue-15"
@@ -10033,11 +10033,11 @@
     "issue_numbers": [
       15
     ],
-    "summary": "New York City’s mayor-elect will be urged to rethink his opposition to a reform movement that is serving low-income kids.",
-    "excerpt": "New York City’s mayor-elect will be urged to rethink his opposition to a reform movement that is serving low-income kids.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/aqt2yrprevya4gst_h_14479554-auto-format-compress-1776259671976.jpg",
-    "feature_image_alt": "Children sit on a colorful rug writing on paper in a classroom",
-    "feature_image_credit": "Andrew Renneisen / The New York Times / Redux",
+    "summary": "How Mayor-elect Mamdani can rise to the central challenge facing the city",
+    "excerpt": "How Mayor-elect Mamdani can rise to the central challenge facing the city",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/aqyrq7prevya4ivt_dscf1674-auto-format-compress-1776259671857.jpg",
+    "feature_image_alt": "People stand in illuminated windows overlooking a nighttime city skyline",
+    "feature_image_credit": "Sonia Goydenko",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -10046,50 +10046,9 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1452,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a3fff"
-  },
-  {
-    "title": "Why Mayor-Elect Mamdani Should Embrace Mayoral Control of Our Schools",
-    "slug": "why-mamdani-should-embrace-mayoral-control-of-schools",
-    "url": "https://www.vitalcitynyc.org/why-mamdani-should-embrace-mayoral-control-of-schools/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-11-06",
-    "published_at": "2025-11-06T15:08:46.000+00:00",
-    "updated_at": "2026-08-26T18:35:54.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Richard Buery Jr."
-    ],
-    "topics": [
-      "Education",
-      "What to Do Now",
-      "City Government"
-    ],
-    "issues": [
-      "issue-15"
-    ],
-    "issue_numbers": [
-      15
-    ],
-    "summary": "It’s the best way to get results.",
-    "excerpt": "It’s the best way to get results.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/aqt2f7prevya4grw_mathias-wasik-nyc-2020-001-auto-format-compress-1776259672435.jpg",
-    "feature_image_alt": "Children run and scooter toward a school entrance past a red hydrant",
-    "feature_image_credit": "Mathias Wasik",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2125,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a3ffd"
+    "word_count": 2666,
+    "reading_minutes": 12,
+    "id": "69a04c0ad4006a00010a3ffe"
   },
   {
     "title": "No City for Old Monuments?",
@@ -10183,22 +10142,22 @@
     "id": "69a04c0ad4006a00010a3ff9"
   },
   {
-    "title": "A Housing Roadmap for New York’s Next Mayor",
-    "slug": "a-housing-roadmap-for-new-yorks-next-mayor",
-    "url": "https://www.vitalcitynyc.org/a-housing-roadmap-for-new-yorks-next-mayor/",
+    "title": "Why Mayor-Elect Mamdani Should Embrace Mayoral Control of Our Schools",
+    "slug": "why-mamdani-should-embrace-mayoral-control-of-schools",
+    "url": "https://www.vitalcitynyc.org/why-mamdani-should-embrace-mayoral-control-of-schools/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-11-06",
     "published_at": "2025-11-06T15:08:46.000+00:00",
-    "updated_at": "2026-08-26T18:35:55.000+00:00",
+    "updated_at": "2026-08-26T18:35:54.000+00:00",
     "primary_author": null,
     "authors": [
-      "Alex Armlovich"
+      "Richard Buery Jr."
     ],
     "topics": [
-      "Housing",
+      "Education",
       "What to Do Now",
-      "City Planning"
+      "City Government"
     ],
     "issues": [
       "issue-15"
@@ -10206,11 +10165,11 @@
     "issue_numbers": [
       15
     ],
-    "summary": "How Mayor-elect Mamdani can rise to the central challenge facing the city",
-    "excerpt": "How Mayor-elect Mamdani can rise to the central challenge facing the city",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/aqyrq7prevya4ivt_dscf1674-auto-format-compress-1776259671857.jpg",
-    "feature_image_alt": "People stand in illuminated windows overlooking a nighttime city skyline",
-    "feature_image_credit": "Sonia Goydenko",
+    "summary": "It’s the best way to get results.",
+    "excerpt": "It’s the best way to get results.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/aqt2f7prevya4grw_mathias-wasik-nyc-2020-001-auto-format-compress-1776259672435.jpg",
+    "feature_image_alt": "Children run and scooter toward a school entrance past a red hydrant",
+    "feature_image_credit": "Mathias Wasik",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -10219,9 +10178,50 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2666,
-    "reading_minutes": 12,
-    "id": "69a04c0ad4006a00010a3ffe"
+    "word_count": 2125,
+    "reading_minutes": 9,
+    "id": "69a04c0ad4006a00010a3ffd"
+  },
+  {
+    "title": "Mamdani’s Charter School Dilemma",
+    "slug": "mamdanis-charter-school-dilemma",
+    "url": "https://www.vitalcitynyc.org/mamdanis-charter-school-dilemma/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-11-06",
+    "published_at": "2025-11-06T15:08:46.000+00:00",
+    "updated_at": "2026-08-26T18:35:56.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Joseph P. Viteritti"
+    ],
+    "topics": [
+      "Education",
+      "What to Do Now",
+      "Government Operations"
+    ],
+    "issues": [
+      "issue-15"
+    ],
+    "issue_numbers": [
+      15
+    ],
+    "summary": "New York City’s mayor-elect will be urged to rethink his opposition to a reform movement that is serving low-income kids.",
+    "excerpt": "New York City’s mayor-elect will be urged to rethink his opposition to a reform movement that is serving low-income kids.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/aqt2yrprevya4gst_h_14479554-auto-format-compress-1776259671976.jpg",
+    "feature_image_alt": "Children sit on a colorful rug writing on paper in a classroom",
+    "feature_image_credit": "Andrew Renneisen / The New York Times / Redux",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1452,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a3fff"
   },
   {
     "title": "Reality Check: How Safe are Manhattan (and Brooklyn)?",
@@ -11612,64 +11612,6 @@
     "id": "69a04c0ad4006a00010a4280"
   },
   {
-    "title": "The Property Tax Cannot Stand",
-    "slug": "the-property-tax-cannot-stand",
-    "url": "https://www.vitalcitynyc.org/the-property-tax-cannot-stand/",
-    "type": "data analysis",
-    "type_basis": "html:3-chart-embeds",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-08-26T18:38:00.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Martha Stark"
-    ],
-    "topics": [
-      "Housing",
-      "If I Had a Hammer..."
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Why reforming the complex, unfair system is imperative to produce more housing",
-    "excerpt": "Why reforming the complex, unfair system is imperative to produce more housing",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amq7dwgnhvftpu43_croppingtool-9--png-auto-format-compress-1776259680945.jpg",
-    "feature_image_alt": "Cheerleaders leap in midair in front of a row of brownstones",
-    "feature_image_credit": "Andrew Lichteinstein / Getty Images",
-    "embeds": {
-      "flourish": [
-        {
-          "id": "25164159",
-          "src": "visualisation/25164159?1271209",
-          "url": "https://public.flourish.studio/visualisation/25164159/"
-        },
-        {
-          "id": "25163804",
-          "src": "visualisation/25163804?1271209",
-          "url": "https://public.flourish.studio/visualisation/25163804/"
-        },
-        {
-          "id": "25163941",
-          "src": "visualisation/25163941?1271209",
-          "url": "https://public.flourish.studio/visualisation/25163941/"
-        }
-      ],
-      "iframes": [],
-      "counts": {
-        "flourish": 3
-      },
-      "total": 3
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2353,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a4017"
-  },
-  {
     "title": "A Housing Agenda for the Next Mayor",
     "slug": "a-housing-agenda-for-the-next-mayor",
     "url": "https://www.vitalcitynyc.org/a-housing-agenda-for-the-next-mayor/",
@@ -11752,6 +11694,55 @@
     "id": "69a04c0ad4006a00010a4218"
   },
   {
+    "title": "Why It Costs So Much To Build in New York City",
+    "slug": "why-it-costs-so-much-to-build-in-new-york-city",
+    "url": "https://www.vitalcitynyc.org/why-it-costs-so-much-to-build-in-new-york-city/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-08-26T18:36:10.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Sean Campion"
+    ],
+    "topics": [
+      "What We Can and Can't Afford",
+      "Housing",
+      "City Planning"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Untangling the many forces that inflate the price of producing new apartments",
+    "excerpt": "Untangling the many forces that inflate the price of producing new apartments",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amq5dmgnhvftpu3w_croppingtool-6--png-auto-format-compress-1776259679146.jpg",
+    "feature_image_alt": "A woman in a vintage dress and parasol walks past a construction site",
+    "feature_image_credit": "Mathias Wasik",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "24699204",
+          "src": "visualisation/24699204?1271209",
+          "url": "https://public.flourish.studio/visualisation/24699204/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2319,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a4011"
+  },
+  {
     "title": "New York City Needs a Two-Track Mind",
     "slug": "new-york-city-needs-a-two-track-mind",
     "url": "https://www.vitalcitynyc.org/new-york-city-needs-a-two-track-mind/",
@@ -11811,6 +11802,105 @@
     "id": "69a04c0ad4006a00010a4013"
   },
   {
+    "title": "The Property Tax Cannot Stand",
+    "slug": "the-property-tax-cannot-stand",
+    "url": "https://www.vitalcitynyc.org/the-property-tax-cannot-stand/",
+    "type": "data analysis",
+    "type_basis": "html:3-chart-embeds",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-08-26T18:38:00.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Martha Stark"
+    ],
+    "topics": [
+      "Housing",
+      "If I Had a Hammer..."
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Why reforming the complex, unfair system is imperative to produce more housing",
+    "excerpt": "Why reforming the complex, unfair system is imperative to produce more housing",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amq7dwgnhvftpu43_croppingtool-9--png-auto-format-compress-1776259680945.jpg",
+    "feature_image_alt": "Cheerleaders leap in midair in front of a row of brownstones",
+    "feature_image_credit": "Andrew Lichteinstein / Getty Images",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "25164159",
+          "src": "visualisation/25164159?1271209",
+          "url": "https://public.flourish.studio/visualisation/25164159/"
+        },
+        {
+          "id": "25163804",
+          "src": "visualisation/25163804?1271209",
+          "url": "https://public.flourish.studio/visualisation/25163804/"
+        },
+        {
+          "id": "25163941",
+          "src": "visualisation/25163941?1271209",
+          "url": "https://public.flourish.studio/visualisation/25163941/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 3
+      },
+      "total": 3
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2353,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a4017"
+  },
+  {
+    "title": "What Hangs in the Balance Sheets",
+    "slug": "what-hangs-in-the-balance-sheets",
+    "url": "https://www.vitalcitynyc.org/what-hangs-in-the-balance-sheets/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-04-16T19:02:02.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "What We Can and Can't Afford",
+      "Economics",
+      "Government Operations"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Two New York City apartment buildings’ costs and revenue",
+    "excerpt": "Two New York City apartment buildings’ costs and revenue",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhfp2gnhvftpqhy_h_16282379-auto-format-compress-1776259678798.jpg",
+    "feature_image_alt": "Two pedestrians walk past a window reflecting an apartment building",
+    "feature_image_credit": "Karsten Moran / The New York Times / Redux",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 3276,
+    "reading_minutes": 14,
+    "id": "69a04c0ad4006a00010a401a"
+  },
+  {
     "title": "Learning from Jersey City",
     "slug": "learning-from-jersey-city",
     "url": "https://www.vitalcitynyc.org/learning-from-jersey-city/",
@@ -11863,96 +11953,6 @@
     "word_count": 2354,
     "reading_minutes": 10,
     "id": "69a04c0ad4006a00010a4010"
-  },
-  {
-    "title": "Why It Costs So Much To Build in New York City",
-    "slug": "why-it-costs-so-much-to-build-in-new-york-city",
-    "url": "https://www.vitalcitynyc.org/why-it-costs-so-much-to-build-in-new-york-city/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-08-26T18:36:10.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Sean Campion"
-    ],
-    "topics": [
-      "What We Can and Can't Afford",
-      "Housing",
-      "City Planning"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Untangling the many forces that inflate the price of producing new apartments",
-    "excerpt": "Untangling the many forces that inflate the price of producing new apartments",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amq5dmgnhvftpu3w_croppingtool-6--png-auto-format-compress-1776259679146.jpg",
-    "feature_image_alt": "A woman in a vintage dress and parasol walks past a construction site",
-    "feature_image_credit": "Mathias Wasik",
-    "embeds": {
-      "flourish": [
-        {
-          "id": "24699204",
-          "src": "visualisation/24699204?1271209",
-          "url": "https://public.flourish.studio/visualisation/24699204/"
-        }
-      ],
-      "iframes": [],
-      "counts": {
-        "flourish": 1
-      },
-      "total": 1
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2319,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a4011"
-  },
-  {
-    "title": "What Hangs in the Balance Sheets",
-    "slug": "what-hangs-in-the-balance-sheets",
-    "url": "https://www.vitalcitynyc.org/what-hangs-in-the-balance-sheets/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-04-16T19:02:02.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Vital City"
-    ],
-    "topics": [
-      "What We Can and Can't Afford",
-      "Economics",
-      "Government Operations"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Two New York City apartment buildings’ costs and revenue",
-    "excerpt": "Two New York City apartment buildings’ costs and revenue",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhfp2gnhvftpqhy_h_16282379-auto-format-compress-1776259678798.jpg",
-    "feature_image_alt": "Two pedestrians walk past a window reflecting an apartment building",
-    "feature_image_credit": "Karsten Moran / The New York Times / Redux",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 3276,
-    "reading_minutes": 14,
-    "id": "69a04c0ad4006a00010a401a"
   },
   {
     "title": "Local Democracy is Land-Use Policy",
@@ -12792,22 +12792,22 @@
     "id": "69a04c0ad4006a00010a4020"
   },
   {
-    "title": "Editors’ Note",
-    "slug": "editors-note-issue-13",
-    "url": "https://www.vitalcitynyc.org/editors-note-issue-13/",
+    "title": "The Good Gun Owner",
+    "slug": "the-good-gun-owner",
+    "url": "https://www.vitalcitynyc.org/the-good-gun-owner/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-08-26T20:11:41.000+00:00",
+    "updated_at": "2026-08-26T18:36:17.000+00:00",
     "primary_author": null,
     "authors": [
-      "Megan Kang",
-      "Elizabeth Glazer"
+      "Samantha J. Simon"
     ],
     "topics": [
-      "Gun Violence",
-      "Overview"
+      "Police Reform",
+      "Modern Evolution: Marketing and Profits",
+      "Gun Violence"
     ],
     "issues": [
       "issue-13"
@@ -12815,11 +12815,11 @@
     "issue_numbers": [
       13
     ],
-    "summary": "How so many guns got into so many American hands",
-    "excerpt": "How so many guns got into so many American hands",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amavdggnhvfto1o1_765433239901-auto-format-compress-1776259685450.jpg",
-    "feature_image_alt": "A man walks out of a gun range’s check-in entrance",
-    "feature_image_credit": "John Locher / AP Photo",
+    "summary": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
+    "excerpt": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6omgnhvfto1zu_gettyimages-51135991-auto-format-compress-1776259687678.jpg",
+    "feature_image_alt": "An armed police officer stands guard on a busy Wall Street sidewalk",
+    "feature_image_credit": "Spencer Platt / Getty Images",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -12828,9 +12828,148 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1532,
+    "word_count": 2291,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a401d"
+  },
+  {
+    "title": "What We Know and Don’t Know About Guns",
+    "slug": "what-we-know-and-dont-know-about-guns",
+    "url": "https://www.vitalcitynyc.org/what-we-know-and-dont-know-about-guns/",
+    "type": "data analysis",
+    "type_basis": "html:17-chart-embeds",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-08-26T18:36:17.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Kate Daugherty",
+      "Paul Reeping",
+      "Megan Kang"
+    ],
+    "topics": [
+      "data",
+      "Overview",
+      "Gun Violence",
+      "History"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "Parsing the data",
+    "excerpt": "Parsing the data",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amaxzmgnhvfto1qh_d23hn0-auto-format-compress-1776259687014.jpg",
+    "feature_image_alt": "A wall is covered with paper shooting-range targets of various designs",
+    "feature_image_credit": "Kristoffer Tripplaar / Alamy Stock Photo",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "24731717",
+          "src": "visualisation/24731717?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731717/"
+        },
+        {
+          "id": "24731821",
+          "src": "visualisation/24731821?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731821/"
+        },
+        {
+          "id": "24730813",
+          "src": "visualisation/24730813?1271209",
+          "url": "https://public.flourish.studio/visualisation/24730813/"
+        },
+        {
+          "id": "24731657",
+          "src": "visualisation/24731657?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731657/"
+        },
+        {
+          "id": "24730916",
+          "src": "visualisation/24730916?1271209",
+          "url": "https://public.flourish.studio/visualisation/24730916/"
+        },
+        {
+          "id": "24731887",
+          "src": "visualisation/24731887?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731887/"
+        },
+        {
+          "id": "24795769",
+          "src": "visualisation/24795769?1271209",
+          "url": "https://public.flourish.studio/visualisation/24795769/"
+        },
+        {
+          "id": "24701566",
+          "src": "visualisation/24701566?1271209",
+          "url": "https://public.flourish.studio/visualisation/24701566/"
+        },
+        {
+          "id": "24701768",
+          "src": "visualisation/24701768?1271209",
+          "url": "https://public.flourish.studio/visualisation/24701768/"
+        },
+        {
+          "id": "24780816",
+          "src": "visualisation/24780816?1271209",
+          "url": "https://public.flourish.studio/visualisation/24780816/"
+        },
+        {
+          "id": "24701934",
+          "src": "visualisation/24701934?1271209",
+          "url": "https://public.flourish.studio/visualisation/24701934/"
+        },
+        {
+          "id": "3282227",
+          "src": "story/3282227?1271209",
+          "url": "https://public.flourish.studio/story/3282227/"
+        },
+        {
+          "id": "24780493",
+          "src": "visualisation/24780493?1271209",
+          "url": "https://public.flourish.studio/visualisation/24780493/"
+        },
+        {
+          "id": "24731510",
+          "src": "visualisation/24731510?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731510/"
+        },
+        {
+          "id": "24731118",
+          "src": "visualisation/24731118?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731118/"
+        },
+        {
+          "id": "24731289",
+          "src": "visualisation/24731289?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731289/"
+        },
+        {
+          "id": "24732005",
+          "src": "visualisation/24732005?1271209",
+          "url": "https://public.flourish.studio/visualisation/24732005/"
+        }
+      ],
+      "iframes": [
+        {
+          "url": "https://www.youtube.com/embed/1ZIgiTrg56w?si=P4kNReOc-whJKw1E",
+          "host": "www.youtube.com",
+          "kind": "video"
+        }
+      ],
+      "counts": {
+        "flourish": 17,
+        "video": 1
+      },
+      "total": 18
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1649,
     "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4021"
+    "id": "69a04c0ad4006a00010a401e"
   },
   {
     "title": "Before the Trigger Is Pulled",
@@ -12886,252 +13025,6 @@
     "id": "69a04c0ad4006a00010a401b"
   },
   {
-    "title": "The Good Gun Owner",
-    "slug": "the-good-gun-owner",
-    "url": "https://www.vitalcitynyc.org/the-good-gun-owner/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-08-26T18:36:17.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Samantha J. Simon"
-    ],
-    "topics": [
-      "Police Reform",
-      "Modern Evolution: Marketing and Profits",
-      "Gun Violence"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
-    "excerpt": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6omgnhvfto1zu_gettyimages-51135991-auto-format-compress-1776259687678.jpg",
-    "feature_image_alt": "An armed police officer stands guard on a busy Wall Street sidewalk",
-    "feature_image_credit": "Spencer Platt / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2291,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a401d"
-  },
-  {
-    "title": "Licensed to Kill",
-    "slug": "licensed-to-kill-concealed-carry-training-course",
-    "url": "https://www.vitalcitynyc.org/licensed-to-kill-concealed-carry-training-course/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:51.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Chris Marvin"
-    ],
-    "topics": [
-      "Gun Violence",
-      "Modern Evolution: Marketing and Profits",
-      "Crime"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "A concealed-carry training course in Texas highlights everything wrong with gun ownership today.",
-    "excerpt": "A concealed-carry training course in Texas highlights everything wrong with gun ownership today.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6iwgnhvfto1y1_gettyimages-1246074845-auto-format-compress-1776259688484.jpg",
-    "feature_image_alt": "A hand fires a pistol toward paper targets on a snowy range",
-    "feature_image_credit": "Natalie Behring / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2392,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a4217"
-  },
-  {
-    "title": "Guns, My Family and Me",
-    "slug": "guns-my-family-and-me",
-    "url": "https://www.vitalcitynyc.org/guns-my-family-and-me/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:51.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Theodore Roosevelt IV"
-    ],
-    "topics": [
-      "History",
-      "Two Sides of the Gun: Stories of Possession and Victimization",
-      "Gun Violence"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "The 26th president’s great-grandson reflects on hunting, history and politics.",
-    "excerpt": "The 26th president’s great-grandson reflects on hunting, history and politics.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amb9tggnhvfto2mm_gettyimages-81632070-auto-format-compress-1776259687538.jpg",
-    "feature_image_alt": "A man examines an antique rifle and revolver on display",
-    "feature_image_credit": "Gabriel Bouys / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1341,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a420e"
-  },
-  {
-    "title": "Pointing a Firearm or Looking Down Its Barrel",
-    "slug": "pointing-a-firearm-or-looking-down-its-barrel",
-    "url": "https://www.vitalcitynyc.org/pointing-a-firearm-or-looking-down-its-barrel/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-08-26T20:11:43.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "A Survey"
-    ],
-    "topics": [
-      "Gun Violence",
-      "Two Sides of the Gun: Stories of Possession and Victimization",
-      "Police Reform"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "A survey",
-    "excerpt": "A survey",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amblm2gnhvfto2wc_061219034503-auto-format-compress-1776259686722.jpg",
-    "feature_image_alt": "A shadowy silhouette faces a human-shaped target at a shooting range",
-    "feature_image_credit": "Bruce Winter / AP Photo",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 4100,
-    "reading_minutes": 18,
-    "id": "69a04c0ad4006a00010a4022"
-  },
-  {
-    "title": "Editors’ Note",
-    "slug": "editors-note-issue-13",
-    "url": "https://www.vitalcitynyc.org/editors-note-issue-13/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-08-26T20:11:41.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Megan Kang",
-      "Elizabeth Glazer"
-    ],
-    "topics": [
-      "Gun Violence",
-      "Overview"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "How so many guns got into so many American hands",
-    "excerpt": "How so many guns got into so many American hands",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amavdggnhvfto1o1_765433239901-auto-format-compress-1776259685450.jpg",
-    "feature_image_alt": "A man walks out of a gun range’s check-in entrance",
-    "feature_image_credit": "John Locher / AP Photo",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1532,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4021"
-  },
-  {
-    "title": "Breaking Through With the Next Generation",
-    "slug": "breaking-through-with-the-next-generation-on-firearms",
-    "url": "https://www.vitalcitynyc.org/breaking-through-with-the-next-generation-on-firearms/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:51.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Nina Vinik"
-    ],
-    "topics": [
-      "Gun Violence",
-      "Youth",
-      "What Can Be Done?"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "A new image of firearms is taking hold among younger Americans.",
-    "excerpt": "A new image of firearms is taking hold among younger Americans.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amb9y2gnhvfto2l__506651127239-auto-format-compress-1776259687255.jpg",
-    "feature_image_alt": "A young man’s T-shirt shows a rifle and reads Come and Take It",
-    "feature_image_credit": "Tony Gutierrez / AP Photo",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1635,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4024"
-  },
-  {
     "title": "How Modern Bullets Maximize Lethality",
     "slug": "how-modern-bullets-maximize-lethality",
     "url": "https://www.vitalcitynyc.org/how-modern-bullets-maximize-lethality/",
@@ -13182,23 +13075,22 @@
     "id": "69a04c0ad4006a00010a4211"
   },
   {
-    "title": "The 80/20 Rule of Gun Supply",
-    "slug": "the-80-20-rule-of-gun-supply",
-    "url": "https://www.vitalcitynyc.org/the-80-20-rule-of-gun-supply/",
+    "title": "Breaking Through With the Next Generation",
+    "slug": "breaking-through-with-the-next-generation-on-firearms",
+    "url": "https://www.vitalcitynyc.org/breaking-through-with-the-next-generation-on-firearms/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:50.000+00:00",
+    "updated_at": "2026-04-15T13:36:51.000+00:00",
     "primary_author": null,
     "authors": [
-      "Daniel Semenza"
+      "Nina Vinik"
     ],
     "topics": [
       "Gun Violence",
-      "What Can Be Done?",
-      "Crime",
-      "History"
+      "Youth",
+      "What Can Be Done?"
     ],
     "issues": [
       "issue-13"
@@ -13206,11 +13098,11 @@
     "issue_numbers": [
       13
     ],
-    "summary": "Why focusing on the small fraction of problem dealers offers the clearest path to reducing violence",
-    "excerpt": "Why focusing on the small fraction of problem dealers offers the clearest path to reducing violence",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambmuwgnhvfto1_k_gettyimages-94668620-auto-format-compress-1776259687304.jpg",
-    "feature_image_alt": "Rows of chrome bathroom faucets displayed on a hardware store shelf",
-    "feature_image_credit": "Andrew Burton / Bloomberg / Getty Images",
+    "summary": "A new image of firearms is taking hold among younger Americans.",
+    "excerpt": "A new image of firearms is taking hold among younger Americans.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amb9y2gnhvfto2l__506651127239-auto-format-compress-1776259687255.jpg",
+    "feature_image_alt": "A young man’s T-shirt shows a rifle and reads Come and Take It",
+    "feature_image_credit": "Tony Gutierrez / AP Photo",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -13219,27 +13111,27 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2361,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a4020"
+    "word_count": 1635,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4024"
   },
   {
-    "title": "The Money Behind Mass Shootings",
-    "slug": "the-money-behind-mass-shootings",
-    "url": "https://www.vitalcitynyc.org/the-money-behind-mass-shootings/",
+    "title": "Licensed to Kill",
+    "slug": "licensed-to-kill-concealed-carry-training-course",
+    "url": "https://www.vitalcitynyc.org/licensed-to-kill-concealed-carry-training-course/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:50.000+00:00",
+    "updated_at": "2026-04-15T13:36:51.000+00:00",
     "primary_author": null,
     "authors": [
-      "Greg Lickenbrock"
+      "Chris Marvin"
     ],
     "topics": [
       "Gun Violence",
       "Modern Evolution: Marketing and Profits",
-      "Economics"
+      "Crime"
     ],
     "issues": [
       "issue-13"
@@ -13247,11 +13139,11 @@
     "issue_numbers": [
       13
     ],
-    "summary": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
-    "excerpt": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama5awgnhvfto1yk_gettyimages-107596655-auto-format-compress-1776259686592.jpg",
-    "feature_image_alt": "Silhouettes of armed tactical officers decorate a wall at a gun trade show",
-    "feature_image_credit": "The Washington Post / Getty Images",
+    "summary": "A concealed-carry training course in Texas highlights everything wrong with gun ownership today.",
+    "excerpt": "A concealed-carry training course in Texas highlights everything wrong with gun ownership today.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6iwgnhvfto1y1_gettyimages-1246074845-auto-format-compress-1776259688484.jpg",
+    "feature_image_alt": "A hand fires a pistol toward paper targets on a snowy range",
+    "feature_image_credit": "Natalie Behring / Getty Images",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -13260,27 +13152,27 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2177,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a401f"
+    "word_count": 2392,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a4217"
   },
   {
-    "title": "A Different Frontier, a Parallel History",
-    "slug": "learning-from-australias-gun-evolution",
-    "url": "https://www.vitalcitynyc.org/learning-from-australias-gun-evolution/",
+    "title": "Gun Culture Then and Now",
+    "slug": "gun-culture-then-and-now",
+    "url": "https://www.vitalcitynyc.org/gun-culture-then-and-now/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:49.000+00:00",
+    "updated_at": "2026-04-15T13:36:51.000+00:00",
     "primary_author": null,
     "authors": [
-      "Ted Alcorn"
+      "Brian DeLay"
     ],
     "topics": [
       "History",
-      "Modern Evolution: Marketing and Profits",
-      "Guns"
+      "Gun Violence",
+      "Foundations: The Wild West and the Nation"
     ],
     "issues": [
       "issue-13"
@@ -13288,11 +13180,11 @@
     "issue_numbers": [
       13
     ],
-    "summary": "What we can and can’t learn from Australia’s gun evolution",
-    "excerpt": "What we can and can’t learn from Australia’s gun evolution",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama8rwgnhvfto11a_gettyimages-540012357-auto-format-compress-1776259685025.jpg",
-    "feature_image_alt": "Rows of shoes and flowers arranged around a 'We Remember’ memorial sign",
-    "feature_image_credit": "The AGE / Getty Images",
+    "summary": "Firearm ownership meant something very different when the United States was founded.",
+    "excerpt": "Firearm ownership meant something very different when the United States was founded.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amaz0wgnhvfto1tj_nyc6884-auto-format-compress-1776259688184.jpg",
+    "feature_image_alt": "A Civil War reenactor stands in a field as children play behind him",
+    "feature_image_credit": "Paul Fusco / Magnum Photos",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -13303,7 +13195,323 @@
     "visibility": "public",
     "word_count": 1600,
     "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a401c"
+    "id": "69a04c0ad4006a00010a4246"
+  },
+  {
+    "title": "My Seven Guns: A Personal Inventory",
+    "slug": "my-seven-guns-a-personal-inventory",
+    "url": "https://www.vitalcitynyc.org/my-seven-guns-a-personal-inventory/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-08-26T18:36:20.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Charles Buckhanan"
+    ],
+    "topics": [
+      "Gun Violence",
+      "Two Sides of the Gun: Stories of Possession and Victimization",
+      "Crime"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "One former gangbanger’s relationship with his firearms",
+    "excerpt": "One former gangbanger’s relationship with his firearms",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambk1wgnhvfto2vr_gettyimages-512389608-auto-format-compress-1776259686683.jpg",
+    "feature_image_alt": "A mural on a building depicts figures with raised hands beside a giant revolver",
+    "feature_image_credit": "Robert Abbott Sengstacke / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1316,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a4023"
+  },
+  {
+    "title": "Before the Trigger Is Pulled",
+    "slug": "before-the-trigger-is-pulled",
+    "url": "https://www.vitalcitynyc.org/before-the-trigger-is-pulled/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-08-26T18:36:19.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Jens Ludwig"
+    ],
+    "topics": [
+      "Gun Violence",
+      "What Can Be Done?"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "The case for smarter deterrence",
+    "excerpt": "The case for smarter deterrence",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambq8ggnhvfto2ck_par112603-auto-format-compress-1776259685262.jpg",
+    "feature_image_alt": "A woman walks past a comic-style mural of a gunman shouting 'Eat Lead’",
+    "feature_image_credit": "Alex Webb / Magnum Photos",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "24748665",
+          "src": "visualisation/24748665?1271209",
+          "url": "https://public.flourish.studio/visualisation/24748665/"
+        },
+        {
+          "id": "24748637",
+          "src": "visualisation/24748637?1271209",
+          "url": "https://public.flourish.studio/visualisation/24748637/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 2
+      },
+      "total": 2
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1405,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a401b"
+  },
+  {
+    "title": "What We Know and Don’t Know About Guns",
+    "slug": "what-we-know-and-dont-know-about-guns",
+    "url": "https://www.vitalcitynyc.org/what-we-know-and-dont-know-about-guns/",
+    "type": "data analysis",
+    "type_basis": "html:17-chart-embeds",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-08-26T18:36:17.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Kate Daugherty",
+      "Paul Reeping",
+      "Megan Kang"
+    ],
+    "topics": [
+      "data",
+      "Overview",
+      "Gun Violence",
+      "History"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "Parsing the data",
+    "excerpt": "Parsing the data",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amaxzmgnhvfto1qh_d23hn0-auto-format-compress-1776259687014.jpg",
+    "feature_image_alt": "A wall is covered with paper shooting-range targets of various designs",
+    "feature_image_credit": "Kristoffer Tripplaar / Alamy Stock Photo",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "24731717",
+          "src": "visualisation/24731717?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731717/"
+        },
+        {
+          "id": "24731821",
+          "src": "visualisation/24731821?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731821/"
+        },
+        {
+          "id": "24730813",
+          "src": "visualisation/24730813?1271209",
+          "url": "https://public.flourish.studio/visualisation/24730813/"
+        },
+        {
+          "id": "24731657",
+          "src": "visualisation/24731657?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731657/"
+        },
+        {
+          "id": "24730916",
+          "src": "visualisation/24730916?1271209",
+          "url": "https://public.flourish.studio/visualisation/24730916/"
+        },
+        {
+          "id": "24731887",
+          "src": "visualisation/24731887?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731887/"
+        },
+        {
+          "id": "24795769",
+          "src": "visualisation/24795769?1271209",
+          "url": "https://public.flourish.studio/visualisation/24795769/"
+        },
+        {
+          "id": "24701566",
+          "src": "visualisation/24701566?1271209",
+          "url": "https://public.flourish.studio/visualisation/24701566/"
+        },
+        {
+          "id": "24701768",
+          "src": "visualisation/24701768?1271209",
+          "url": "https://public.flourish.studio/visualisation/24701768/"
+        },
+        {
+          "id": "24780816",
+          "src": "visualisation/24780816?1271209",
+          "url": "https://public.flourish.studio/visualisation/24780816/"
+        },
+        {
+          "id": "24701934",
+          "src": "visualisation/24701934?1271209",
+          "url": "https://public.flourish.studio/visualisation/24701934/"
+        },
+        {
+          "id": "3282227",
+          "src": "story/3282227?1271209",
+          "url": "https://public.flourish.studio/story/3282227/"
+        },
+        {
+          "id": "24780493",
+          "src": "visualisation/24780493?1271209",
+          "url": "https://public.flourish.studio/visualisation/24780493/"
+        },
+        {
+          "id": "24731510",
+          "src": "visualisation/24731510?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731510/"
+        },
+        {
+          "id": "24731118",
+          "src": "visualisation/24731118?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731118/"
+        },
+        {
+          "id": "24731289",
+          "src": "visualisation/24731289?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731289/"
+        },
+        {
+          "id": "24732005",
+          "src": "visualisation/24732005?1271209",
+          "url": "https://public.flourish.studio/visualisation/24732005/"
+        }
+      ],
+      "iframes": [
+        {
+          "url": "https://www.youtube.com/embed/1ZIgiTrg56w?si=P4kNReOc-whJKw1E",
+          "host": "www.youtube.com",
+          "kind": "video"
+        }
+      ],
+      "counts": {
+        "flourish": 17,
+        "video": 1
+      },
+      "total": 18
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1649,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a401e"
+  },
+  {
+    "title": "The Good Gun Owner",
+    "slug": "the-good-gun-owner",
+    "url": "https://www.vitalcitynyc.org/the-good-gun-owner/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-08-26T18:36:17.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Samantha J. Simon"
+    ],
+    "topics": [
+      "Police Reform",
+      "Modern Evolution: Marketing and Profits",
+      "Gun Violence"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
+    "excerpt": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6omgnhvfto1zu_gettyimages-51135991-auto-format-compress-1776259687678.jpg",
+    "feature_image_alt": "An armed police officer stands guard on a busy Wall Street sidewalk",
+    "feature_image_credit": "Spencer Platt / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2291,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a401d"
+  },
+  {
+    "title": "The Case Against Futility",
+    "slug": "the-case-against-futility-in-gun-regulation",
+    "url": "https://www.vitalcitynyc.org/the-case-against-futility-in-gun-regulation/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-08-26T18:36:16.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Philip J. Cook",
+      "Rosanna Smart"
+    ],
+    "topics": [
+      "Gun Violence",
+      "What Can Be Done?",
+      "History"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "Why making guns slightly harder to get reduces their use in violent crime",
+    "excerpt": "Why making guns slightly harder to get reduces their use in violent crime",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amblpwgnhvfto1-f_97010301562-auto-format-compress-1776259687438.jpg",
+    "feature_image_alt": "Three children’s feet in sandals stand around spilled bullet casings",
+    "feature_image_credit": "Gregory Smith / AP Photo",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2468,
+    "reading_minutes": 11,
+    "id": "69a04c0ad4006a00010a4219"
   },
   {
     "title": "The Long Chain",
@@ -16362,46 +16570,6 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
-    "title": "What You Can Do About Trump",
-    "slug": "what-you-can-do-about-trump",
-    "url": "https://www.vitalcitynyc.org/what-you-can-do-about-trump/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-08-26T20:11:52.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "A Survey"
-    ],
-    "topics": [
-      "Politics",
-      "Where Do We Go From Here?",
-      "Journalism",
-      "Government Operations"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "Some advice for ordinary Americans concerned about the judgment of history",
-    "excerpt": "Some advice for ordinary Americans concerned about the judgment of history",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeoqviqrldabuac_johnhalpin__headerimage__trump100days_edited-png-auto-format-compress-1776259704726.jpg",
-    "feature_image_alt": "A pair of sneakers stands beside a Vote NYC arrow sign on pavement",
-    "feature_image_credit": "UCG / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 4184,
-    "reading_minutes": 18,
-    "id": "69a04c0ad4006a00010a404a"
-  },
-  {
     "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
     "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
     "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
@@ -16517,6 +16685,46 @@
     "word_count": 1696,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4049"
+  },
+  {
+    "title": "What You Can Do About Trump",
+    "slug": "what-you-can-do-about-trump",
+    "url": "https://www.vitalcitynyc.org/what-you-can-do-about-trump/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-08-26T20:11:52.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "A Survey"
+    ],
+    "topics": [
+      "Politics",
+      "Where Do We Go From Here?",
+      "Journalism",
+      "Government Operations"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "Some advice for ordinary Americans concerned about the judgment of history",
+    "excerpt": "Some advice for ordinary Americans concerned about the judgment of history",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeoqviqrldabuac_johnhalpin__headerimage__trump100days_edited-png-auto-format-compress-1776259704726.jpg",
+    "feature_image_alt": "A pair of sneakers stands beside a Vote NYC arrow sign on pavement",
+    "feature_image_credit": "UCG / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 4184,
+    "reading_minutes": 18,
+    "id": "69a04c0ad4006a00010a404a"
   },
   {
     "title": "Donald Trump vs. the Rule of Law, and New York City",

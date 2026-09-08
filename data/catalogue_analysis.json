@@ -1,9 +1,9 @@
 {
   "meta": {
-    "generated_at": "2026-09-08T11:17:41.541297+00:00",
+    "generated_at": "2026-09-08T17:43:48.456233+00:00",
     "site": "https://www.vitalcitynyc.org",
     "total_posts": 906,
-    "total_authors": 497,
+    "total_authors": 500,
     "total_issues": 31,
     "total_topics": 216,
     "date_range": [
@@ -11,8 +11,39 @@
       "2026-09-05"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 5,
+    "new_articles": [
+      {
+        "title": "What We Know and Don\u2019t Know About Guns",
+        "url": "https://www.vitalcitynyc.org/what-we-know-and-dont-know-about-guns/",
+        "published_date": "2025-09-10",
+        "primary_author": null
+      },
+      {
+        "title": "Gun Culture Then and Now",
+        "url": "https://www.vitalcitynyc.org/gun-culture-then-and-now/",
+        "published_date": "2025-09-10",
+        "primary_author": null
+      },
+      {
+        "title": "My Seven Guns: A Personal Inventory",
+        "url": "https://www.vitalcitynyc.org/my-seven-guns-a-personal-inventory/",
+        "published_date": "2025-09-10",
+        "primary_author": null
+      },
+      {
+        "title": "What We Know and Don\u2019t Know About Guns",
+        "url": "https://www.vitalcitynyc.org/what-we-know-and-dont-know-about-guns/",
+        "published_date": "2025-09-10",
+        "primary_author": null
+      },
+      {
+        "title": "The Case Against Futility",
+        "url": "https://www.vitalcitynyc.org/the-case-against-futility-in-gun-regulation/",
+        "published_date": "2025-09-10",
+        "primary_author": null
+      }
+    ]
   },
   "total_pieces": 906,
   "by_year": {
@@ -83,7 +114,7 @@
   "by_type": [
     [
       "opinion/commentary",
-      733
+      731
     ],
     [
       "q&a",
@@ -91,7 +122,7 @@
     ],
     [
       "data analysis",
-      47
+      49
     ],
     [
       "podcast",
@@ -121,7 +152,7 @@
     ],
     [
       "History",
-      143
+      144
     ],
     [
       "City Government",
@@ -149,15 +180,15 @@
     ],
     [
       "Gun Violence",
-      65
-    ],
-    [
-      "Economics",
-      56
+      66
     ],
     [
       "Police Reform",
       56
+    ],
+    [
+      "Economics",
+      55
     ],
     [
       "Politics",
@@ -188,15 +219,15 @@
       31
     ],
     [
+      "data",
+      31
+    ],
+    [
       "Budget",
       29
     ],
     [
       "Podcast",
-      29
-    ],
-    [
-      "data",
       29
     ],
     [
@@ -228,7 +259,7 @@
     ],
     [
       "Journalist / media",
-      102
+      101
     ],
     [
       "Vital City (institutional)",
@@ -236,7 +267,7 @@
     ],
     [
       "Other / unclassified",
-      93
+      95
     ],
     [
       "Government / public official",
@@ -260,7 +291,7 @@
     ],
     [
       "Survey / reader poll",
-      14
+      13
     ],
     [
       "Unknown / no bio",
@@ -274,7 +305,7 @@
     ],
     [
       "Other / unclassified",
-      106
+      108
     ],
     [
       "Nonprofit / advocacy",
@@ -290,7 +321,7 @@
     ],
     [
       "Think tank / research institute",
-      27
+      28
     ],
     [
       "Business / private sector",
@@ -339,7 +370,7 @@
       "2022": 12,
       "2023": 28,
       "2024": 38,
-      "2025": 51,
+      "2025": 52,
       "2026": 14
     },
     "City Government": {
@@ -385,16 +416,16 @@
   },
   "wc_stats": {
     "n": 896,
-    "median": 1614,
-    "mean": 1892,
-    "p90": 2840,
+    "median": 1616,
+    "mean": 1889,
+    "p90": 2839,
     "max": 30332,
     "p10": 908,
     "p25": 1269,
-    "p75": 2137,
-    "p95": 3843,
+    "p75": 2135,
+    "p95": 3810,
     "no_count": 10,
-    "core_1000_2499": 658,
+    "core_1000_2499": 659,
     "under_500": 43,
     "over_5000": 24
   },
@@ -409,7 +440,7 @@
     ],
     [
       "1,000-1,999",
-      524
+      525
     ],
     [
       "2,000-2,999",
@@ -417,7 +448,7 @@
     ],
     [
       "3,000-4,999",
-      56
+      55
     ],
     [
       "5,000+",
@@ -456,7 +487,7 @@
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 140
+        "n": 141
       },
       {
         "floor": 1500,
@@ -471,12 +502,12 @@
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 68
+        "n": 67
       },
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 66
+        "n": 67
       },
       {
         "floor": 2500,
@@ -501,7 +532,7 @@
       {
         "floor": 3500,
         "label": "3,500+",
-        "n": 55
+        "n": 54
       }
     ]
   },
@@ -534,8 +565,8 @@
       "year": "2025",
       "n": 287,
       "p25": 1292,
-      "median": 1634,
-      "p75": 2111,
+      "median": 1635,
+      "p75": 2105,
       "max": 14800
     },
     {
@@ -548,9 +579,9 @@
     }
   ],
   "by_nauthors": {
-    "1": 769,
-    "2": 109,
-    "3": 25,
+    "1": 768,
+    "2": 108,
+    "3": 27,
     "4": 1,
     "8": 1,
     "10": 1
@@ -563,7 +594,7 @@
     },
     {
       "name": "Elizabeth Glazer",
-      "posts": 48,
+      "posts": 46,
       "credential": "Government / public official"
     },
     {
@@ -593,13 +624,8 @@
     },
     {
       "name": "A Survey",
-      "posts": 15,
+      "posts": 14,
       "credential": "Survey / reader poll"
-    },
-    {
-      "name": "Ted Alcorn",
-      "posts": 13,
-      "credential": "Journalist / media"
     },
     {
       "name": "Errol Louis",
@@ -612,6 +638,11 @@
       "credential": "Academic"
     },
     {
+      "name": "Ted Alcorn",
+      "posts": 12,
+      "credential": "Journalist / media"
+    },
+    {
       "name": "Nicole Gelinas",
       "posts": 11,
       "credential": "Think tank / research institute"
@@ -620,6 +651,11 @@
       "name": "Brandon del Pozo",
       "posts": 11,
       "credential": "Academic"
+    },
+    {
+      "name": "Paul Reeping",
+      "posts": 9,
+      "credential": "Think tank / research institute"
     },
     {
       "name": "David Schleicher",
@@ -637,24 +673,19 @@
       "credential": "Business / private sector"
     },
     {
-      "name": "Paul Reeping",
-      "posts": 7,
-      "credential": "Think tank / research institute"
-    },
-    {
       "name": "John K. Roman",
       "posts": 7,
       "credential": "Think tank / research institute"
     },
     {
+      "name": "Jens Ludwig",
+      "posts": 7,
+      "credential": "Academic"
+    },
+    {
       "name": "Cara Eckholm",
       "posts": 6,
       "credential": "Journalist / media"
-    },
-    {
-      "name": "Michael Jacobson",
-      "posts": 6,
-      "credential": "Academic"
     }
   ],
   "n_issues": 31,

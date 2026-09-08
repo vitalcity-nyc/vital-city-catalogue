@@ -109,7 +109,7 @@
   },
   {
     "name": "Elizabeth Glazer",
-    "post_count": 48,
+    "post_count": 46,
     "slugs": [
       "a-brief-history-of-the-3300-target",
       "a-rare-remedy-to-the-persistent-brutality-of-rikers",
@@ -120,7 +120,6 @@
       "civic-life-can-create-safety",
       "could-our-jails-be-a-civic-asset",
       "crime-rhetoric-vs-crime-realities",
-      "editors-note-issue-13",
       "editors-note-issue-3",
       "editors-note-issue-4",
       "editors-note-issue-5",
@@ -340,7 +339,7 @@
   },
   {
     "name": "A Survey",
-    "post_count": 15,
+    "post_count": 14,
     "slugs": [
       "6-observers-and-veterans-of-new-york-city-politics-weigh-in-on-the-mayors-chances-of-finishing-out-his-term",
       "challenges-around-every-bend-transit-workers-day-to-day",
@@ -349,7 +348,6 @@
       "how-drugs-hurt-or-helped-me",
       "measures-of-urban-vitality",
       "my-first-adult-apartment",
-      "pointing-a-firearm-or-looking-down-its-barrel",
       "six-ways-new-york-can-spare-more-people-from-shootings",
       "summer-city-memories",
       "the-best-connection-i-ever-made",
@@ -361,29 +359,6 @@
     "slug": "a-survey",
     "bio": null,
     "url": "https://www.vitalcitynyc.org/author/a-survey/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Ted Alcorn",
-    "post_count": 13,
-    "slugs": [
-      "department-of-community-safety-and-universal-childcare-albequerque-new-york",
-      "gun-violence-debates",
-      "learning-from-australias-gun-evolution",
-      "ted-alcorn-neighborhood-safety-teams",
-      "the-public-square",
-      "the-public-square-issue-4",
-      "the-public-square-issue-5",
-      "the-public-square-issue-6",
-      "the-public-square-issue-7",
-      "the-public-square-issue-8",
-      "the-public-square-march-2023",
-      "the-public-square-subways"
-    ],
-    "slug": "alcorn-ted",
-    "bio": "Ted Alcorn is Vital City’s policy director. An award-winning journalist, he was previously a policy advisor in the administration of New York City Mayor Michael Bloomberg and the founding research director of Everytown for Gun Safety.",
-    "url": "https://www.vitalcitynyc.org/author/alcorn-ted/",
     "twitter": null,
     "website": null
   },
@@ -435,6 +410,29 @@
     "website": null
   },
   {
+    "name": "Ted Alcorn",
+    "post_count": 12,
+    "slugs": [
+      "department-of-community-safety-and-universal-childcare-albequerque-new-york",
+      "gun-violence-debates",
+      "learning-from-australias-gun-evolution",
+      "ted-alcorn-neighborhood-safety-teams",
+      "the-public-square",
+      "the-public-square-issue-4",
+      "the-public-square-issue-5",
+      "the-public-square-issue-6",
+      "the-public-square-issue-7",
+      "the-public-square-issue-8",
+      "the-public-square-march-2023",
+      "the-public-square-subways"
+    ],
+    "slug": "alcorn-ted",
+    "bio": "Ted Alcorn is Vital City’s policy director. An award-winning journalist, he was previously a policy advisor in the administration of New York City Mayor Michael Bloomberg and the founding research director of Everytown for Gun Safety.",
+    "url": "https://www.vitalcitynyc.org/author/alcorn-ted/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Nicole Gelinas",
     "post_count": 11,
     "slugs": [
@@ -475,6 +473,25 @@
     "slug": "del-pozo-brandon",
     "bio": "is an assistant professor of medicine at Brown University’s Warren Alpert Medical School and research scientist at Brown University Health. He was chief of police of Burlington, Vermont, and served with the NYPD from 1997 to 2015.",
     "url": "https://www.vitalcitynyc.org/author/del-pozo-brandon/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Paul Reeping",
+    "post_count": 9,
+    "slugs": [
+      "just-the-facts-on-new-york-city-subway-crime",
+      "navigating-apartment-hunting-rising-rent-in-nyc",
+      "nyc-crime-midyear-2026-felony-assaults-rape-murder",
+      "safer-cities-in-context",
+      "the-state-of-crime-in-new-york-city-at-midyear-2024",
+      "vital-signs-state-of-the-city-on-crime-2024",
+      "what-the-data-show-about-subway-safety",
+      "what-we-know-and-dont-know-about-guns"
+    ],
+    "slug": "reeping-paul",
+    "bio": "is the director of research at Vital City and a dedicated gun violence prevention researcher. Before joining Vital City, Paul served as a postdoctoral fellow at the Violence Prevention Research Program at UC Davis.",
+    "url": "https://www.vitalcitynyc.org/author/reeping-paul/",
     "twitter": null,
     "website": null
   },
@@ -538,24 +555,6 @@
     "website": null
   },
   {
-    "name": "Paul Reeping",
-    "post_count": 7,
-    "slugs": [
-      "just-the-facts-on-new-york-city-subway-crime",
-      "navigating-apartment-hunting-rising-rent-in-nyc",
-      "nyc-crime-midyear-2026-felony-assaults-rape-murder",
-      "safer-cities-in-context",
-      "the-state-of-crime-in-new-york-city-at-midyear-2024",
-      "vital-signs-state-of-the-city-on-crime-2024",
-      "what-the-data-show-about-subway-safety"
-    ],
-    "slug": "reeping-paul",
-    "bio": "is the director of research at Vital City and a dedicated gun violence prevention researcher. Before joining Vital City, Paul served as a postdoctoral fellow at the Violence Prevention Research Program at UC Davis.",
-    "url": "https://www.vitalcitynyc.org/author/reeping-paul/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "John K. Roman",
     "post_count": 7,
     "slugs": [
@@ -570,6 +569,23 @@
     "slug": "roman-john-k",
     "bio": "is a senior fellow at NORC at the University of Chicago. He also serves as the co-Director of the National Prevention Science Coalition.",
     "url": "https://www.vitalcitynyc.org/author/roman-john-k/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Jens Ludwig",
+    "post_count": 7,
+    "slugs": [
+      "before-the-trigger-is-pulled",
+      "does-nothing-stop-a-bullet-like-a-job",
+      "gun-violence-is-the-crime-problem",
+      "incrementalism-beats-yolo",
+      "police-management-matters-a-lot",
+      "what-really-drives-gun-violence-matthew-yglesias-and-jens-ludwig-in-conversation"
+    ],
+    "slug": "ludwig-jens",
+    "bio": "is the Edwin A. and Betty L. Bergman Distinguished Service Professor at the University of Chicago and Pritzker Director of the Crime Lab. He co-directs the Education Lab and NBER’s working group on economics of crime.",
+    "url": "https://www.vitalcitynyc.org/author/ludwig-jens/",
     "twitter": null,
     "website": null
   },
@@ -625,23 +641,6 @@
     "website": null
   },
   {
-    "name": "Jens Ludwig",
-    "post_count": 6,
-    "slugs": [
-      "before-the-trigger-is-pulled",
-      "does-nothing-stop-a-bullet-like-a-job",
-      "gun-violence-is-the-crime-problem",
-      "incrementalism-beats-yolo",
-      "police-management-matters-a-lot",
-      "what-really-drives-gun-violence-matthew-yglesias-and-jens-ludwig-in-conversation"
-    ],
-    "slug": "ludwig-jens",
-    "bio": "is the Edwin A. and Betty L. Bergman Distinguished Service Professor at the University of Chicago and Pritzker Director of the Crime Lab. He co-directs the Education Lab and NBER’s working group on economics of crime.",
-    "url": "https://www.vitalcitynyc.org/author/ludwig-jens/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Arpit Gupta",
     "post_count": 5,
     "slugs": [
@@ -678,9 +677,9 @@
     "post_count": 5,
     "slugs": [
       "a-better-conversation-on-guns",
-      "editors-note-issue-13",
       "state-gun-laws-matter",
-      "unraveling-the-threads-of-americas-gun-culture"
+      "unraveling-the-threads-of-americas-gun-culture",
+      "what-we-know-and-dont-know-about-guns"
     ],
     "slug": "kang-megan",
     "bio": "is a Ph.D. candidate in sociology at Princeton University and a research affiliate at the UChicago Crime Lab and the Princeton Violence and Inequality Project.",
@@ -897,6 +896,21 @@
     "slug": "friedman-barry",
     "bio": "is the Jacob D. Fuchsberg Professor of Law and founding director of the Policing Project at NYU School of Law, a nonprofit research center promoting public safety through transparency and democratic accountability.",
     "url": "https://www.vitalcitynyc.org/author/friedman-barry/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Philip J. Cook",
+    "post_count": 4,
+    "slugs": [
+      "gun-violence-is-the-crime-problem",
+      "incrementalism-beats-yolo",
+      "the-case-against-futility-in-gun-regulation",
+      "what-police-can-do-differently-to-save-lives"
+    ],
+    "slug": "cook-philip-j",
+    "bio": "is professor emeritus of public policy and economics at Duke University. He is a member of the National Academy of Medicine and honorary fellow in the American Society of Criminology.",
+    "url": "https://www.vitalcitynyc.org/author/cook-philip-j/",
     "twitter": null,
     "website": null
   },
@@ -1145,20 +1159,6 @@
     "website": null
   },
   {
-    "name": "Alex Chohlas-Wood",
-    "post_count": 3,
-    "slugs": [
-      "how-rare-is-crime-on-the-subway",
-      "how-to-deploy-ai-policing-nyc-nypd",
-      "underground-safer-than-the-surface"
-    ],
-    "slug": "chohlas-wood-alex",
-    "bio": "is an assistant professor of computational social science at NYU Steinhardt. He also co-directs the Computational Policy Lab at Harvard Kennedy School and is the former director of analytics at the New York Police Department.",
-    "url": "https://www.vitalcitynyc.org/author/chohlas-wood-alex/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Marcos F. Soler",
     "post_count": 3,
     "slugs": [
@@ -1169,6 +1169,20 @@
     "slug": "soler-marcos-f",
     "bio": "is the executive director of the Center for Ethics and the Rule of Law at the University of Pennsylvania, and he previously served as deputy secretary for public safety for the New York governor.",
     "url": "https://www.vitalcitynyc.org/author/soler-marcos-f/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Alex Chohlas-Wood",
+    "post_count": 3,
+    "slugs": [
+      "how-rare-is-crime-on-the-subway",
+      "how-to-deploy-ai-policing-nyc-nypd",
+      "underground-safer-than-the-surface"
+    ],
+    "slug": "chohlas-wood-alex",
+    "bio": "is an assistant professor of computational social science at NYU Steinhardt. He also co-directs the Computational Policy Lab at Harvard Kennedy School and is the former director of analytics at the New York Police Department.",
+    "url": "https://www.vitalcitynyc.org/author/chohlas-wood-alex/",
     "twitter": null,
     "website": null
   },
@@ -1323,20 +1337,6 @@
     "slug": "la-vigne-nancy",
     "bio": "is dean of Rutgers School of Criminal Justice.",
     "url": "https://www.vitalcitynyc.org/author/la-vigne-nancy/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Philip J. Cook",
-    "post_count": 3,
-    "slugs": [
-      "gun-violence-is-the-crime-problem",
-      "incrementalism-beats-yolo",
-      "what-police-can-do-differently-to-save-lives"
-    ],
-    "slug": "cook-philip-j",
-    "bio": "is professor emeritus of public policy and economics at Duke University. He is a member of the National Academy of Medicine and honorary fellow in the American Society of Criminology.",
-    "url": "https://www.vitalcitynyc.org/author/cook-philip-j/",
     "twitter": null,
     "website": null
   },
@@ -1811,26 +1811,26 @@
     "website": null
   },
   {
-    "name": "Greg Lickenbrock",
+    "name": "Samantha J. Simon",
     "post_count": 2,
     "slugs": [
-      "the-money-behind-mass-shootings"
+      "the-good-gun-owner"
     ],
-    "slug": "lickenbrock-greg",
-    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
-    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
+    "slug": "simon-samantha-j",
+    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
     "twitter": null,
     "website": null
   },
   {
-    "name": "Daniel Semenza",
+    "name": "Kate Daugherty",
     "post_count": 2,
     "slugs": [
-      "the-80-20-rule-of-gun-supply"
+      "what-we-know-and-dont-know-about-guns"
     ],
-    "slug": "semenza-daniel",
-    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
-    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
+    "slug": "daugherty-kate",
+    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
+    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
     "twitter": null,
     "website": null
   },
@@ -3558,6 +3558,18 @@
     "website": null
   },
   {
+    "name": "Alex Armlovich",
+    "post_count": 1,
+    "slugs": [
+      "a-housing-roadmap-for-new-yorks-next-mayor"
+    ],
+    "slug": "armlovich-alex",
+    "bio": "is a senior housing policy analyst at the Niskanen Center and a member of the Rent Guidelines Board.",
+    "url": "https://www.vitalcitynyc.org/author/armlovich-alex/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Michele Bogart",
     "post_count": 1,
     "slugs": [
@@ -3578,18 +3590,6 @@
     "slug": "brechner-charles",
     "bio": "is professor emeritus at NYU’s Wagner School and research director emeritus at the Citizens Budget Commission.",
     "url": "https://www.vitalcitynyc.org/author/brechner-charles/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Alex Armlovich",
-    "post_count": 1,
-    "slugs": [
-      "a-housing-roadmap-for-new-yorks-next-mayor"
-    ],
-    "slug": "armlovich-alex",
-    "bio": "is a senior housing policy analyst at the Niskanen Center and a member of the Rent Guidelines Board.",
-    "url": "https://www.vitalcitynyc.org/author/armlovich-alex/",
     "twitter": null,
     "website": null
   },
@@ -3918,50 +3918,26 @@
     "website": null
   },
   {
-    "name": "Samantha J. Simon",
+    "name": "Greg Lickenbrock",
     "post_count": 1,
     "slugs": [
-      "the-good-gun-owner"
+      "the-money-behind-mass-shootings"
     ],
-    "slug": "simon-samantha-j",
-    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
-    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
+    "slug": "lickenbrock-greg",
+    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
+    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
     "twitter": null,
     "website": null
   },
   {
-    "name": "Chris Marvin",
+    "name": "Daniel Semenza",
     "post_count": 1,
     "slugs": [
-      "licensed-to-kill-concealed-carry-training-course"
+      "the-80-20-rule-of-gun-supply"
     ],
-    "slug": "marvin-chris",
-    "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
-    "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Theodore Roosevelt IV",
-    "post_count": 1,
-    "slugs": [
-      "guns-my-family-and-me"
-    ],
-    "slug": "roosevelt-theodore-iv",
-    "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
-    "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Nina Vinik",
-    "post_count": 1,
-    "slugs": [
-      "breaking-through-with-the-next-generation-on-firearms"
-    ],
-    "slug": "vinik-nina",
-    "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
-    "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
+    "slug": "semenza-daniel",
+    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
+    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
     "twitter": null,
     "website": null
   },
@@ -3986,6 +3962,66 @@
     "slug": "tucker-jennifer",
     "bio": "is a professor of history at Wesleyan University and the founding director of Wesleyan’s Center for the Study of Guns and Society.",
     "url": "https://www.vitalcitynyc.org/author/tucker-jennifer/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Nina Vinik",
+    "post_count": 1,
+    "slugs": [
+      "breaking-through-with-the-next-generation-on-firearms"
+    ],
+    "slug": "vinik-nina",
+    "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
+    "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Chris Marvin",
+    "post_count": 1,
+    "slugs": [
+      "licensed-to-kill-concealed-carry-training-course"
+    ],
+    "slug": "marvin-chris",
+    "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
+    "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Brian DeLay",
+    "post_count": 1,
+    "slugs": [
+      "gun-culture-then-and-now"
+    ],
+    "slug": "delay-brian",
+    "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of “The Myth of Continuity in American Gun Culture,” and the 2025–2026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
+    "url": "https://www.vitalcitynyc.org/author/delay-brian/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Charles Buckhanan",
+    "post_count": 1,
+    "slugs": [
+      "my-seven-guns-a-personal-inventory"
+    ],
+    "slug": "buckhanan-charles",
+    "bio": "is a street outreach worker on Chicago’s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
+    "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Rosanna Smart",
+    "post_count": 1,
+    "slugs": [
+      "the-case-against-futility-in-gun-regulation"
+    ],
+    "slug": "smart-rosanna",
+    "bio": "is a senior economist at RAND and codirector of the RAND Drug Policy Research Center and RAND Gun Policy in America initiative. She was selected as the 2025 Mark Kleiman Memorial Lecturer.",
+    "url": "https://www.vitalcitynyc.org/author/smart-rosanna/",
     "twitter": null,
     "website": null
   },
