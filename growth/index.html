@@ -38,9 +38,21 @@
   /* KPI tiles */
   /* 8 tiles in rows that always divide evenly (4/2/1 columns) — auto-fit
      left a partial second row with a bare gray slab where tiles ran out. */
-  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin:0 0 22px}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin:0 0 0}
+  /* Second tier: same tiles, quieter. Subsidiary by Josh's own ranking of the
+     objectives, so they sit under the six rather than competing with them. */
+  .kpis2{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--vc-cloud);
+    border:1px solid var(--vc-cloud);border-top:0;margin:0 0 22px}
+  .kpis2 .kpi{padding:10px 12px}
+  .kpis2 .kpi .lbl{font-size:10px}
+  .kpis2 .kpi .num{font-size:19px}
+  .kpis2 .kpi .delta{font-size:10.5px}
+  .alsolbl{font-family:var(--vc-sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--vc-charcoal);background:var(--vc-cloud);padding:5px 12px;margin:0;
+    border:1px solid var(--vc-cloud);border-top:0;border-bottom:0}
+  @media(max-width:980px){ .kpis2{grid-template-columns:repeat(2,1fr)} }
   @media(max-width:980px){ .kpis{grid-template-columns:repeat(2,1fr)} }
-  @media(max-width:480px){ .kpis{grid-template-columns:1fr} }
+  @media(max-width:480px){ .kpis{grid-template-columns:1fr} .kpis2{grid-template-columns:1fr} }
   .kpi{background:var(--vc-white);padding:14px 16px;transition:transform .16s ease, box-shadow .16s ease}
   .kpi:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(15,16,17,.08);position:relative;z-index:1}
   .kpi .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700}
@@ -571,8 +583,10 @@
         </ul>
       </div>
       <div class="sechead-title" id="sec-glance" style="margin:24px 0 4px">At a glance</div>
-      <div style="font-size:12.5px;color:var(--vc-charcoal);margin:0 0 12px;max-width:760px">Two numbers matter most on this whole page: net list change and money raised. Everything below explains why they moved.</div>
+      <div style="font-size:12.5px;color:var(--vc-charcoal);margin:0 0 12px;max-width:760px">The six tiles below are the ones the organization is steered by: net list change and how well reading converts to subscribing, then the donor base and the recurring income that makes it sustainable. Everything under &ldquo;also tracked&rdquo; is real but subsidiary &mdash; useful context, not the objective.</div>
       <div class="kpis" id="kpis"></div>
+      <p class="alsolbl" id="kpisAlsoLbl" style="display:none">Also tracked</p>
+      <div class="kpis2" id="kpis2"></div>
 
       <div class="card" id="askAI">
         <h2>Ask your own questions of this data <span class="hint">download the full dataset and analyze it with Claude, ChatGPT or a spreadsheet</span></h2>
@@ -1084,18 +1098,60 @@ function boot(data){
   const ig = data.instagram || {};
   const ga4 = data.ga4 || {};
   const kpis=[
-    // --- Newsletter ---
-    {lbl:"Subscribers",num:fmtN(total),delta:`net ${fmtDelta(netNew30)} in 30d`,cls:deltaClass(netNew30),hero:true,
-     tip:"Unique people on the Mailchimp list right now — each individual counted once, even if signed up under multiple emails.\n\nWhy it matters: The newsletter list is Vital City's core owned audience and the organization's number-one growth goal. Every other metric on this page ultimately serves growing and engaging it.\n\nSource: Mailchimp for unsubscribes, Ghost for signups, reconciled weekly."},
+    // --- Objective 1: grow the newsletter ---
+    // Net change leads. Gross signups look healthy every month while the list
+    // stays flat; only the net number shows that, so it gets the hero slot.
+    {lbl:"Net list change · 30d", num:fmtDelta(netNew30), delta:`${fmtN(subs30)} joined \u00b7 ${fmtN(unsubs30)} left`,
+     cls:deltaClass(netNew30), hero:true,
+     tip:`Subscribers gained minus subscribers lost over the last 30 days: ${fmtN(subs30)} in, ${fmtN(unsubs30)} out.\n\nWhy it leads: growing the list is objective one, and this is the only tile that answers it. Gross signups have run healthy all year while the list has barely moved -- roughly a third of what comes in leaves again, and a one-off cleaning in May 2026 removed about 500 more.\n\nReconciliation note: this is a rolling 30-day window from Ghost's daily event feed, which lands first. Mailchimp's monthly close is a different source and a different window, and will not match exactly -- August 2026 closed at +39 on Mailchimp against +87 on this rolling basis. Use the Mailchimp monthly figure for reporting and this one for watching.`},
+    (function(){
+      // The 30-day net now has its own tile, so this one carries the long view:
+      // the trailing six months off Mailchimp's monthly close, which is the
+      // basis the monthly report uses.
+      const ser=(mc.monthly_signups||[]).filter(r=>r.cum_subs!=null);
+      const six=ser.length>=7 ? ser[ser.length-1].cum_subs-ser[ser.length-7].cum_subs : null;
+      return {lbl:"Subscribers",num:fmtN(total),
+       delta: six!=null ? `${fmtDelta(six)} over 6 months` : `net ${fmtDelta(netNew30)} in 30d`,
+       cls: six!=null ? deltaClass(six) : deltaClass(netNew30), hero:true,
+     tip:"Unique people on the Mailchimp list right now — each individual counted once, even if signed up under multiple emails.\n\nWhy it matters: The newsletter list is Vital City's core owned audience and the organization's number-one growth goal. Every other metric on this page ultimately serves growing and engaging it.\n\nSource: Mailchimp for unsubscribes, Ghost for signups, reconciled weekly."};
+    })(),
+    (function(){
+      // Conversion, not volume: the number to move when traffic is falling.
+      const gt=data.ghost_traffic||{}, vis=gt.available?gt.visitors_30d:null;
+      if(!vis) return {lbl:"Signups per 1,000 visitors", num:"\u2014", delta:"needs Ghost traffic", cls:"na",
+        tip:"New subscribers per 1,000 unique visitors. Populates once Ghost analytics are connected."};
+      const r=subs30/vis*1000;
+      return {lbl:"Signups per 1,000 visitors", num:r.toFixed(2),
+        delta:`${fmtN(subs30)} signups \u00b7 ${fmtN(vis)} visitors`, cls:"flat",
+        tip:`How well reading converts into subscribing: ${fmtN(subs30)} signups against ${fmtN(vis)} unique visitors in the last 30 days.\n\nWhy it matters: this separates "traffic went up" from "we got better at asking." When traffic falls -- as it did in August 2026, when search dropped 39% in a month -- this is the number still under your control.\n\nCaveat: signups come from Ghost events and visitors from Ghost analytics, counted over the same 30 days but by different subsystems. Read it as a directional ratio, not a precise conversion rate.`};
+    })(),
+    // --- Objective 2: turn readers into donors ---
+    (function(){
+      const n=db.active_recurring_donors, mrr=db.mrr_estimate;
+      if(!db.available || mrr==null) return {lbl:"Recurring revenue \u00b7 monthly", num:"\u2014",
+        delta:"Donorbox not connected", cls:"na", tip:"Monthly recurring donation revenue. Needs Donorbox."};
+      return {lbl:"Recurring revenue \u00b7 monthly", num:fmtUSD(mrr),
+        delta:`${fmtN(n||0)} recurring donors \u00b7 ${fmtUSD(mrr*12)}/yr`, cls:"flat",
+        tip:`Dependable income: ${fmtN(n||0)} people giving on a schedule, worth ${fmtUSD(mrr)} a month or ${fmtUSD(mrr*12)} a year.\n\nWhy it is here and total raised is not: sustainability is the stated purpose of the fundraising objective, and recurring gifts are the only part of the income that can be counted on before it arrives. Everything else depends on December -- December 2025 alone carried 56% of every gift on record.\n\nThis is the clearest growth opportunity on the page. Against a list of ${fmtN(total)} with a 66% activation rate among new subscribers, the recurring base is a rounding error.`};
+    })(),
+    (function(){
+      const y=dWin.ytd||{};
+      if(!db.available) return {lbl:"Unique donors \u00b7 YTD", num:"\u2014", delta:"Donorbox not connected", cls:"na",
+        tip:"Distinct people who have given this year. Needs Donorbox."};
+      const d=y.donors||0, rate=total?(d/total*1000):0;
+      return {lbl:"Unique donors \u00b7 YTD", num:fmtN(d),
+        delta:`${rate.toFixed(1)} per 1,000 subscribers \u00b7 ${fmtN(y.count||0)} gifts`, cls:"flat",
+        tip:`Distinct people who have given this year: ${fmtN(d)}, across ${fmtN(y.count||0)} gifts.\n\nWhy unique donors rather than total raised: one large gift can carry the total while the pipeline thins. The median gift is well under half the mean, so the dollar figure is the more easily flattered number -- it sits under "also tracked" and in the Donors card below.\n\nThis is also the number that ties both objectives together: ${rate.toFixed(1)} donors per 1,000 subscribers. If it rises while the list is flat, the asking got better.`};
+    })(),
     (function(){
       if (subsNorm!=null){
         const d=subs30-subsNorm.val;
-        return {lbl:"New signups · 30d",num:fmtN(subs30),
+        return {tier:"also",lbl:"New signups · 30d",num:fmtN(subs30),
           delta:`${fmtDelta(Math.round(d))}${pctChg(subs30,subsNorm.val)} vs ${subsNorm.months}-mo norm (~${fmtN(Math.round(subsNorm.val))}/30d)`,
           cls:deltaClass(d),
           tip:`New subscribers in the last 30 days, against the norm: the average 30-day signup total across the trailing ${subsNorm.months} months of real data (current window excluded; the feed is zero-filled before Feb 2026 and those dead days are not counted). Prior 30 days for reference: ${fmtN(subsPrev30)}.\n\nWhy the norm and not last month: a single prior window is noisy -- one strong piece swings it by half. The norm says whether this month is unusual.\n\nSource: merged Ghost+Mailchimp dataset (signups land in Ghost first, reconciled to Mailchimp weekly).`};
       }
-      return {lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)}${pctChg(subs30,subsPrev30)} vs prior 30d`,flag:"noisy window",cls:deltaClass(subs30-subsPrev30),
+      return {tier:"also",lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)}${pctChg(subs30,subsPrev30)} vs prior 30d`,flag:"noisy window",cls:deltaClass(subs30-subsPrev30),
        tip:"New subscribers in the last 30 days vs the 30 days before.\n\nSource: merged Ghost+Mailchimp dataset."};
     })(),
     (function(){
@@ -1123,13 +1179,13 @@ function boot(data){
     (function(){
       const a=mc.aau||{}, n=a.active_users;
       const pct = (n && total) ? (n/total*100).toFixed(0)+"%" : "—";
-      return {lbl:"Active subscribers · 1y", num: n!=null ? fmtN(n) : "—",
+      return {tier:"also",lbl:"Active subscribers · 1y", num: n!=null ? fmtN(n) : "—",
               delta: n!=null ? `${pct} opened ≥1 email in last year` : "data pending",
               cls:"flat",
               tip:`Unique people who opened at least one Vital City newsletter in the last 365 days. Sometimes called AAU (annual active users).\n\nWhy it matters: The gap between this and the 30-day number is your re-engagement opportunity — people who already chose Vital City once and are far cheaper to win back than to acquire fresh. The Subscriber lifecycle card turns that gap into a named, exportable list.`};
     })(),
     // --- Fundraising (priority 2: donors) ---
-    {lbl:"Raised · YTD", num: db.available ? fmtUSD((dWin.ytd||{}).amount||0) : "—",
+    {tier:"also",lbl:"Raised · YTD", num: db.available ? fmtUSD((dWin.ytd||{}).amount||0) : "—",
      delta: db.available ? `${fmtN((dWin.ytd||{}).donors||0)} donors / ${fmtN((dWin.ytd||{}).count||0)} gifts` : "Donorbox not connected",
      flag: db.available ? "online gifts only" : "",
      cls:"flat",
@@ -1152,7 +1208,7 @@ function boot(data){
       const manualTxt = manual.length
         ? ` ${manual.map(m=>m.n).join(" and ")} ${manual.length>1?"are":"is"} hand-entered (as of ${manual[0].as_of||"a recent date"}) — their live counts aren't free to read (X's API is paid, Instagram's public count isn't reliably scrapeable); LinkedIn and Bluesky are pulled live.`
         : "";
-      return {lbl:"Social followers", num: counts.length ? fmtN(total) : "—",
+      return {tier:"also",lbl:"Social followers", num: counts.length ? fmtN(total) : "—",
               delta: counts.map(([k,n])=>`${fmtN(n)} ${k}`).join(" · "),
               cls:"flat",
               tip:`Combined followers across ${included.join(" + ")}.${manualTxt}\n\nWhy it matters: Followers are owned amplification reach beyond the inbox — the audience that can share Vital City's work into networks email never touches.\n\nPer-platform detail and coverage notes are in the Social reach card below.`};
@@ -1175,7 +1231,7 @@ function boot(data){
                 : (vp!=null) ? `${fmtDelta(n-vp)}${pctChg(n,vp)} vs prior 30d · ` : "";
       const sub = gt.available ? `${chg}${fmtN(gt.pageviews_30d||0)} page views` :
                   (ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs Ghost staff token ↗ · free");
-      return {lbl:"Website visitors · 30d", num: n!=null ? fmtN(n) : "—", delta: sub,
+      return {tier:"also",lbl:"Website visitors · 30d", num: n!=null ? fmtN(n) : "—", delta: sub,
               flag: (vNorm!=null) ? "" : ((vp!=null) ? "noisy window" : ""),
               cls: (vNorm!=null) ? deltaClass(n-vNorm) : ((vp!=null) ? deltaClass(n-vp) : (n!=null ? "flat" : "na")),
               tip:"Unique visitors to vitalcitynyc.org in the last 30 days, from Ghost's own analytics (same numbers as the admin Analytics tab).\n\nWhy it matters: This is the top of the funnel — the pool of people who could become subscribers and donors. Read it against New signups to see how well the site converts attention into list growth; a big gap is a conversion opportunity.\n\nSource: Ghost's own analytics. Caveat: Ghost and Google Analytics 4 count visitors differently — bot filtering, what counts as a 'visit', time zones and consent all differ — so this won't exactly match the GA4-based 1-year tile, or any other tool. Treat traffic numbers as directional, not exact head counts."};
@@ -1186,7 +1242,7 @@ function boot(data){
       // too, so it's a TRUE trailing 12 months (~500K), whereas Ghost's own
       // analytics only start at the cutover and understate the year badly.
       if(ga4 && ga4.available && ga4.aau!=null){
-        return {lbl:"Website visitors · 1 year", num: fmtN(ga4.aau),
+        return {tier:"also",lbl:"Website visitors · 1 year", num: fmtN(ga4.aau),
                 delta: `${fmtN(ga4.pageviews_365||0)} page views · via GA4`, cls:"flat",
                 tip:"Unique visitors to vitalcitynyc.org over the trailing 12 months, from Google Analytics 4 — which tracked the previous site too, so this is a real full year (Ghost's own analytics only begin at the April 2026 cutover).\n\nWhy it matters: the site's true annual reach — the right number for grant reporting and long-run trend.\n\nCaveat: this comes from GA4, while the 30-day tile and the Website traffic card come from Ghost. The two systems count visitors differently, so don't compare them directly or treat them as one continuous series."};
       }
@@ -1196,7 +1252,7 @@ function boot(data){
       const startLbl = start ? new Date(start+'T00:00:00Z')
         .toLocaleDateString('en-US',{month:'short',year:'numeric',timeZone:'UTC'}) : null;
       const sub = gt.available ? `${fmtN(gt.pageviews_365d||0)} page views` : "needs Ghost staff token ↗ · free";
-      return {lbl: gt.available && startLbl ? `Website visitors · since ${startLbl}` : "Website visitors · 1y",
+      return {tier:"also",lbl: gt.available && startLbl ? `Website visitors · since ${startLbl}` : "Website visitors · 1y",
               num: n!=null ? fmtN(n) : "—", delta: sub,
               cls: n!=null ? "flat" : "na",
               tip:`Cumulative unique visitors since Ghost analytics began recording${startLbl ? ` (first traffic: ${esc(start)})` : " at the April 2026 cutover"}.\n\nNote: this understates the true 12-month audience; connect GA4 for a real trailing year (it tracked the old site too).`};
@@ -1205,21 +1261,37 @@ function boot(data){
       // Site-wide avg engaged time PER VIEW: audience-weighted across the
       // tracked pieces (engaged seconds ÷ views). A read-depth headline.
       const eng = (ga4 && ga4.engagement) || [];
-      if(!eng.length) return {lbl:"Avg engaged time / view", num:"—", delta:"GA4 engagement pending", cls:"na",
+      if(!eng.length) return {tier:"also",lbl:"Avg engaged time / view", num:"—", delta:"GA4 engagement pending", cls:"na",
         tip:"Average engaged seconds per page view (Google Analytics 4). Populates once GA4 engagement data is present."};
       const dur=s=>{s=Math.round(s||0);const m=Math.floor(s/60);return m?`${m}m ${s%60}s`:`${s}s`;};
       const wavg=lst=>{const v=lst.reduce((s,p)=>s+(p.views||0),0),t=lst.reduce((s,p)=>s+(p.total_secs||0),0);return v?t/v:0;};
       const cur=wavg(eng), prev=wavg(((ga4.engagement_by_year||{})["2025"])||[]);
       const totV=eng.reduce((s,p)=>s+(p.views||0),0);
-      return {lbl:"Avg engaged time / view",
+      return {tier:"also",lbl:"Avg engaged time / view",
         num: dur(cur),
         delta: prev ? `${pctChg(cur,prev)} vs 2025` : `across ${fmtN(totV)} views since Jan 1`,
         flag:"comparative, not literal reading",
         cls: prev ? deltaClass(cur-prev) : "flat",
         tip:"Average seconds a reader's browser tab was actively focused on a piece, PER page view — engaged time ÷ views, audience-weighted across articles with 100+ views since Jan 1, 2026 (Google Analytics 4; Ghost can't measure this).\n\nWhy it matters: a read-depth signal — are people actually reading or bouncing? Watch the trend, not the absolute level.\n\nCaveat: active-tab time, not literal eyes-on-page; a comparative indicator only. Full per-piece breakdown is in the Reader attention card."};
     })(),
+    (function(){
+      const sc=data.scholar_citations||{};
+      if(!sc.available) return null;
+      // Fail loud. The pull reports available:true even when it returns nothing,
+      // and a confident "0" would read as "nobody cites us" rather than "the
+      // scraper came back empty". Seen 2026-09-08: a CI run returned 0/0 where
+      // the run eleven days earlier found 10 confirmed and 15 unverified.
+      if(!(sc.confirmed||0) && !(sc.unverified||0) && !((sc.citations||[]).length)){
+        return {tier:"also", lbl:"Policy & academic citations", num:"\u2014",
+          delta:"feed returned nothing", flag:"check the pull", cls:"na",
+          tip:"The citation search came back completely empty, which is different from finding no citations.\n\nGoogle Scholar rate-limits and blocks automated queries from data-centre addresses, so a run on GitHub Actions can return nothing where the same code returns results from a laptop. Treat this as a broken feed until the pull is checked, not as a real zero."};
+      }
+      return {tier:"also", lbl:"Policy & academic citations", num:fmtN(sc.confirmed||0),
+        delta:`${fmtN(sc.unverified||0)} more unverified`, cls:"flat",
+        tip:`Scholarly and policy citations of Vital City work, confirmed by fetching the citing document. ${fmtN(sc.unverified||0)} further candidates are unverified and should not be quoted externally until checked.\n\nWhy it is tracked: a citation is permanent, cannot be bought and is what funders respond to. Subsidiary to the two primary objectives, but the most durable evidence of influence on the page.`};
+    })(),
   ];
-  $("#kpis").innerHTML=kpis.map(k=>{
+  const tile = k => {
     // GA4 stub tiles get a click-through to the setup docs in about.html
     const isStub = (k.cls==="na");
     const wrap = isStub
@@ -1231,8 +1303,16 @@ function boot(data){
        <div class="num">${k.num}</div>
        <div class="delta ${k.cls}">${esc(k.delta)}${k.flag?` <span class="flag">${esc(k.flag)}</span>`:""}</div>
      ${close}`;
-  }).join("");
-
+  };
+  // Two tiers. The head tiles are the ones the organization is steered by; the
+  // rest are real but subsidiary, so they sit underneath rather than alongside.
+  const live  = kpis.filter(Boolean);
+  const head  = live.filter(k=>k.tier!=="also");
+  const also  = live.filter(k=>k.tier==="also");
+  $("#kpis").innerHTML  = head.map(tile).join("");
+  $("#kpis2").innerHTML = also.map(tile).join("");
+  $("#kpisAlsoLbl").style.display = also.length ? "" : "none";
+  $("#kpis2").style.display       = also.length ? "" : "none";
   // ----- Last 7 days rolling scorecard (weekly pulse, all categories)
   renderWeekPulse(data);
   (function(){
@@ -3716,7 +3796,7 @@ function renderDonors(db){
   const drGift = yoyDelta(ytd.avg_gift,prior.avg_gift,true);
 
   const cells=[
-    {lbl:"Raised · YTD", n:fmtUSD(ytd.amount||0),
+    {tier:"also",lbl:"Raised · YTD", n:fmtUSD(ytd.amount||0),
       d:drYtd.label, cls:drYtd.cls,
       tip:`Total raised through Donorbox so far this year (gross — before processor fees). Net YTD: $${fmtN(Math.round(ytd.net||0))}.`+
           (yoyOk?interpretInsight("sends", ((ytd.amount-prior.amount)/Math.max(prior.amount,1))*100):` Donorbox history in this account starts ${esc((db.history_starts||'').slice(0,10))}, so a like-for-like YoY isn't possible yet.`)},

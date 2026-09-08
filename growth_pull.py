@@ -3341,8 +3341,19 @@ def pull_scholar_citations():
     conf = sum(1 for x in out if x["confidence"] == "confirmed")
     log(f"  scholar citations: {len(out)} ({conf} confirmed by URL, {len(out)-conf} to verify)"
         + (" (rate-limited partway)" if blocked else ""))
-    return {"available": bool(out) or not blocked, "citations": out,
+    # An empty result set is a failure, not a finding. Google Scholar answers a
+    # blocked query with a 200 and a consent or CAPTCHA page, which parses to
+    # zero rows without tripping the `blocked` flag -- so "no citations" and
+    # "we were turned away" arrive looking identical. Vital City is cited; zero
+    # means the pull broke. Reporting available:false here hands the block to
+    # the carry-forward guard below, which restores the last good pull and
+    # marks it stale, instead of publishing a confident zero.
+    # Seen 2026-09-08: a CI run returned 0 where a laptop run 11 days earlier
+    # found 10 confirmed and 15 unverified.
+    return {"available": bool(out), "citations": out,
             "confirmed": conf, "unverified": len(out) - conf,
+            "reason": ("Scholar returned no rows — rate-limited or served an "
+                       "interstitial" if not blocked else "Scholar rate-limited the run"),
             "rate_limited": blocked, "since_year": 2025,
             "note": ("Law reviews and journals are not in Google News, so these never reach the "
                      "press tracker. Citation lags publication by 2-4 years: 2025-26 pieces will "
