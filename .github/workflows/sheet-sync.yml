@@ -1,0 +1,39 @@
+name: sheet-sync
+
+# Mirrors the contacts database into a Google Sheet, so the same information
+# can be filtered, pivoted and formula'd. Reads the published encrypted payload,
+# so it needs no plaintext and can run on its own schedule: half an hour after
+# each network-refresh, which is when the payload changes.
+#
+# The sheet must be shared, as Editor, with the service account in
+# GA4_CREDS_JSON. The sync stamps "refreshed at" on the sheet's 'about' tab only
+# when a write succeeds -- a stamp that stops advancing means this broke.
+
+on:
+  schedule:
+    - cron: "30 11 * * *"   # network-refresh runs at 11:00 UTC
+    - cron: "30 23 * * *"   # and at 23:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sheet-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet cryptography google-auth
+      - name: Mirror contacts to the Google Sheet
+        env:
+          VC_NETWORK_PASS:   ${{ secrets.VC_NETWORK_PASS }}
+          GA4_CREDS_JSON:    ${{ secrets.GA4_CREDS_JSON }}
+          CONTACTS_SHEET_ID: ${{ secrets.CONTACTS_SHEET_ID }}
+        run: python3 sheet_sync.py
