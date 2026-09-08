@@ -242,6 +242,11 @@
   .svchip:hover{background:var(--vc-black);color:#fff}
   .svchip-built{border-color:var(--vc-green);color:var(--vc-green)}
   .svchip-built:hover{background:var(--vc-green);color:#fff}
+  /* Lit while the chip's filters are the ones in force. Same fill as .tg.on so
+     "on" reads the same on the toolbar and in the Views bar. */
+  .svchip.on{background:var(--vc-black);color:#fff}
+  .svchip-built.on{background:var(--vc-green);border-color:var(--vc-green);color:#fff}
+  .svchip.on .x{color:#fff}
   .svchip .x{color:var(--vc-charcoal);font-weight:700}
   .svchip:hover .x{color:#fff}
   .svadd{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border:1px dashed var(--vc-charcoal);background:transparent;color:var(--vc-charcoal);cursor:pointer}
@@ -951,6 +956,32 @@ function syncMenuChrome(shown){
   // Light the toolbar button whenever the Name filter is on "Unconfirmed" —
   // however that happened (the button, the dropdown, a saved view, a permalink).
   $("#tUnconfirmed").classList.toggle("on", $("#fName").value==="needs_work");
+  syncViewChips();
+}
+// A view chip stays lit for as long as applying it again would change nothing,
+// and goes dark the moment any filter it set is altered. Computed from the live
+// state each render rather than remembered from the click, so a permalink, a
+// saved view or the dropdowns can light a chip too -- and no chip can stay lit
+// after its filters are gone.
+function viewInForce(v){
+  const cur=currentState(); const w=v.want||{};
+  for(const k of ["mem","don","auth","press"]) if((w[k]||0)!==(cur.want[k]||0)) return false;
+  const a=[...(v.cats||[])].sort().join("|"), b=[...cur.cats].sort().join("|"); if(a!==b) return false;
+  // Same defaults applyState uses, so "would applying this change anything" is exact.
+  const nm=v.name&&v.name!=="any" ? v.name : (v.noName ? "needs_work" : "any");
+  if(nm!==cur.name) return false;
+  if((v.engagement||"any")!==cur.engagement) return false;
+  for(const k of ["q","dFrom","dTo"]) if((v[k]||"")!==(cur[k]||"")) return false;
+  for(const k of ["repeat","star","wiki","prospect","prospectNew","multisub","noEmail","unsub","onlyUnsub"]) if(!!v[k]!==!!cur[k]) return false;
+  if(v.sortKey && (v.sortKey!==cur.sortKey || (v.sortDir||1)!==cur.sortDir)) return false;
+  return true;
+}
+function syncViewChips(){
+  const saved=loadViews();
+  document.querySelectorAll("#savedViews .svchip").forEach(ch=>{
+    const v = ch.dataset.builtin!=null ? BUILTIN_VIEWS[+ch.dataset.builtin] : saved[+ch.dataset.i];
+    ch.classList.toggle("on", !!(v && viewInForce(v.state)));
+  });
 }
 // How many people still need a real name. Shown on the button so the size of the
 // job is visible without clicking it. Counts the current (non-unsubscribed) universe.
