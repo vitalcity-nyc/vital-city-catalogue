@@ -114,6 +114,8 @@ COLS = [
  ("press", lambda p: yn(p.get("press"))),
  ("press_outlet", lambda p: p.get("poutlet", "")),
  ("press_twitter", lambda p: p.get("ptw", "")),
+ ("house_parties", lambda p: "; ".join(f"{h.get('label')}: {h.get('status')}" for h in (p.get("hp") or []))),
+ ("house_party_attended", lambda p: yn(any(h.get("status") == "attended" for h in (p.get("hp") or [])))),
  ("notable_wikipedia", lambda p: yn(p.get("wiki"))),
  ("starred", lambda p: yn(p.get("star"))),
  ("sources", lambda p: j(p.get("src"))),
@@ -192,11 +194,32 @@ def push(sid, head, body):
         chunk = body[i:i + CHUNK]
         api(token, "PUT", f"{base}/values/{TAB}!A{i + 2}?valueInputOption=RAW", {"values": chunk})
         log(f"  wrote rows {i + 1}-{i + len(chunk)}")
-    # Freeze the header and keep the sheet sized to the data.
+    # Make it a working spreadsheet, not a dump: frozen header, a filter
+    # dropdown on every column (sort A-Z / Z-A, filter by value, search), bold
+    # header, and column widths a person can read. The filter has to be re-set
+    # each run because its range must cover the new row count.
+    sid_num = tabs[TAB]
+    wide = {"all_emails": 260, "newsletter_emails": 220, "most_recently_opened_email": 220,
+            "institution": 220, "prospect_why": 320, "notes": 320, "types": 200, "specialties": 220,
+            "sources": 160, "byline": 160, "press_outlet": 160, "house_parties": 260}
+    width_reqs = []
+    for i, col in enumerate(head):
+        w = wide.get(col, 120 if len(col) < 14 else 150)
+        width_reqs.append({"updateDimensionProperties": {
+            "range": {"sheetId": sid_num, "dimension": "COLUMNS", "startIndex": i, "endIndex": i + 1},
+            "properties": {"pixelSize": w}, "fields": "pixelSize"}})
     api(token, "POST", f"{base}:batchUpdate", {"requests": [
-        {"updateSheetProperties": {"properties": {"sheetId": tabs[TAB], "gridProperties": {"frozenRowCount": 1}},
+        {"updateSheetProperties": {"properties": {"sheetId": sid_num, "gridProperties": {"frozenRowCount": 1}},
                                    "fields": "gridProperties.frozenRowCount"}},
-    ]})
+        {"clearBasicFilter": {"sheetId": sid_num}},
+        {"setBasicFilter": {"filter": {"range": {"sheetId": sid_num, "startRowIndex": 0,
+                                                  "endRowIndex": len(body) + 1,
+                                                  "startColumnIndex": 0, "endColumnIndex": len(head)}}}},
+        {"repeatCell": {"range": {"sheetId": sid_num, "startRowIndex": 0, "endRowIndex": 1},
+                        "cell": {"userEnteredFormat": {"textFormat": {"bold": True},
+                                                       "backgroundColor": {"red": 0.93, "green": 0.93, "blue": 0.91}}},
+                        "fields": "userEnteredFormat(textFormat,backgroundColor)"}},
+    ] + width_reqs})
     stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     api(token, "PUT", f"{base}/values/{META_TAB}!A1?valueInputOption=RAW", {"values": [
         ["refreshed at", stamp],
