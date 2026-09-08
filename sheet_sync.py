@@ -122,7 +122,9 @@ COLS = [
 
 def rows_for(people):
     head = [c for c, _ in COLS]
-    body = [[fn(p) for _, fn in COLS] for p in people]
+    def cell(v):
+        return v[:40000] + " [cut]" if isinstance(v, str) and len(v) > 40000 else v
+    body = [[cell(fn(p)) for _, fn in COLS] for p in people]
     return head, body
 
 
@@ -151,10 +153,15 @@ def api(token, method, url, body=None, tries=4):
             with urllib.request.urlopen(req, timeout=120) as r:
                 return json.loads(r.read() or b"{}")
         except urllib.error.HTTPError as e:
-            msg = e.read().decode()[:600]
+            raw = e.read().decode()
+            # One line, message only. GitHub masks every line of the key file
+            # in the log, bare braces included, which turns a pretty-printed
+            # error body into a row of asterisks.
+            try: msg = json.loads(raw)["error"]["message"]
+            except Exception: msg = raw[:300].replace("\n", " ")
             if e.code in (429, 500, 502, 503) and i < tries - 1:
                 time.sleep(3 * (i + 1)); continue
-            raise SystemExit(f"Sheets API {e.code} on {method} {url.split('?')[0]}: {msg}")
+            raise SystemExit(f"Sheets API {e.code} on {method} {url.split('?')[0].rsplit('/',1)[-1]}: {msg}")
 
 def ensure_tabs(token, sid):
     meta = api(token, "GET", f"https://sheets.googleapis.com/v4/spreadsheets/{sid}?fields=sheets.properties")
@@ -171,6 +178,12 @@ def push(sid, head, body):
     log(f"authorised as {who}")
     tabs = ensure_tabs(token, sid)
     base = f"https://sheets.googleapis.com/v4/spreadsheets/{sid}"
+    # Size the grid first. A new tab is 1,000 rows by 26 columns, and a write
+    # that runs past the edge is refused rather than grown.
+    api(token, "POST", f"{base}:batchUpdate", {"requests": [
+        {"updateSheetProperties": {"properties": {"sheetId": tabs[TAB],
+            "gridProperties": {"rowCount": len(body) + 1, "columnCount": len(head)}},
+            "fields": "gridProperties.rowCount,gridProperties.columnCount"}}]})
     # Clear, then write in chunks. RAW so an email or a note is never parsed as
     # a formula or a date.
     api(token, "POST", f"{base}/values/{TAB}!A:ZZ:clear", {})
