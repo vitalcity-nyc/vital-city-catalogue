@@ -2110,26 +2110,54 @@ function renderPerfChart(monthly){
 function renderYTD(mc, signups){
   const w=(mc.windows)||{};
   const ytd=w.ytd||{}, prior=w.prior_ytd||{};
+  // One basis for both years: Mailchimp's monthly series. Every signup since
+  // the April 2026 cutover happens on the Ghost form and reaches Mailchimp on
+  // the weekly sync; before the cutover the form posted straight to Mailchimp.
+  // So the Mailchimp monthly count is the same population in both years,
+  // counted a week later in 2026. The in-progress month is prorated in the
+  // prior year so the windows match to the day.
+  const ms=(mc.monthly_signups||[]).slice().sort((a,b)=>String(a.month).localeCompare(String(b.month)));
+  const today=new Date(), Y=today.getUTCFullYear(), M=today.getUTCMonth()+1, D=today.getUTCDate();
+  const dim=(y,m)=>new Date(Date.UTC(y,m,0)).getUTCDate();
+  // May-September 2025 signups were roughly half bots (audit of 17 Aug 2026:
+  // 50-56% of signups still on the list from those months). 53% is removed
+  // from each of those months to give a like-for-like 2025 figure.
+  const BOT={"2025-05":.53,"2025-06":.53,"2025-07":.53,"2025-08":.53,"2025-09":.53};
+  const rowOf=(y,m)=>ms.find(r=>r.month===`${y}-${String(m).padStart(2,"0")}`);
+  const sumYTD=(y, adj, fromM)=>{
+    let t=0;
+    for(let m=(fromM||1); m<=M; m++){
+      const r=rowOf(y,m); if(!r) continue;
+      const frac = (m===M) ? D/dim(y,m) : 1;            // prorate the current month
+      const share = adj ? (1-(BOT[r.month]||0)) : 1;
+      t += (r.new_signups||0)*share*frac;
+    }
+    return Math.round(t);
+  };
+  const netYTD=(y)=>{
+    const start=rowOf(y-1,12), cur=rowOf(y,M), prevM=rowOf(y,M-1)||start;
+    if(!start||!cur) return null;
+    const endVal = (y<Y) ? (prevM.cum_subs + (cur.cum_subs-prevM.cum_subs)*D/dim(y,M)) : cur.cum_subs;
+    return Math.round(endVal - start.cum_subs);
+  };
+  const CUT=4;   // Ghost became the signup intake in April 2026
   const rows=[
-    {label:"New signups (Ghost, organic)", now:signups.ytd_ghost, prev:null, ok:false, positiveGood:true,
-     na:signups.ghost_source ||
-        `Organic signups counted the day they happened, straight from Ghost's member signup dates. Real-time — current through today, not netted against later unsubscribes and not padded by manual bulk imports. Ghost only became the site's signup intake in April 2026, so there's no comparable 2025 Ghost figure; use the 'Net list change' row below for the year-over-year view.`},
-    {label:"Net list change (all-source)", now:signups.ytd, prev:signups.prior_ytd, ok:signups.prior_ytd_ok, positiveGood:true,
-     na:signups.prior_ytd_source ||
-        `Net additions to the list from Mailchimp's growth-history — every net add regardless of which form fed it (Ghost form, MC form, or a manual import), reduced by unsubscribes. Lags the real-time Ghost count because Ghost signups transfer to Mailchimp on the weekly reconcile. Methodology-fair for the year-over-year comparison; a sharp 2025 jump likely reflects a one-time list integration.`},
-    {label:"Unsubscribes", now:signups.unsub_ytd, prev:signups.unsub_prior_ytd, ok:true, positiveGood:false,
-     na:""},
-    {label:"Newsletter sends", now:ytd.sends, prev:prior.sends, ok:true, positiveGood:true,
-     na:""},
-    {label:"Total opens (per-send)", now:Math.round((ytd.open_pct||0)*(ytd.recipients||0)/100), prev:Math.round((prior.open_pct||0)*(prior.recipients||0)/100), ok:true, positiveGood:true,
-     na:""},
-    {label:"Avg open rate", now:(ytd.open_pct||0), prev:(prior.open_pct||0), ok:true, positiveGood:true, suffix:"%",
-     na:""},
-    {label:"Avg click rate", now:(ytd.click_pct||0), prev:(prior.click_pct||0), ok:true, positiveGood:true, suffix:"%",
-     na:""},
+    {label:"New signups, all sources (Mailchimp)", now:sumYTD(Y,false), prev:sumYTD(Y-1,false), ok:true, positiveGood:true,
+     na:"Every addition to the Mailchimp list, January 1 to today, both years. Since April 2026 these are Ghost-form signups arriving on the weekly sync; before that the form posted straight to Mailchimp. Includes any manual import."},
+    {label:"Same, with the 2025 bot cohort removed", now:sumYTD(Y,false), prev:sumYTD(Y-1,true), ok:true, positiveGood:true,
+     na:"2025 with 53% of May–September signups removed, per the 17 August 2026 audit that found the bot cohort was 50–56% of signups still on the list from those months. The fairer year-over-year signup comparison."},
+    {label:"Signups since the Ghost cutover (Apr 1 → today), vs the same window last year", now:signups.ytd_ghost, prev:sumYTD(Y-1,true,CUT), ok:signups.ytd_ghost!=null, positiveGood:true,
+     na:"2026: signups counted the day they happened on the Ghost form, from the April cutover. 2025: the same calendar window on the Mailchimp form, bots removed. The same population measured at the point of signup in both years — this is the like-for-like organic comparison."},
+    {label:"Net list change (list size, Jan 1 → today)", now:netYTD(Y), prev:netYTD(Y-1), ok:netYTD(Y-1)!=null, positiveGood:true,
+     na:"Change in Mailchimp list size from January 1 to today — additions minus unsubscribes minus cleanings. 2025's figure includes the bots that had not yet left; 2026's includes the May cleaning that removed about 500."},
+    {label:"Unsubscribes", now:signups.unsub_ytd, prev:signups.unsub_prior_ytd, ok:true, positiveGood:false, na:""},
+    {label:"Newsletter sends", now:ytd.sends, prev:prior.sends, ok:true, positiveGood:true, na:""},
+    {label:"Total opens (per-send)", now:Math.round((ytd.open_pct||0)*(ytd.recipients||0)/100), prev:Math.round((prior.open_pct||0)*(prior.recipients||0)/100), ok:true, positiveGood:true, na:""},
+    {label:"Avg open rate", now:(ytd.open_pct||0), prev:(prior.open_pct||0), ok:true, positiveGood:true, suffix:"%", na:"Diluted in 2026 by the bot cohort still on the list (about a fifth of it), and inflated in both years by Apple Mail auto-opens."},
+    {label:"Avg click rate", now:(ytd.click_pct||0), prev:(prior.click_pct||0), ok:true, positiveGood:true, suffix:"%", na:"The cleaner engagement signal, but also diluted by the bot cohort, which never clicks."},
   ];
   const body=rows.map(r=>{
-    const nowStr  = r.suffix==="%" ? (r.now||0).toFixed(1)+"%" : fmtN(r.now||0);
+    const nowStr  = r.suffix==="%" ? (r.now||0).toFixed(1)+"%" : (r.now==null?"—":fmtN(r.now||0));
     let deltaCell, dCls;
     if(!r.ok){ deltaCell="no prior-year data"; dCls="na"; }
     else if(r.prev==null||(r.prev===0&&r.now===0)){ deltaCell="—"; dCls="flat"; }
@@ -2150,12 +2178,10 @@ function renderYTD(mc, signups){
   }).join("");
   $("#ytdBody").innerHTML=
     `<table class="ytdtbl"><colgroup><col class="metric"><col class="val"><col class="val"><col class="val"></colgroup><thead><tr>
-      <th>Metric</th><th class="num">YTD 2026</th><th class="num">YTD 2025<br><span style="font-weight:400;text-transform:none;letter-spacing:0">same period</span></th><th class="num">YoY</th>
+      <th>Metric</th><th class="num">YTD ${Y}</th><th class="num">YTD ${Y-1}<br><span style="font-weight:400;text-transform:none;letter-spacing:0">same period</span></th><th class="num">YoY</th>
     </tr></thead><tbody>${body}</tbody></table>
     <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5">
-      <b>Two signup rows, on purpose:</b> <b>New signups (Ghost, organic)</b> is the real-time count of people who actually signed up through the website — current through today, straight from Ghost's member dates. <b>Net list change (all-source)</b> is Mailchimp's growth-history: net additions after unsubscribes, including manual list imports, and it lags because Ghost signups transfer over on the weekly reconcile. The two differ on purpose — organic signups show acquisition momentum; net list change shows the list's actual size trend.
-      <br><b>Why no 2025 Ghost figure:</b> vitalcitynyc.org only moved to Ghost in <b>April 2026</b>, so the organic row has no comparable prior year. The year-over-year column lives on the net-list-change row, which uses Mailchimp's growth-history the same way for both years. If 2025's number spikes (see the May-Jun 2025 months in the chart), that's likely a one-time list integration.
-      Unsubscribes → Mailchimp; newsletter performance numbers are recipient-weighted from Mailchimp campaign reports.
+      <b>How the two years are made comparable.</b> Every signup since the April 2026 cutover happens on the Ghost form and is transferred to Mailchimp on the weekly sync; before the cutover the form posted straight to Mailchimp. So Mailchimp's monthly count is the same population in both years, counted about a week later in 2026, and it is the basis for the first two rows and for net change. The third row measures at the point of signup in both years over the same calendar window. <b>The bot cohort:</b> May–September 2025 signups were roughly half bots; the &ldquo;bots removed&rdquo; rows take 53% off those months. About 2,400 of those accounts are still on the list, which dilutes every 2026 rate below. Unsubscribes and the send figures come from Mailchimp campaign reports, recipient-weighted.
     </div>`;
 }
 
