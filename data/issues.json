@@ -107,11 +107,11 @@
       ],
       [
         "What Can Be Done?",
-        9
+        8
       ],
       [
         "Modern Evolution: Marketing and Profits",
-        7
+        6
       ],
       [
         "Foundations: The Wild West and the Nation",
@@ -450,6 +450,36 @@
     ]
   },
   {
+    "name": "women-and-guns",
+    "post_count": 6,
+    "first_published": "2026-09-09",
+    "last_published": "2026-09-09",
+    "number": null,
+    "display_name": "Women And Guns",
+    "top_topics": [
+      [
+        "Gun Violence",
+        6
+      ],
+      [
+        "When Women Wield Guns",
+        4
+      ],
+      [
+        "Crime",
+        2
+      ],
+      [
+        "The Culture Around Us",
+        1
+      ],
+      [
+        "Race",
+        1
+      ]
+    ]
+  },
+  {
     "name": "911-anniversary-issue",
     "post_count": 7,
     "first_published": "2026-09-05",
@@ -706,7 +736,7 @@
         2
       ],
       [
-        "City Planning",
+        "Journalism",
         1
       ]
     ]

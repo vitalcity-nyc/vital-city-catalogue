@@ -1,27 +1,82 @@
 {
   "meta": {
-    "generated_at": "2026-09-09T11:17:53.699149+00:00",
+    "generated_at": "2026-09-09T19:51:47.962625+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 906,
-    "total_authors": 500,
-    "total_issues": 31,
-    "total_topics": 216,
+    "total_posts": 912,
+    "total_authors": 507,
+    "total_issues": 32,
+    "total_topics": 219,
     "date_range": [
       "2021-09-15",
-      "2026-09-05"
+      "2026-09-09"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 9,
+    "new_articles": [
+      {
+        "title": "She Buys It, He Fires It",
+        "url": "https://www.vitalcitynyc.org/women-and-illegal-firearm-diversion/",
+        "published_date": "2026-09-09",
+        "primary_author": null
+      },
+      {
+        "title": "Unpacking the Triggers",
+        "url": "https://www.vitalcitynyc.org/urban-gun-violence-black-women/",
+        "published_date": "2026-09-09",
+        "primary_author": null
+      },
+      {
+        "title": "Stand Your Ground Laws and Women\u2019s Safety",
+        "url": "https://www.vitalcitynyc.org/stand-your-ground-laws-womens-safety/",
+        "published_date": "2026-09-09",
+        "primary_author": null
+      },
+      {
+        "title": "Carrying Care",
+        "url": "https://www.vitalcitynyc.org/how-women-think-about-guns-lethal-force/",
+        "published_date": "2026-09-09",
+        "primary_author": null
+      },
+      {
+        "title": "The Recent Rise of Women Gun Owners",
+        "url": "https://www.vitalcitynyc.org/women-gun-owners-recent-rise/",
+        "published_date": "2026-09-09",
+        "primary_author": null
+      },
+      {
+        "title": "What Data Can\u2019t Tell Us",
+        "url": "https://www.vitalcitynyc.org/crime-data-gaps-women-firearms/",
+        "published_date": "2026-09-09",
+        "primary_author": null
+      },
+      {
+        "title": "Pointing a Firearm or Looking Down Its Barrel",
+        "url": "https://www.vitalcitynyc.org/pointing-a-firearm-or-looking-down-its-barrel/",
+        "published_date": "2025-09-10",
+        "primary_author": null
+      },
+      {
+        "title": "Editors\u2019 Note",
+        "url": "https://www.vitalcitynyc.org/editors-note-issue-13/",
+        "published_date": "2025-09-10",
+        "primary_author": null
+      },
+      {
+        "title": "Guns, My Family and Me",
+        "url": "https://www.vitalcitynyc.org/guns-my-family-and-me/",
+        "published_date": "2025-09-10",
+        "primary_author": null
+      }
+    ]
   },
-  "total_pieces": 906,
+  "total_pieces": 912,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 194
+    "2026": 200
   },
   "by_month": {
     "2021-09": 1,
@@ -78,12 +133,12 @@
     "2026-06": 44,
     "2026-07": 22,
     "2026-08": 16,
-    "2026-09": 8
+    "2026-09": 14
   },
   "by_type": [
     [
       "opinion/commentary",
-      731
+      737
     ],
     [
       "q&a",
@@ -117,7 +172,7 @@
   "by_topic_top25": [
     [
       "Crime",
-      145
+      147
     ],
     [
       "History",
@@ -149,7 +204,7 @@
     ],
     [
       "Gun Violence",
-      66
+      72
     ],
     [
       "Police Reform",
@@ -189,7 +244,7 @@
     ],
     [
       "data",
-      31
+      30
     ],
     [
       "Budget",
@@ -216,11 +271,11 @@
       23
     ]
   ],
-  "n_topics_total": 216,
+  "n_topics_total": 219,
   "by_credential_pieces": [
     [
       "Academic",
-      221
+      224
     ],
     [
       "Nonprofit / advocacy",
@@ -236,7 +291,7 @@
     ],
     [
       "Other / unclassified",
-      95
+      96
     ],
     [
       "Government / public official",
@@ -248,7 +303,7 @@
     ],
     [
       "Think tank / research institute",
-      52
+      53
     ],
     [
       "Architecture / design / planning",
@@ -260,7 +315,7 @@
     ],
     [
       "Survey / reader poll",
-      13
+      14
     ],
     [
       "Unknown / no bio",
@@ -270,11 +325,11 @@
   "by_credential_authors": [
     [
       "Academic",
-      155
+      159
     ],
     [
       "Other / unclassified",
-      108
+      110
     ],
     [
       "Nonprofit / advocacy",
@@ -290,7 +345,7 @@
     ],
     [
       "Think tank / research institute",
-      28
+      29
     ],
     [
       "Business / private sector",
@@ -333,7 +388,7 @@
       "2023": 37,
       "2024": 38,
       "2025": 31,
-      "2026": 21
+      "2026": 23
     },
     "History": {
       "2022": 12,
@@ -384,17 +439,17 @@
     }
   },
   "wc_stats": {
-    "n": 896,
-    "median": 1616,
-    "mean": 1889,
+    "n": 902,
+    "median": 1614,
+    "mean": 1891,
     "p90": 2839,
     "max": 30332,
-    "p10": 908,
-    "p25": 1269,
-    "p75": 2135,
-    "p95": 3810,
+    "p10": 909,
+    "p25": 1271,
+    "p75": 2137,
+    "p95": 3836,
     "no_count": 10,
-    "core_1000_2499": 659,
+    "core_1000_2499": 663,
     "under_500": 43,
     "over_5000": 24
   },
@@ -409,15 +464,15 @@
     ],
     [
       "1,000-1,999",
-      525
+      529
     ],
     [
       "2,000-2,999",
-      187
+      188
     ],
     [
       "3,000-4,999",
-      55
+      56
     ],
     [
       "5,000+",
@@ -456,12 +511,12 @@
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 141
+        "n": 142
       },
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 169
+        "n": 172
       },
       {
         "floor": 1750,
@@ -471,17 +526,17 @@
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 67
+        "n": 68
       },
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 67
+        "n": 66
       },
       {
         "floor": 2500,
         "label": "2,500",
-        "n": 33
+        "n": 34
       },
       {
         "floor": 2750,
@@ -501,7 +556,7 @@
       {
         "floor": 3500,
         "label": "3,500+",
-        "n": 54
+        "n": 55
       }
     ]
   },
@@ -534,23 +589,23 @@
       "year": "2025",
       "n": 287,
       "p25": 1292,
-      "median": 1635,
+      "median": 1634,
       "p75": 2105,
       "max": 14800
     },
     {
       "year": "2026",
-      "n": 189,
-      "p25": 1258,
+      "n": 195,
+      "p25": 1269,
       "median": 1635,
-      "p75": 2385,
+      "p75": 2381,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 768,
-    "2": 108,
-    "3": 27,
+    "1": 771,
+    "2": 112,
+    "3": 26,
     "4": 1,
     "8": 1,
     "10": 1
@@ -563,7 +618,7 @@
     },
     {
       "name": "Elizabeth Glazer",
-      "posts": 46,
+      "posts": 47,
       "credential": "Government / public official"
     },
     {
@@ -593,7 +648,7 @@
     },
     {
       "name": "A Survey",
-      "posts": 14,
+      "posts": 15,
       "credential": "Survey / reader poll"
     },
     {
@@ -622,11 +677,6 @@
       "credential": "Academic"
     },
     {
-      "name": "Paul Reeping",
-      "posts": 9,
-      "credential": "Think tank / research institute"
-    },
-    {
       "name": "David Schleicher",
       "posts": 9,
       "credential": "Academic"
@@ -635,6 +685,11 @@
       "name": "John Hall",
       "posts": 9,
       "credential": "Government / public official"
+    },
+    {
+      "name": "Paul Reeping",
+      "posts": 8,
+      "credential": "Think tank / research institute"
     },
     {
       "name": "Bradley Tusk",
@@ -647,17 +702,17 @@
       "credential": "Think tank / research institute"
     },
     {
-      "name": "Jens Ludwig",
-      "posts": 7,
-      "credential": "Academic"
-    },
-    {
       "name": "Cara Eckholm",
       "posts": 6,
       "credential": "Journalist / media"
+    },
+    {
+      "name": "Michael Jacobson",
+      "posts": 6,
+      "credential": "Academic"
     }
   ],
-  "n_issues": 31,
+  "n_issues": 32,
   "cadence": {
     "by_year": [
       {
@@ -707,34 +762,34 @@
       },
       {
         "year": "2026",
-        "weeks": 35.4,
-        "pieces": 194,
+        "weeks": 36.0,
+        "pieces": 200,
         "outside_issues": 136,
-        "per_week_all": 5.48,
-        "per_week_outside_issues": 3.84,
+        "per_week_all": 5.56,
+        "per_week_outside_issues": 3.78,
         "partial": true
       }
     ],
-    "total_weeks": 259.4,
-    "all_time_per_week": 3.49,
+    "total_weeks": 260.0,
+    "all_time_per_week": 3.51,
     "all_time_per_week_outside_issues": 1.6,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.84,
-    "current_per_week_all": 5.48,
+    "current_per_week_outside_issues": 3.78,
+    "current_per_week_all": 5.56,
     "robustness": {
       "drop_window_days": 3,
-      "issue_tagged_pieces": 490,
+      "issue_tagged_pieces": 496,
       "published_away_from_drop": 63,
-      "share_of_issue_pieces": 12.9,
-      "current_year_strict": 3.84,
-      "current_year_loose": 4.01,
+      "share_of_issue_pieces": 12.7,
+      "current_year_strict": 3.78,
+      "current_year_loose": 3.94,
       "all_time_strict": 1.6,
-      "all_time_loose": 1.85,
-      "all_time_all": 3.49
+      "all_time_loose": 1.84,
+      "all_time_all": 3.51
     }
   },
   "rhythm": {
-    "n_dated": 906,
+    "n_dated": 912,
     "by_weekday": [
       {
         "day": "Mon",
@@ -744,17 +799,17 @@
       {
         "day": "Tue",
         "pieces": 160,
-        "share": 17.7
+        "share": 17.5
       },
       {
         "day": "Wed",
-        "pieces": 434,
-        "share": 47.9
+        "pieces": 440,
+        "share": 48.2
       },
       {
         "day": "Thu",
         "pieces": 175,
-        "share": 19.3
+        "share": 19.2
       },
       {
         "day": "Fri",
@@ -773,8 +828,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.9,
-    "midweek_share": 84.9,
+    "top_day_share": 48.2,
+    "midweek_share": 85.0,
     "weekend_pieces": 24,
     "by_month": [
       {
@@ -836,9 +891,9 @@
       {
         "month": "September",
         "abbr": "Sep",
-        "pieces": 103,
+        "pieces": 109,
         "occurrences": 6,
-        "per_occurrence": 17.2
+        "per_occurrence": 18.2
       },
       {
         "month": "October",

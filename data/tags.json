@@ -1,7 +1,7 @@
 [
   {
     "name": "Crime",
-    "post_count": 145
+    "post_count": 147
   },
   {
     "name": "History",
@@ -33,7 +33,7 @@
   },
   {
     "name": "Gun Violence",
-    "post_count": 66
+    "post_count": 72
   },
   {
     "name": "Police Reform",
@@ -73,7 +73,7 @@
   },
   {
     "name": "data",
-    "post_count": 31
+    "post_count": 30
   },
   {
     "name": "Budget",
@@ -124,6 +124,10 @@
     "post_count": 18
   },
   {
+    "name": "Race",
+    "post_count": 16
+  },
+  {
     "name": "Mental Health",
     "post_count": 16
   },
@@ -141,10 +145,6 @@
   },
   {
     "name": "Transportation",
-    "post_count": 15
-  },
-  {
-    "name": "Race",
     "post_count": 15
   },
   {
@@ -216,10 +216,6 @@
     "post_count": 9
   },
   {
-    "name": "What Can Be Done?",
-    "post_count": 9
-  },
-  {
     "name": "The Great Debate",
     "post_count": 9
   },
@@ -252,6 +248,10 @@
     "post_count": 8
   },
   {
+    "name": "What Can Be Done?",
+    "post_count": 8
+  },
+  {
     "name": "Sights and Sounds",
     "post_count": 8
   },
@@ -277,10 +277,6 @@
   },
   {
     "name": "Mugged by Reality",
-    "post_count": 7
-  },
-  {
-    "name": "Modern Evolution: Marketing and Profits",
     "post_count": 7
   },
   {
@@ -337,6 +333,10 @@
   },
   {
     "name": "The State of the City",
+    "post_count": 6
+  },
+  {
+    "name": "Modern Evolution: Marketing and Profits",
     "post_count": 6
   },
   {
@@ -406,6 +406,10 @@
   {
     "name": "Projecting the Size of the Jail Population — More than Math",
     "post_count": 5
+  },
+  {
+    "name": "When Women Wield Guns",
+    "post_count": 4
   },
   {
     "name": "Borrow and Steal",
@@ -521,6 +525,10 @@
   },
   {
     "name": "Nonprofits",
+    "post_count": 3
+  },
+  {
+    "name": "Two Sides of the Gun: Stories of Possession and Victimization",
     "post_count": 3
   },
   {
@@ -672,6 +680,14 @@
     "post_count": 2
   },
   {
+    "name": "The Culture Around Us",
+    "post_count": 1
+  },
+  {
+    "name": "What We Know and Don't Know",
+    "post_count": 1
+  },
+  {
     "name": "Chicago",
     "post_count": 1
   },
@@ -705,10 +721,6 @@
   },
   {
     "name": "Guns",
-    "post_count": 1
-  },
-  {
-    "name": "Two Sides of the Gun: Stories of Possession and Victimization",
     "post_count": 1
   },
   {
