@@ -149,6 +149,22 @@
     <tr><td><b>Contact database + catalogue</b></td><td>Flags which subscribers are notable or work in government (the "who's reading" card) and links pieces to their bylines.</td><td>Live</td></tr>
   </table>
 
+  <h2 id="perspective">Perspective &mdash; how the field is trending</h2>
+  <p><i>Moved here from the dashboard on 9 September 2026: static industry context, not live data, so it belongs with the documentation rather than among the tiles.</i></p>
+
+        <div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.6">
+          <p style="margin:0 0 12px">Rough context for reading the numbers above. Benchmarks vary by sector and methodology, so treat them as orientation, not a scorecard.</p>
+          <ul style="margin:0;padding-left:18px;line-height:1.6">
+            <li><b style="color:var(--vc-black)">Engagement is beating reach.</b> Across news media, subscriptions and loyal audiences keep growing even as overall traffic shrinks — the resilient model is depth, not scale. <span style="opacity:.7">(Reuters Institute Digital News Report 2025; Digiday, 2025)</span></li>
+            <li><b style="color:var(--vc-black)">Email is the retention engine.</b> Readers who regularly open a newsletter are roughly 2× more likely to still be subscribed a year later, and healthy digital-news titles keep monthly churn under ~5%. <span style="opacity:.7">(INMA, 2025)</span></li>
+            <li><b style="color:var(--vc-black)">Nonprofit email norms:</b> ~28–29% average open and ~3.3% click for nonprofits (vs ~21% open for for-profits). Vital City's recent sends run ~31% open (above the nonprofit norm) and ~3% click (about average). <span style="opacity:.7">(M+R Benchmarks 2025; Nonprofit Tech for Good)</span></li>
+            <li><b style="color:var(--vc-black)">Open rates are broken; clicks are the truth.</b> Apple Mail auto-opens (~46% of inboxes) have inflated open rates industry-wide since 2021, so the field now leads with click rate and engaged-reader counts — as this dashboard does.</li>
+            <li><b style="color:var(--vc-black)">The "willing payer" pool is maturing.</b> Only ~18% of people across wealthy countries (~20% in the US) pay for any online news, and growth is flattening — so for a free nonprofit the lever is an engaged audience and the right readers becoming donors, not a paywall. <span style="opacity:.7">(Reuters Institute, 2025)</span></li>
+            <li><b style="color:var(--vc-black)">For think tanks specifically,</b> influence is about <i>who</i> reads, not how many — reaching decision-makers and the policy community beats raw reach. (Vital City tracks this directly in the "who's reading" card above.)</li>
+          </ul>
+          <div class="flagnote" style="margin-top:12px">Static context, not live data — last reviewed June 2026. Refresh when the new annual reports land: <a href="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2025" target="_blank" style="color:var(--vc-cerulean)">Reuters Institute Digital News Report</a> · <a href="https://mrbenchmarks.com/" target="_blank" style="color:var(--vc-cerulean)">M+R Benchmarks</a>.</div>
+        </div>
+      
   <h2>How often it refreshes</h2>
   <p>Twice a day, at 11:00 and 23:00 UTC (≈ 7am and 7pm ET). The same GitHub Action that updates the Contact tool also runs <code>growth_pull.py</code> → <code>encrypt_growth.py</code> and pushes the new encrypted file. The second run is mainly for resilience — GitHub's scheduler often delays or skips cron jobs, so the evening run catches a missed morning one. The "Last refresh" timestamp at the top of the dashboard tells you exactly when this snapshot was taken.</p>
 

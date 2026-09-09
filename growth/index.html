@@ -38,6 +38,11 @@
   /* KPI tiles */
   /* 8 tiles in rows that always divide evenly (4/2/1 columns) — auto-fit
      left a partial second row with a bare gray slab where tiles ran out. */
+  /* A card that absorbed another keeps the absorbed card's title as a labelled
+     sub-section, so nothing that used to be findable by name is lost. */
+  main .card h3.subh{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);
+    font-weight:700;margin:24px 0 8px;padding-top:14px;border-top:1px solid var(--vc-cloud)}
+  main .card h3.subh .hint{text-transform:none;letter-spacing:0;font-weight:400;font-size:11px;margin-left:8px;color:var(--vc-charcoal)}
   .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin:0 0 0}
   /* Second tier: same tiles, quieter. Subsidiary by Josh's own ranking of the
      objectives, so they sit under the six rather than competing with them. */
@@ -599,13 +604,8 @@
       </div>
 
 
-      <div class="card" id="askAI">
-        <h2>Ask your own questions of this data <span class="hint">download the full dataset and analyze it with Claude, ChatGPT or a spreadsheet</span></h2>
-        <div id="askAIBody"></div>
-      </div>
-
-      <div class="card" id="rangeReport">
-        <h2>Custom reports <span class="hint">build a report on any date range, any piece or any author</span></h2>
+            <div class="card" id="rangeReport">
+        <h2>Tools <span class="hint">custom reports on any date range, piece or author &middot; exports &middot; your own questions of the full dataset</span></h2>
 
         <div class="rpttabs noprint" id="rptTabs" role="tablist">
           <button class="rpttab on" data-tab="range" role="tab">By date range</button>
@@ -652,35 +652,35 @@
           <div style="font-size:12px;color:var(--vc-charcoal);line-height:1.5;margin:2px 0 10px" id="alHint">every piece they've written, summarized</div>
           <div id="authorLookupBody"></div>
         </div>
+      
+        <h3 class="subh">Ask your own questions of this data <span class="hint">download the full dataset and analyze it with Claude, ChatGPT or a spreadsheet</span></h3>
+        <div id="askAIBody"></div>
+      
       </div>
 
       <div class="card" id="bigPicture">
         <h2>The long view <span class="hint">every year GA4 has tracked — the whole-history picture</span></h2>
         <div id="bigPictureBody"></div>
+      
+        <h3 class="subh">Year-to-date · 2026 vs 2025 <span class="hint">where the comparison is fair</span></h3>
+        <div id="ytdBody"></div>
+      
       </div>
 
       <div class="card" id="audienceQuality">
         <h2>The funnel &amp; who's reading <span class="hint">the on-mission cuts: do visitors convert, do they come back, and are the right people reading</span></h2>
         <div id="audienceQualityBody"></div>
+      
+        <h3 class="subh">Engagement &amp; influence <span class="hint">post-Apple-privacy metrics: who really reads, by mailbox provider, by influence weight</span></h3>
+        <div id="engagementExtrasBody"></div>
+      
+      
+        <h3 class="subh">Subscriber quality <span class="hint">based on Mailchimp engagement</span></h3>
+        <div id="qualityBody"></div>
+      
       </div>
 
-      <div class="card" id="perspective">
-        <h2>Perspective — how the field is trending <span class="hint">industry context for nonprofit publishers &amp; think tanks · not live data · reviewed June 2026</span></h2>
-        <div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.6">
-          <p style="margin:0 0 12px">Rough context for reading the numbers above. Benchmarks vary by sector and methodology, so treat them as orientation, not a scorecard.</p>
-          <ul style="margin:0;padding-left:18px;line-height:1.6">
-            <li><b style="color:var(--vc-black)">Engagement is beating reach.</b> Across news media, subscriptions and loyal audiences keep growing even as overall traffic shrinks — the resilient model is depth, not scale. <span style="opacity:.7">(Reuters Institute Digital News Report 2025; Digiday, 2025)</span></li>
-            <li><b style="color:var(--vc-black)">Email is the retention engine.</b> Readers who regularly open a newsletter are roughly 2× more likely to still be subscribed a year later, and healthy digital-news titles keep monthly churn under ~5%. <span style="opacity:.7">(INMA, 2025)</span></li>
-            <li><b style="color:var(--vc-black)">Nonprofit email norms:</b> ~28–29% average open and ~3.3% click for nonprofits (vs ~21% open for for-profits). Vital City's recent sends run ~31% open (above the nonprofit norm) and ~3% click (about average). <span style="opacity:.7">(M+R Benchmarks 2025; Nonprofit Tech for Good)</span></li>
-            <li><b style="color:var(--vc-black)">Open rates are broken; clicks are the truth.</b> Apple Mail auto-opens (~46% of inboxes) have inflated open rates industry-wide since 2021, so the field now leads with click rate and engaged-reader counts — as this dashboard does.</li>
-            <li><b style="color:var(--vc-black)">The "willing payer" pool is maturing.</b> Only ~18% of people across wealthy countries (~20% in the US) pay for any online news, and growth is flattening — so for a free nonprofit the lever is an engaged audience and the right readers becoming donors, not a paywall. <span style="opacity:.7">(Reuters Institute, 2025)</span></li>
-            <li><b style="color:var(--vc-black)">For think tanks specifically,</b> influence is about <i>who</i> reads, not how many — reaching decision-makers and the policy community beats raw reach. (Vital City tracks this directly in the "who's reading" card above.)</li>
-          </ul>
-          <div class="flagnote" style="margin-top:12px">Static context, not live data — last reviewed June 2026. Refresh when the new annual reports land: <a href="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2025" target="_blank" style="color:var(--vc-cerulean)">Reuters Institute Digital News Report</a> · <a href="https://mrbenchmarks.com/" target="_blank" style="color:var(--vc-cerulean)">M+R Benchmarks</a>.</div>
-        </div>
-      </div>
-
-      <div class="sechead" id="sec-growth">
+            <div class="sechead" id="sec-growth">
         <div class="sechead-title">Growing the list</div>
         <div class="sechead-sub">Is the newsletter growing, and where from? Watch net list change and readers per send — list size can be flattered by imports and bots, but engaged readers can't. Signup sources tell you what's working; the unsubscribe cards tell you what it costs.</div>
       </div>
@@ -719,46 +719,34 @@
       <div class="card" id="acquisition">
         <h2>Where newsletter signups come from <span class="hint" id="acqHint"></span></h2>
         <div id="acqBody"></div>
-      </div>
-
-      <div class="card" id="contentCard">
-        <h2>Which pieces drove signups <span class="hint" id="postsHint"></span></h2>
+      
+        <h3 class="subh">Which pieces drove signups <span class="hint" id="postsHint"></span></h3>
         <div id="postsList"></div>
+      
       </div>
 
-      <div class="card" id="trend">
+            <div class="card" id="trend">
         <h2>Signups vs unsubscribes <span class="hint" id="trendHint"></span></h2>
         <div class="winrow" id="trendWin"></div>
         <div class="chartwrap"><svg class="chart" id="trendChart" viewBox="0 0 800 240" preserveAspectRatio="xMidYMid meet"></svg></div>
         <div class="legend" id="trendLegend"></div>
       </div>
 
-      <div class="card" id="fundUnsub">
-        <h2>Cost of asking · unsubscribes <span class="hint">do fundraising appeals shed more subscribers than the regular newsletter?</span></h2>
-        <div id="fundUnsubBody"></div>
-      </div>
-
-      <div class="card" id="whyLeave">
+            <div class="card" id="whyLeave">
         <h2>Why people leave <span class="hint">unsubscribe reasons + whether send frequency matters</span></h2>
         <div id="whyLeaveBody"></div>
+      
+        <h3 class="subh">Cost of asking · unsubscribes <span class="hint">do fundraising appeals shed more subscribers than the regular newsletter?</span></h3>
+        <div id="fundUnsubBody"></div>
+      
       </div>
 
-      <div class="card" id="ytd">
-        <h2>Year-to-date · 2026 vs 2025 <span class="hint">where the comparison is fair</span></h2>
-        <div id="ytdBody"></div>
-      </div>
-
-      <div class="sechead" id="sec-health">
+            <div class="sechead" id="sec-health">
         <div class="sechead-title">List health</div>
         <div class="sechead-sub">Maintenance metrics, worth a periodic look rather than a daily one. The star ratings here are Apple-Mail-skewed; the corrected who-really-reads view lives under Donors &amp; influence.</div>
       </div>
 
-      <div class="card" id="quality">
-        <h2>Subscriber quality <span class="hint">based on Mailchimp engagement</span></h2>
-        <div id="qualityBody"></div>
-      </div>
-
-      <div class="card" id="lifecycle">
+            <div class="card" id="lifecycle">
         <h2>Subscriber lifecycle <span class="hint">are new signups sticking? who's drifting? who's gone but salvageable?</span></h2>
         <div id="lifecycleBody"></div>
       </div>
@@ -794,12 +782,7 @@
         </div>
       </div>
 
-      <div class="card" id="engagementExtras">
-        <h2>Engagement &amp; influence <span class="hint">post-Apple-privacy metrics: who really reads, by mailbox provider, by influence weight</span></h2>
-        <div id="engagementExtrasBody"></div>
-      </div>
-
-      <div class="card" id="xfollowers">
+            <div class="card" id="xfollowers">
         <h2>Who follows Vital City on X <span class="hint" id="xfHint">point-in-time snapshot · not live</span></h2>
         <div id="xfollowersBody"></div>
       </div>
@@ -821,7 +804,7 @@
 
 
       <div class="card" id="perf">
-        <h2>Newsletter performance <span class="hint">recipient-weighted averages · YoY = same window last year</span></h2>
+        <h2>Newsletter performance <span class="hint">recipient-weighted averages · YoY = same window last year · <a href="about.html#perspective" target="_blank">industry context</a></span></h2>
         <div class="perfgrid" id="perfKpis"></div>
         <div style="margin-top:14px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px">Monthly trend — last 24 months</div>
           <div class="chartwrap"><svg class="chart" id="perfChart" viewBox="0 0 800 220" preserveAspectRatio="none"></svg></div>
@@ -832,10 +815,8 @@
           </div>
         </div>
         <div class="flagnote" style="margin-top:12px"><b>Benchmark:</b> nonprofit email averages ~28-29% open and ~3.3% click (<a href="https://mrbenchmarks.com/" target="_blank" style="color:var(--vc-cerulean)">M+R Benchmarks 2025</a>). Vital City runs above the norm on opens and about average on clicks. Open rate is Apple-Mail-inflated across the whole industry, so click rate is the cleaner comparison.</div>
-      </div>
-
-      <div class="card" id="campaignsTrend">
-        <h2>Send-by-send performance <span class="hint">last 20 sends charted and tabled · one point = one send (A/B tests counted once)</span></h2>
+      
+        <h3 class="subh">Send-by-send performance <span class="hint">last 20 sends charted and tabled · one point = one send (A/B tests counted once)</span></h3>
         <div class="chartwrap"><svg class="chart" id="sendChart" viewBox="0 0 800 200" preserveAspectRatio="none"></svg></div>
         <div class="legend">
           <span><span class="sw" style="background:var(--vc-cerulean)"></span>Open rate</span>
@@ -843,11 +824,12 @@
           <span><span class="sw" style="background:var(--vc-charcoal);opacity:.5"></span>20-send rolling average</span>
         </div>
         <div id="sendInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
-        <h2 style="margin-top:18px;border-top:1px solid var(--vc-cloud);padding-top:14px">The sends themselves <span class="hint">same data as the chart · click a subject to open it in Mailchimp</span></h2>
+        <h3 class="subh">The sends themselves <span class="hint">same data as the chart · click a subject to open it in Mailchimp</span></h3>
         <div id="campTbl"></div>
+      
       </div>
 
-      <div class="card" id="abTests">
+            <div class="card" id="abTests">
         <h2>A/B subject-line tests <span class="hint">which subject won, and the patterns</span></h2>
         <div id="abTestsBody"></div>
       </div>
@@ -870,6 +852,10 @@
       <div class="card" id="searchConsole">
         <h2>How people find us on Google <span class="hint">search queries, clicks, impressions · Search Console</span></h2>
         <div id="searchConsoleBody"></div>
+      
+        <h3 class="subh">Beyond web search &mdash; Discover and News <span class="hint">Google channels that do not show up in query reports · last 90 days</span></h3>
+        <div id="searchChannelsBody"></div>
+      
       </div>
 
       <div class="card" id="topSearches">
@@ -877,12 +863,7 @@
         <div id="topSearchesBody"></div>
       </div>
 
-      <div class="card" id="searchChannels">
-        <h2>Beyond web search &mdash; Discover and News <span class="hint">Google channels that do not show up in query reports · last 90 days</span></h2>
-        <div id="searchChannelsBody"></div>
-      </div>
-
-      <div class="card" id="social">
+            <div class="card" id="social">
         <h2>Social reach — X, LinkedIn, Bluesky, Instagram <span class="hint">followers + latest posts per platform · all free sources · coverage labeled per panel</span></h2>
         <div id="socialBody"></div>
         <div id="socialTrend"></div>
@@ -4039,16 +4020,8 @@ function renderEngagementExtras(ex){
       <div class="perfgrid">
         <div class="perfcell"><div class="pl">Influence score (total)</div><div class="pn">${fmtN(iwr.score)}</div><div class="pd flat">summed across the ${fmtN(iwr.raw_mau||0)} active readers</div></div>
         <div class="perfcell"><div class="pl">Score per reader (avg)</div><div class="pn">${iwr.score_per_reader}</div><div class="pd flat">1.0 = baseline, 5.0 ≈ max</div></div>
-        <div class="perfcell" title="Active subscribers whose email ends in .gov, or who carry city/state/federal/judge type tags in the CRM. Click the number to see them.">
-          <div class="pl">Government / judge readers</div>
-          <div class="pn"><span class="clickable-num" onclick="showPeople('gov_in_mau','Government/judge readers in this month\\'s active set','These are subscribers whose email is on a government domain (.gov) or who carry city/state/federal/judge type tags in the Contact tool, AND who opened at least one Vital City newsletter in the last 30 days. The most policy-relevant audience for Vital City\\'s editorial.')">${fmtN(iwr.gov_in_mau||0)}</span></div>
-          <div class="pd flat">in this month's active set <span style="color:var(--vc-cerulean)">· click to view</span></div>
-        </div>
-        <div class="perfcell" title="Active subscribers flagged as 'notable' (matched to an English Wikipedia page using conservative context clues). Click the number to see them.">
-          <div class="pl">Wikipedia-notable readers</div>
-          <div class="pn"><span class="clickable-num" onclick="showPeople('notable_in_mau','Wikipedia-notable readers in this month\\'s active set','Subscribers flagged as appearing on the English Wikipedia (matched conservatively from CRM context). These are the public-profile readers — academics, journalists, public officials, prominent practitioners. Rough signal of public-profile audience reach.')">${fmtN(iwr.notable_in_mau||0)}</span></div>
-          <div class="pd flat">in this month's active set <span style="color:var(--vc-cerulean)">· click to view</span></div>
-        </div>
+        
+        
       </div>
     </div>` : '';
 
