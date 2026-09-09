@@ -4843,6 +4843,28 @@ function renderBigPicture(data){
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:24px 0 8px">Newsletter performance by year</div>
       <table class="tbl" style="width:100%"><thead><tr><th>Year</th><th class="num">Subscribers (EOY)</th><th class="num">Sends</th><th class="num">Open rate <span class="flag">Apple Mail–inflated</span></th><th class="num">Total opens</th><th class="num" title="Total opens ÷ the weeks of that year that have elapsed. This is the number to compare across years — the in-progress year's raw total is low only because the year isn't over.">Opens / week</th><th class="num">Total clicks <span class="flag">honest signal</span></th><th class="num" title="Total clicks ÷ the weeks of that year that have elapsed. Clicks aren't inflated by Apple Mail auto-opens, so this is the cleanest year-over-year engagement trend on the page.">Clicks / week <span class="flag">best trend line</span></th></tr></thead><tbody>${emRows}</tbody></table>
       <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px;line-height:1.55">Total opens/clicks are estimated from each send's open/click rate × recipients (Mailchimp reports rates, not raw totals). <b>Open rate isn't comparable across the whole span</b> — Apple Mail Privacy Protection (Sept 2021+) auto-opens email, inflating opens from ~2022 on; treat open rate as directional and clicks as the cleaner engagement signal. <b>Per-week columns divide by the weeks of that year that have actually elapsed</b>, so ${curYear} can be read against complete years — its raw totals are lower only because the year is still running. ${curYear} is in progress.</div>` : "";
+    // ---- Active readers per send, by year. The list size above is who is
+    // subscribed; this is who actually opens (and, the honest line, clicks).
+    // Per-send averages are comparable across a partial year, unlike totals.
+    const arYears = listYears.filter(y=> emYr[y.year] && emYr[y.year].sends>0);
+    const arMax = Math.max(1, ...arYears.map(y=> emYr[y.year].opens/emYr[y.year].sends));
+    const arBars = arYears.map((y,i)=>{
+      const e=emYr[y.year]; const op=e.opens/e.sends, ck=e.clicks/e.sends;
+      const prev = i>0 ? emYr[arYears[i-1].year] : null;
+      const yoy = prev ? Math.round((op - prev.opens/prev.sends)/(prev.opens/prev.sends)*100) : null;
+      const yoyTxt = yoy!=null ? (yoy>=0?'+':'')+yoy+'%' : '';
+      return `<div style="flex:1;text-align:center;min-width:0" title="${y.year}: an average send reached ${fmtN(Math.round(op))} openers and ${fmtN(Math.round(ck))} clickers, across ${e.sends} sends (${fmtN(Math.round(e.recip/e.sends))} delivered per send)${yoy!=null?` · openers ${yoyTxt} vs ${arYears[i-1].year}`:''}">
+        <div style="font-size:13px;font-weight:700;color:var(--vc-black)">${fmtN(Math.round(op))}</div>
+        <div style="background:#b8860b;opacity:.9;height:${Math.round(op/arMax*130)+4}px;margin:4px auto 0;width:62%;border-radius:2px 2px 0 0;display:flex;align-items:flex-start;justify-content:center;overflow:visible">${yoyTxt?`<span style="font-size:10.5px;font-weight:800;color:#fff;padding-top:4px;text-shadow:0 1px 1.5px rgba(0,0,0,.4)">${yoyTxt}</span>`:''}</div>
+        <div style="font-size:12px;color:var(--vc-black);margin-top:6px;font-weight:700">${y.year}${y.year>=curYear?'*':''}</div>
+        <div style="font-size:10px;color:var(--vc-charcoal)">${fmtN(Math.round(ck))} clickers</div>
+      </div>`;
+    }).join("");
+    const arBlock = arYears.length>=2 ? `
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:24px 0 10px">Active readers per send, by year</div>
+      <div style="display:flex;gap:14px;align-items:flex-end;height:180px">${arBars}</div>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">Each bar is the average number of people who opened a send that year (delivered × unique open rate); the figure under it is the average who clicked, the honest signal. Per-send averages are comparable across a year in progress, unlike totals. Opens are Apple Mail–inflated from 2022 on, so read the openers bar as directional and the clickers figure as the truth.</div>` : "";
+
     listBlock = `
       <div style="border-top:1px solid var(--vc-cloud);margin-top:26px;padding-top:20px"></div>
       <div style="font-size:13px;color:var(--vc-charcoal);margin-bottom:16px;line-height:1.5">
@@ -4851,6 +4873,7 @@ function renderBigPicture(data){
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:10px">Newsletter subscribers by year-end</div>
       <div style="display:flex;gap:14px;align-items:flex-end;height:180px">${lbars}</div>
       <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">Each bar is the total list size at that year's end; the number under it is new signups during the year. ${curYear} is in progress. Source: Mailchimp growth history — the list's system of record (a clean cumulative count, unlike the cookie-based visitor numbers above).</div>
+      ${arBlock}
       ${emTable}`;
   }
 
