@@ -105,6 +105,11 @@
   .bf-view{position:relative;height:430px;overflow:hidden;background:var(--vc-paper)}
   .bf-view iframe{width:200%;height:860px;border:0;transform:scale(.5);transform-origin:0 0;pointer-events:none}
   .bf-cap{font-size:11px;color:var(--vc-charcoal);margin-top:8px}
+  .tq{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin-top:12px}
+  .tqi{background:var(--vc-white);padding:14px 16px}
+  .tqq{font-family:var(--vc-serif);font-size:17px;line-height:1.3}
+  .tqw{font-size:11px;color:var(--vc-charcoal);margin-top:8px}
+  @media(max-width:700px){.tq{grid-template-columns:1fr}}
   .clogo{width:230px;margin-bottom:30px;filter:brightness(0) invert(1)}   /* black art -> paper white on the cover */
   .slide:not(.cover) .slogo{position:absolute;top:46px;right:54px;width:110px;opacity:.85}
 
@@ -387,7 +392,7 @@ async function exportPptx(){
   // 3 impact
   { const s=slide("Impact","Where the work has moved policy.");
     let rs=(FF.receipts||[]).slice(); if(V) rs.sort((a,b)=>{const i=V.receipts.indexOf(a.head),j=V.receipts.indexOf(b.head);return (i<0?99:i)-(j<0?99:j);});
-    rows(s,s._bodyY||2.2,rs.map(r=>({k:r.head,v:r.claim,note:r.note,links:r.links})),{kw:2.1,rh:0.86}); }
+    rows(s,s._bodyY||2.2,rs.slice(0,5).map(r=>({k:r.head,v:r.claim,note:r.note,links:r.links})),{kw:2.1,rh:0.86}); }
   // 4 media influence
   { const s=slide("Media influence","When New York's press corps needs intelligent, honest analysis, it comes here.");
     let y=figs(s,s._bodyY||2.3,[
@@ -408,7 +413,13 @@ async function exportPptx(){
   { const s=slide("Media influence, continued","Cited from City Journal to Mother Jones.");
     let y=lede(s,s._bodyY||2.2,"Vital City is cited approvingly by City Journal and Mother Jones alike — read closely by the correction commissioner, quoted by the mayor. The analyses are built to be usable by people who disagree with each other, and they are.",{h:1.0});
     y=pull(s,y,"When reporters dig into the city's crime numbers, it is often Vital City's analyses they build on.");
-    lede(s,y,"That is a deliberate product choice: the data work is published with methods attached, at the speed of the news cycle, under a name both sides can print.",{h:0.8}); }
+    const TQ=(FF.testimonials||[]).slice(0,3);
+    if(TQ.length){ const tw=(CW-0.4)/TQ.length; TQ.forEach((t,i)=>{ const x=L+i*(tw+0.2);
+        s.addShape(pptx.ShapeType.rect,{x,y:y+0.05,w:tw,h:1.35,fill:{color:WHT},line:{color:CLOUD,width:0.75}});
+        TX(s,"\u201c"+t.q+"\u201d",{x:x+0.15,y:y+0.12,w:tw-0.3,h:0.8,fontSize:11,italic:false,color:BLK,fontFace:SERIF,valign:"top",fit:"shrink"});
+        TX(s,t.who+(t.role?", "+t.role:""),{x:x+0.15,y:y+0.95,w:tw-0.3,h:0.4,fontSize:8.5,color:CHAR,fontFace:SANS,valign:"top"}); });
+      if(FF.cited_by_notable&&FF.cited_by_notable.length) TX(s,"Cited by "+FF.cited_by_notable.join(", ")+".",{x:L,y:y+1.5,w:CW,h:0.3,fontSize:9,color:CHAR,fontFace:SANS}); }
+    else lede(s,y,"That is a deliberate product choice: the data work is published with methods attached, at the speed of the news cycle, under a name both sides can print.",{h:0.8}); }
   // 6 bylines
   { const s=slide("The bylines","The people who shape the debate.");
     const people=V?V.authors.map(nm=>((FF.seniors||{}).people||[]).find(p=>p.n===nm)).filter(Boolean):((FF.seniors||{}).people||[]).filter(p=>p.feat);
@@ -466,18 +477,19 @@ async function exportPptx(){
     caveat(s,y,"Every giving figure here is Donorbox only.","Checks, wire transfers, donor-advised-fund grants and foundation grants do not pass through Donorbox — these totals understate real giving by whatever arrives through those channels."); }
   // 12 the ask
   { const s=slide("The ask","Fund the room where it is decided.");
-    let y=lede(s,s._bodyY||2.2,"Vital City is built on one conviction: tough urban problems have pragmatic solutions, and the gap between the two is evidence put in the right hands. A gift here does not disappear into overhead — it buys a specific piece of that machine.",{h:0.95});
+    let y=lede(s,s._bodyY||2.2,"Vital City is built on one conviction: tough urban problems have pragmatic solutions, and the gap between the two is evidence put in the right hands. A gift here buys a specific piece of that machine.",{h:0.95});
     bullets(s,y,[
       {b:"More original analysis.",t:"The data work is what gets cited — "+(P.total||"")+" times and counting — and it is the most expensive thing we do."},
       {b:"More convening.",t:"The people who decide and the people with the evidence"+(((FF.senior||{}).count)?" — starting with the "+(FF.senior||{}).count+" senior contributors —":",")+" in one room, on the record."},
       {b:"More reach into City Hall.",t:"The readers are already there; the work is getting the right piece in front of them at the right moment."},
-      {b:"Capacity to answer fast.",t:"The permitting fixes ran days before City Hall's own report. That speed took standing capacity."}]); }
+      {b:"Capacity to answer fast.",t:"The permitting fixes ran days before City Hall's own report. That speed took standing capacity."}]);
+    if(FF.oneliner) TX(s,FF.oneliner,{x:L,y:6.45,w:CW,h:0.5,fontSize:12,bold:true,color:BLK,fontFace:SERIF,valign:"top"}); }
   // 13 sources
   { const s=slide("Sources","Every number in this deck, and where it comes from.");
     const paras=[
       [{text:"Every figure is computed from a primary system; none is typed in by hand. ",options:{bold:true}},{text:"Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed "+asof+". Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News search across about 25 named outlets; giving from Donorbox; the catalogue from the Ghost publishing platform; the senior-contributor roster from vitalcitynyc.org/contributors; audience composition from the Vital City contact database."}],
       [{text:"Caveats that travel with these numbers. ",options:{bold:true}},{text:"Giving is Donorbox only. The 2025 signup surge is bot-inflated; 2024 is the volume baseline. Open rates are inflated industry-wide by Apple Mail, which is why click-to-open leads. Press counts are floors, since only those outlets are watched."}],
-      [{text:"Impact claims ",options:{bold:true}},{text:"are Vital City's own accounting, each carrying its source links on the impact slide. The Mamdani conversation took place while he was a candidate."}],
+      [{text:"Impact claims ",options:{bold:true}},{text:"are Vital City's own accounting, each carrying its source links on the impact slide. The Mamdani conversation took place while he was a candidate. Quotations are as delivered publicly or in writing."}],
       [{text:"This deck was assembled with AI assistance. ",options:{bold:true}},{text:"Every figure comes from a primary Vital City system; verify any figure before it goes to a funder."}]];
     paras.forEach((p,i)=>TX(s,p,{x:L,y:(s._bodyY||2.2)+i*1.0,w:CW,h:1.0,fontSize:10.5,color:BLK,fontFace:SANS,valign:"top",lineSpacingMultiple:1.2,fit:"shrink"})); }
 
@@ -520,7 +532,7 @@ function figs(items){
 function receiptRows(order){
   let rs=(FF.receipts||[]).slice();
   if(order) rs.sort((a,b)=>{const i=order.indexOf(a.head),j=order.indexOf(b.head);return (i<0?99:i)-(j<0?99:j);});
-  return `<div class="rows">${rs.map(r=>`
+  return `<div class="rows">${rs.slice(0,6).map(r=>`
     <div class="row"><div class="rk">${esc(r.head)}</div>
       <div class="rv">${esc(r.claim)}${r.note?` <span style="color:var(--vc-charcoal)">— ${esc(r.note)}</span>`:""}
         ${(r.links||[]).length?`<div class="rn links">${r.links.map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div>`:""}
@@ -593,7 +605,9 @@ function slides(){
     <h2>Cited from City Journal to Mother Jones.</h2>
     <p class="lede">Vital City is cited approvingly by City Journal and Mother Jones alike — read closely by the correction commissioner, quoted by the mayor. The analyses are built to be usable by people who disagree with each other, and they are.</p>
     <p class="pull">When reporters dig into the city's crime numbers, it is often Vital City's analyses they build on.</p>
-    <p class="lede">That is a deliberate product choice: the data work is published with methods attached, at the speed of the news cycle, under a name both sides can print.</p>`});
+    ${(FF.testimonials||[]).length?`<div class="tq">${(FF.testimonials||[]).slice(0,3).map(t=>`<div class="tqi"><div class="tqq">&ldquo;${esc(t.q)}&rdquo;</div><div class="tqw">${esc(t.who)}${t.role?`, ${esc(t.role)}`:""}</div></div>`).join("")}</div>
+    ${(FF.cited_by_notable||[]).length?`<div class="bf-cap">Cited by ${(FF.cited_by_notable||[]).map(esc).join(", ")}.</div>`:""}`
+    :`<p class="lede">That is a deliberate product choice: the data work is published with methods attached, at the speed of the news cycle, under a name both sides can print.</p>`}`});
 
   S.push({eyebrow:"The bylines",html:`
     <h2>The people who shape the debate.</h2>
@@ -692,20 +706,21 @@ function slides(){
 
   S.push({eyebrow:"The ask",html:`
     <h2>Fund the room where it is decided.</h2>
-    <p class="lede">Vital City is built on one conviction: tough urban problems have pragmatic solutions, and the gap between the two is evidence put in the right hands. A gift here does not disappear into overhead — it buys a specific piece of that machine.</p>
+    <p class="lede">Vital City is built on one conviction: tough urban problems have pragmatic solutions, and the gap between the two is evidence put in the right hands. A gift here buys a specific piece of that machine.</p>
     <ul class="bullets">
       <li><b>More original analysis.</b> The data work is what gets cited — ${esc(String((FF.press||{}).total||""))} times and counting — and it is the most expensive thing we do.</li>
       <li><b>More convening.</b> The people who decide and the people with the evidence${(FF.senior&&FF.senior.count)?` &mdash; starting with the ${esc(String(FF.senior.count))} senior contributors &mdash;`:","} in one room, on the record.</li>
       <li><b>More reach into City Hall.</b> The readers are already there; the work is getting the right piece in front of them at the right moment.</li>
       <li><b>Capacity to answer fast.</b> The permitting fixes ran days before City Hall's own report. That speed took standing capacity.</li>
-    </ul>`});
+    </ul>
+    ${FF.oneliner?`<p class="pull">${esc(FF.oneliner)}</p>`:""}`});
 
   S.push({eyebrow:"Sources",html:`
     <h2>Every number in this deck, and where it comes from.</h2>
     <div class="src">
       <p><b>Every figure is computed from a primary system; none is typed in by hand.</b> Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed <b>${esc(asof)}</b>. Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News search across about 25 named outlets; giving from Donorbox; the catalogue from the Ghost publishing platform; the senior-contributor roster from vitalcitynyc.org/contributors; audience composition from the Vital City contact database, which fuses subscribers, contributors and contacts.</p>
       <p><b>Caveats that travel with these numbers.</b> Giving is Donorbox only. The 2025 signup surge is bot-inflated; 2024 is the volume baseline. Open rates are inflated industry-wide by Apple Mail, which is why click-to-open leads. Press counts are floors, since only those outlets are watched.</p>
-      <p><b>Impact claims</b> are Vital City's own accounting, each carrying its source links on the impact slide. The Mamdani conversation took place while he was a candidate.</p>
+      <p><b>Impact claims</b> are Vital City's own accounting, each carrying its source links on the impact slide. The Mamdani conversation took place while he was a candidate. Quotations are as delivered publicly or in writing.</p>
       <p><b>This deck was assembled with AI assistance.</b> Every figure comes from a primary Vital City system; verify any figure before it goes to a funder.</p>
     </div>`});
 

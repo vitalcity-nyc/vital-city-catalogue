@@ -545,6 +545,27 @@ def main():
     if half >= 4:
         a = st.mean([t["visitors"] for t in ts[:half]]); b = st.mean([t["visitors"] for t in ts[half:]])
         tgrow = round((b - a) / a * 100)
+    # Year-to-date reach for the one-pager: GA4 unique visitors this calendar
+    # year, and visits over the same weeks of the prior year from the weekly
+    # series (visits, not visitors, so the comparison is labelled as visits).
+    ga4 = growth.get("ga4") or {}
+    _yrs = {str(r.get("year")): r for r in ((ga4.get("by_year") or {}).get("years") or [])}
+    ytd_users = (_yrs.get(str(TODAY.year)) or {}).get("users")
+    _tw = ga4.get("traffic_weekly") or []
+    def _ytd_visits(y):
+        cut = f"{y}-{TODAY.month:02d}-{TODAY.day:02d}"
+        return sum(w.get("visits") or 0 for w in _tw if (w.get("wk") or "")[:4] == str(y) and w.get("wk") <= cut)
+    _v_now, _v_prev = _ytd_visits(TODAY.year), _ytd_visits(TODAY.year - 1)
+    ytd_visits_pct = round((_v_now - _v_prev) / _v_prev * 100) if _v_prev >= 1000 and _v_now else None
+    _sc = ((growth.get("search_console") or {}).get("windows") or {}).get("28") or {}
+    _sct = _sc.get("totals") or {}
+    _top26 = ((ga4.get("top_pages_by_year") or {}).get(str(TODAY.year)) or [{}])[0]
+    _mbx = {m.get("label"): m for m in ((growth.get("engagement_extras") or {}).get("mailbox_engagement") or [])}
+    _AP = {1:"Jan.",2:"Feb.",3:"March",4:"April",5:"May",6:"June",7:"July",8:"Aug.",9:"Sept.",10:"Oct.",11:"Nov.",12:"Dec."}
+    def _ym(v):
+        """2021-10 -> Oct. 2021 (AP month style); anything else passes through."""
+        try: y, m = str(v)[:7].split("-"); return f"{_AP[int(m)]} {y}"
+        except Exception: return v
     dom = lambda r: (r.get("e") or "").split("@")[-1].lower()
     gov = [r for r in sub if dom(r).endswith(".gov")]
     edu = [r for r in sub if dom(r).endswith(".edu")]
@@ -595,11 +616,16 @@ def main():
         {"n": f"{mc.get('total_subscribers', len(sub)):,}", "l": "Newsletter subscribers",
          "s": (f"up {yoy_pct}% year over year" if yoy_pct else "Mailchimp, current")},
         {"n": f"{len(press):,}", "l": "Press citations",
-         "s": f"in {sum(1 for v in p_out.values() if v)} outlets since {p_first}; an undercount, since only a fixed set of outlets is watched"},
+         "s": f"in {sum(1 for v in p_out.values() if v)} outlets since {_ym(p_first)}; an undercount, since only a fixed set of outlets is watched"},
         {"n": f"{p_out.get('nytimes.com', 0)}", "l": "New York Times citations",
          "s": "no outlet cites Vital City more often"},
+      ] + ([{"n": f"{ytd_users:,}", "l": f"Visitors so far in {TODAY.year}",
+             "s": (f"visits up {ytd_visits_pct}% on the same weeks of {TODAY.year-1}" if ytd_visits_pct is not None
+                   else "unique visitors, Google Analytics")}] if ytd_users else []) + [
         {"n": f"{gt.get('visitors_30d') or 0:,}", "l": "Site visitors, last 30 days",
          "s": (f"weekly visitors up {tgrow}% across {TODAY.year}" if tgrow else "Ghost analytics")},
+      ] + ([{"n": f"{_sct['impressions']:,}", "l": "Times shown in Google results, last 28 days",
+             "s": f"{_sct.get('clicks') or 0:,} clicks through to the site"}] if _sct.get("impressions") else []) + [
         {"n": f"{len(gov)+len(edu):,}", "l": "Government + university subscribers",
          "s": f"{sum(1 for r in gov if 'nyc.gov' in dom(r)):,} on nyc.gov — City Hall, the courts, both DAs"},
         {"n": f"{len(cat):,}", "l": "Pieces published",
@@ -607,17 +633,21 @@ def main():
                if _roster_n else f"by {len(authors):,} contributors since 2021")},
       ],
       "receipts": [
-        {"head": "Zohran Mamdani", "claim": "As a candidate, sat with Vital City for an hour on public safety",
-         "note": "after calling himself 'quite taken' by the annual crime analysis — he is now the mayor",
+        {"head": "Zohran Mamdani", "claim": "As a candidate, called himself 'quite taken' by the annual crime analysis, then sat with Vital City for an hour on public safety. He is now the mayor",
+         "note": "",
          "links": [{"t":"the interview","u":"https://www.vitalcitynyc.org/zohran-mamdani-talks-public-safety/"},
                    {"t":"'quite taken' (NY Editorial Board)","u":"https://nyeditorialboard.substack.com/p/zohran-mamdani-interview-transcript"},
                    {"t":"the crime analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"}]},
+        {"head": "City Hall's safety chief", "claim": "The first deputy mayor for community safety is a Vital City contributor who previewed her office's approach in its pages",
+         "note": "Renita Francois, December 2025",
+         "links": [{"t":"the essay","u":"https://www.vitalcitynyc.org/nstat-should-be-key-to-mamdani-public-safety-plan/"},
+                   {"t":"the interview","u":"https://www.vitalcitynyc.org/renita-francois-interview-neighborhood-safety/"}]},
         {"head": "Rikers Island", "claim": "Made the case for a federal receiver; a judge has since appointed one", "note": "",
          "links": [{"t":"the case","u":"https://www.vitalcitynyc.org/the-rikers-receivership-risk-and-opportunity/"},
                    {"t":"the order (THE CITY)","u":"https://www.thecity.nyc/2025/05/13/federal-judge-rikers-oversight-remediation-manager/"},
                    {"t":"the receiver's powers (Queens Eagle)","u":"https://queenseagle.com/all/2025/12/22/judge-details-sweeping-powers-of-receiver-set-to-run-rikers"}]},
-        {"head": "Subway safety", "claim": "Recommendations drove New York Times coverage",
-         "note": "and were adopted in part by the governor and the MTA",
+        {"head": "Subway safety", "claim": "Recommendations drove New York Times coverage and were adopted in part by the governor and the MTA",
+         "note": "",
          "links": [{"t":"the recommendations","u":"https://www.vitalcitynyc.org/what-to-do-about-subway-safety-nyc-policy-recommendations/"},
                    {"t":"NYT, March 2025","u":"https://www.nytimes.com/2025/03/14/nyregion/subway-crime-nyc.html"},
                    {"t":"NYT, September 2025","u":"https://www.nytimes.com/2025/09/10/nyregion/nyc-subway-hochul-white-house.html"},
@@ -628,7 +658,33 @@ def main():
          "note": f"{p_out.get('gothamist.com',0)} Gothamist and {p_out.get('politico.com',0)} Politico citations tracked",
          "links": [{"t":"the annual analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"},
                    {"t":"why the numbers change","u":"https://www.vitalcitynyc.org/real-crime-numbers-nyc-nypd/"}]},
+        {"head": "Housing", "claim": "The housing issue won the Citizens Housing and Planning Council's Insight Award",
+         "note": "for helping guide a conversation in which progressives, liberals, independents and conservatives increasingly agree the city must build",
+         "links": [{"t":"the issue","u":"https://www.vitalcitynyc.org/build-big-without-delay/"}]},
+        {"head": "Observation decks", "claim": "Months after Vital City argued for free public observation decks, the administration created one",
+         "note": "Moses Gates, January 2026",
+         "links": [{"t":"the piece","u":"https://www.vitalcitynyc.org/free-observation-decks-new-york/"}]},
       ],
+      # Borrowed from the editable donor-deck text (Sept 2026). Quotations are
+      # as delivered publicly or in writing, per Vital City's influence record.
+      "testimonials": [
+        {"q": "The crime nerds' New Yorker.", "who": "Thomas Abt", "role": "founding director, Violence Reduction Center"},
+        {"q": "By far the best journal for anyone interested in urban issues.", "who": "Peter Moskos", "role": "criminologist, John Jay College"},
+        {"q": "It gives space to sharp, well-articulated arguments backed up with data that can even move a hack like me.", "who": "Patrick Gaspard", "role": "adviser to the mayor, December 2025"},
+      ],
+      "cited_by_notable": ["The New York Times", "The Atlantic", "The Guardian", "City Journal", "Reason", "Mother Jones", "Last Week Tonight"],
+      "republished_by": ["the New York Daily News", "Crain's New York Business", "The City Reporter", "Next City"],
+      "oneliner": "Cheap to run, hard to replace and read by the people who make the decisions that shape every part of New York City.",
+      "festival": "The first annual Vital City New York Ideas Festival is planned for January 2027.",
+      # People in Vital City's orbit by role, counted live from the contact
+      # database (named people, never estimates).
+      "roles": [{"label": lab, "n": sum(1 for r in people if t in (r.get("types") or []))}
+                for t, lab in [("VC contributor", "Contributors"), ("journalist", "Journalists"),
+                               ("current nyc.gov", "Current city government"), ("nonprofit leadership", "Nonprofit leadership"),
+                               ("academic", "Academics"), ("foundation leadership", "Foundation leadership"),
+                               ("state gov", "State government"), ("judge", "Judges")]],
+      "power_readers": (lambda pr: {"count": pr.get("count"), "pct": pr.get("as_pct_of_list"), "open": pr.get("avg_open_pct")}
+                        if pr.get("count") else None)((growth.get("engagement_extras") or {}).get("power_readers") or {}),
       # The senior-contributor roster from the site (senior_contributors.py).
       "senior": {"count": _roster_n, "as_of": _roster.get("as_of", ""),
                  "names": sorted(_roster_names, key=lambda n: n.split()[-1]),
@@ -650,7 +706,7 @@ def main():
         {"name": "What To Do (and Not To Do)", "desc": "Policy playbooks that separate what works from what merely sounds tough — subway safety, people in crisis.",
          "count": 2, "links": [{"t":"subway safety","u":"https://www.vitalcitynyc.org/what-to-do-about-subway-safety-nyc-policy-recommendations/"},
                                {"t":"people in crisis","u":"https://www.vitalcitynyc.org/what-to-do-about-people-in-crisis-on-streets-and-subways/"}]},
-        {"name": "Rubber Meets Road", "desc": "An eight-piece issue on execution — how the city actually gets things done, with an interactive map of where darkness and crime overlap.",
+        {"name": "Rubber Meets Road", "desc": "An eight-piece issue on execution — how the city gets things done, with an interactive map of where darkness and crime overlap.",
          "count": 8, "links": [{"t":"how to get it done","u":"https://www.vitalcitynyc.org/rubber-meets-road-lighting-policy-details/"},
                                {"t":"the darkness-and-crime map","u":"https://www.vitalcitynyc.org/rubber-meets-road-lighting-satellite-crime-map/"}]},
       ],
@@ -665,7 +721,17 @@ def main():
         {"label": "Nonprofit addresses", "value": f"{len(org):,}", "note": "Vera, Osborne, Arnold Ventures, CBC, Court Innovation among the densest"},
         {"label": "Staff at grantmaking foundations", "value": "Arnold Ventures, Bloomberg Philanthropies, Robin Hood, Guggenheim, Revson, Tiger, Clark, MacArthur", "note": "counts and names in the warm-doors table"},
         {"label": "Wikipedia-notable subscribers", "value": f"{sum(1 for r in sub if r.get('wiki')):,}", "note": "conservative floor — matched, not estimated"},
-      ],
+      ] + ([{"label": "Government readers open", "value": f"{_mbx['Government'].get('avg_open_pct')}% of sends",
+             "note": (f"{_mbx['Government'].get('subs'):,} government addresses" +
+                      (f"; academic addresses {_mbx['Academic'].get('avg_open_pct')}%" if _mbx.get("Academic") else ""))}]
+            if _mbx.get("Government") and _mbx["Government"].get("avg_open_pct") else []),
+      # The most-read piece of the current year, for the one-pager.
+      "mostread": ({"title": _top26.get("title"), "url": "https://www.vitalcitynyc.org" + (_top26.get("path") or ""),
+                    "visitors": _top26.get("visitors"), "year": TODAY.year} if _top26.get("visitors") else None),
+      # One sourced line for a pull quote. Wording matches the impact receipt.
+      "quote": {"text": "As a candidate, Zohran Mamdani called himself 'quite taken' by Vital City's annual crime analysis, then sat with Vital City for an hour on public safety. He is now the mayor.",
+                "source": "The New York Editorial Board, Feb. 2025; Columbia Journalism School forum, Sept. 2025",
+                "url": "https://nyeditorialboard.substack.com/p/zohran-mamdani-interview-transcript"},
       "seniors": (lambda au: {
           "people": [
             {"n": disp,
