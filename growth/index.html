@@ -4126,6 +4126,13 @@ function renderTraffic(data){
 
   // % change vs the prior 30 days. "new" when there was no prior-period traffic.
   const pctBadge = (cur, prev) => {
+    // Small-base guard: a percentage on a prior figure under 100 is noise
+    // (Reddit 200 -> 2,838 visits read as +1,333%). Give the direction and
+    // the prior figure instead, and say why there is no rate.
+    if(prev > 0 && prev < 100){
+      const arrow = cur > prev ? "▲" : cur < prev ? "▼" : "—";
+      return `<span style="color:var(--vc-charcoal);font-weight:700;font-size:11px" title="Prior 30 days had ${fmtN(prev)}: too small a base for a percentage">${arrow} from ${fmtN(prev)} · small base</span>`;
+    }
     if(prev > 0){
       const d = Math.round((cur - prev) / prev * 100);
       const col = d > 0 ? "#3b7d2f" : d < 0 ? "#b5604e" : "var(--vc-charcoal)";
@@ -4415,10 +4422,11 @@ function searchRows(rows){
 }
 // Direction of demand. A flat annual total cannot tell a search that spiked in
 // February and died from one growing every week.
-function trendCell(t){
-  if(t===null || t===undefined) return `<span style="color:var(--vc-cloud)">&mdash;</span>`;
-  if(t >= 25)  return `<span style="color:var(--vc-green);font-weight:800" title="Impressions up ${t}% in the second half of the year to date versus the first.">&#9650; ${t}%</span>`;
-  if(t <= -25) return `<span style="color:#c8102e;font-weight:800" title="Impressions down ${Math.abs(t)}% in the second half of the year to date versus the first.">&#9660; ${Math.abs(t)}%</span>`;
+function trendCell(t, base){
+  if(t===null || t===undefined) return `<span style="color:var(--vc-cloud)" title="Fewer than 100 impressions in the first half of the year to date, so no trend is called.">&mdash;</span>`;
+  const from = base ? ` Measured from ${fmtN(base)} impressions in the first half; the pipeline calls no trend under 100.` : "";
+  if(t >= 25)  return `<span style="color:var(--vc-green);font-weight:800" title="Impressions up ${t}% in the second half of the year to date versus the first.${from}">&#9650; ${t}%</span>`;
+  if(t <= -25) return `<span style="color:#c8102e;font-weight:800" title="Impressions down ${Math.abs(t)}% in the second half of the year to date versus the first.${from}">&#9660; ${Math.abs(t)}%</span>`;
   return `<span style="color:var(--vc-charcoal)" title="Roughly flat across the year to date (${t>=0?'+':''}${t}%).">flat</span>`;
 }
 function renderTopSearches(data){
@@ -4454,7 +4462,7 @@ function renderTopSearches(data){
     <td class="num">${r.ctr.toFixed(1)}%</td>
     <td class="num">${r.position.toFixed(1)}</td>
     <td class="num"${r.missed>=500?' style="font-weight:800"':''} title="Roughly how many extra clicks a page at position ${r.position.toFixed(1)} would typically earn (~${r.exp}% click-through) minus what this actually earns (${r.ctr.toFixed(1)}%). An estimate of the size of the gap, not a forecast.">${r.missed>=50?"~"+fmtN(r.missed):"&mdash;"}</td>
-    <td class="num">${trendCell(r.trend)}</td>
+    <td class="num">${trendCell(r.trend, r.trend_base)}</td>
     <td>${r.piece
         ? `<a href="${esc(r.piece.url)}" target="_blank" rel="noopener">${esc(r.piece.title)}</a>${r.piece.source==="title-match"?` <span class="tsSrc" title="Matched by comparing the search to piece titles — Google did not attribute this query to a page, so treat it as a guess.">guessed</span>`:``}`
         : `<span class="warnflag">nothing matched</span>`}</td>

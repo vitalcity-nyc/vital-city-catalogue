@@ -2334,7 +2334,7 @@ def pull_search_console():
         # Per-query direction: first half of the year to date vs second half.
         # Answers "is this search growing or fading", which a flat annual total
         # cannot. Sampled on the top queries only, to keep the request small.
-        trend = {}
+        trend, trend_base = {}, {}
         try:
             drows = query({"startDate": ytd_start, "endDate": end,
                            "dimensions": ["query", "date"], "rowLimit": 25000})
@@ -2349,9 +2349,10 @@ def pull_search_console():
                 half = len(pts) // 2
                 a = sum(v for _, v in pts[:half]) or 0
                 b = sum(v for _, v in pts[half:]) or 0
-                if a < 50:
+                if a < 100:
                     continue                      # tiny base makes the ratio noise
                 trend[q] = round((b - a) / a * 100)
+                trend_base[q] = a                 # so the page can say what the % is measured from
             log(f"  search console: trend direction for {len(trend):,} queries")
         except Exception as e:
             log(f"  search console: query+date pull failed ({e})")
@@ -2369,6 +2370,7 @@ def pull_search_console():
                               "ctr": round((r.get("ctr") or 0) * 100, 1),
                               "position": round(r.get("position") or 0, 1),
                               "trend": trend.get(q),
+                              "trend_base": trend_base.get(q),
                               "piece": attributed(q)})
             topic.sort(key=lambda x: -x["impressions"])
             topic_searches = topic[:40]
