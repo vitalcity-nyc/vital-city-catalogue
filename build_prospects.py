@@ -675,7 +675,6 @@ def main():
       "cited_by_notable": ["The New York Times", "The Atlantic", "The Guardian", "City Journal", "Reason", "Mother Jones", "Last Week Tonight"],
       "republished_by": ["the New York Daily News", "Crain's New York Business", "The City Reporter", "Next City"],
       "oneliner": "Cheap to run, hard to replace and read by the people who make the decisions that shape every part of New York City.",
-      "festival": "The first annual Vital City New York Ideas Festival is planned for January 2027.",
       # People in Vital City's orbit by role, counted live from the contact
       # database (named people, never estimates).
       "roles": [{"label": lab, "n": sum(1 for r in people if t in (r.get("types") or []))}
