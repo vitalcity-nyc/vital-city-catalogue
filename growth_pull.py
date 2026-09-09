@@ -2946,6 +2946,18 @@ def pull_ghost():
     out["count_7"]  = _cnt(7)
     out["count_30"] = _cnt(30)
     out["count_90"] = len(out["posts"])
+    # Every publication date, from the catalogue. The posts list above is a
+    # 90-day feed, which is fine for the recent-posts card but useless as a
+    # comparison base: a 90-day window compared against "the 90 days before"
+    # found 2 posts there and reported +2950%. Dates alone are ~11 KB for the
+    # whole archive, so the pulse tiles can count any window and build a real
+    # trailing-year norm.
+    try:
+        cat = json.loads((ROOT / "data" / "catalogue.json").read_text())
+        out["pub_dates"] = sorted(str(x.get("published_date") or "")[:10]
+                                  for x in cat if x.get("published_date"))
+    except Exception as e:
+        log(f"  ghost: could not read catalogue for pub_dates ({e})")
     return out
 
 

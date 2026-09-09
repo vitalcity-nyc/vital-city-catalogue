@@ -5140,6 +5140,11 @@ function renderWeekPulse(data, span){
     const ds=(rows||[]).map(r=>String(r[key]||"").slice(0,10)).filter(Boolean).sort();
     return ds.length?ds[0]:null;
   };
+  // Articles: count from the full publication history when the payload
+  // carries it (ghost.pub_dates), falling back to the 90-day posts feed.
+  const pubRows = (gh.pub_dates && gh.pub_dates.length)
+    ? gh.pub_dates.map(d=>({published:d}))
+    : (gh.posts||[]);
   const win=(a,b)=>({
     signups:  sumField(act,"d","subs",a,b),
     unsubs:   sumField(act,"d","unsubs",a,b),
@@ -5147,7 +5152,7 @@ function renderWeekPulse(data, span){
     sends:    countWhere(mc.campaigns,"sent",a,b,c=>c.sent),
     raised:   sumField(db.daily_series,"d","amt",a,b),
     gifts:    sumField(db.daily_series,"d","gifts",a,b),
-    articles: countWhere(gh.posts,"published",a,b,p=>p.published),
+    articles: countWhere(pubRows,"published",a,b,p=>p.published),
     visitors: (function(){
       const daily = firstOfSafe(gt.kpi_rows_30d,"date");
       if (daily && a >= daily) return sumField(gt.kpi_rows_30d,"date","visits",a,b);
@@ -5169,7 +5174,7 @@ function renderWeekPulse(data, span){
   const covers={
     signups:  firstOf(act,"d"),
     visitors: firstOf(gt.kpi_rows_30d,"date"),
-    articles: firstOf(gh.posts,"published"),
+    articles: firstOf(pubRows,"published"),
     money:    firstOf(db.daily_series,"d"),
   };
   // Visitors have a second, coarser source: weekly rows going back further.
@@ -5234,6 +5239,17 @@ function renderWeekPulse(data, span){
   };
   if(norms.signups&&norms.unsubs)
     norms.net={val:norms.signups.val-norms.unsubs.val, months:norms.signups.months};
+  // Articles get a norm only when the full history is present; the 90-day
+  // feed cannot support one.
+  if(gh.pub_dates && gh.pub_dates.length){
+    const hist=gh.pub_dates.filter(d=>d<curStart).slice(-2000);
+    const yearAgo=shift(curStart,-365);
+    const inYear=hist.filter(d=>d>=yearAgo);
+    const first=hist.length?hist[0]:null;
+    const spanDays = first ? Math.min(365,(new Date(curStart)-new Date(first))/86400000) : 0;
+    if(spanDays>=90 && inYear.length>=10)
+      norms.articles={val:inYear.length/spanDays*N, months:Math.round(spanDays/30)};
+  }
   if(norms.signups&&norms.visitors&&norms.visitors.val>0)
     norms.spv={val:norms.signups.val/norms.visitors.val*1000, months:Math.min(norms.signups.months,norms.visitors.months)};
 
@@ -5302,6 +5318,10 @@ function renderWeekPulse(data, span){
     // a stub of 2025 that happened to contain the year-end campaign, and
     // reported an 82% collapse. A partial prior window is not a comparison.
     if(!nm7 && (t.k==="raised"||t.k==="gifts") && covers.money && prevStart<covers.money) priorEmpty=true;
+    // Articles had the same trap from the 90-day posts feed: the comparison
+    // window fell almost entirely before the feed began, so "the 90 days
+    // before" held 2 posts and the tile read +2950%.
+    if(!nm7 && t.k==="articles" && covers.articles && prevStart<covers.articles) priorEmpty=true;
     if(priorEmpty){
       const numHtml0 = t.fmt(cur[t.k]||0);
       return `<div class="perfcell${t.hero?' hero':''}"><div class="pl">${esc(t.lbl)}</div><div class="pn">${numHtml0}</div>`+
