@@ -64,7 +64,7 @@
   .tab.on{background:var(--vc-black);border-color:var(--vc-black);color:#fff}
   .why{font-size:10.5px;color:var(--vc-charcoal)}
   .vgrid{flex-basis:100%;margin-top:6px;font-size:10.5px}
-  .vhead,.vrow{display:grid;grid-template-columns:150px 70px 70px 120px 70px;gap:6px;align-items:center}
+  .vhead,.vrow{display:grid;grid-template-columns:150px 70px 70px 120px 70px 80px;gap:6px;align-items:center}
   .vhead{font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:var(--vc-charcoal);padding-bottom:3px;border-bottom:1px solid var(--vc-cloud);margin-bottom:3px}
   .vrow{padding:2px 0}
   .vrow .exp{float:none;text-decoration:none;text-align:center;padding:3px 6px}
@@ -301,7 +301,7 @@ function boot(d){
       <a href="onepager.html?print=1" target="_blank" rel="noopener" class="deckbtn onebtn" title="A single Letter page: the numbers, the receipts, the press and the senior contributors, from the same nightly data. Opens with the print-to-PDF dialog.">&#9643;&nbsp; Download / print the one-pager</a>
       <div class="deckwhy">Opens the presentation deck and its print-to-PDF dialog in one click (prints landscape, one slide per page). The deck is generated from the same nightly data as this page &mdash; <b>whatever you save is current as of the last rebuild</b>, never a stale file. Each version below comes in every format.</div>
       <div class="vgrid">
-        <div class="vhead"><span>Version</span><span>Open</span><span>Print / PDF</span><span>Editable PowerPoint</span><span>Email</span></div>
+        <div class="vhead"><span>Version</span><span>Open</span><span>Print / PDF</span><span>Editable PowerPoint</span><span>Email</span><span>One-pager</span></div>
         ${[
           ["","General","The full deck, unweighted."],
           ["abundance","Abundance","Same deck, re-weighted: Just Fix It and permitting lead, housing/state-capacity authors carded, six selected pieces on building and governing."],
@@ -311,7 +311,8 @@ function boot(d){
           <a class="exp" href="deck.html${b}" target="_blank" rel="noopener">view</a>
           <a class="exp" href="deck.html${q}print=1" target="_blank" rel="noopener" title="Opens the deck and its print-to-PDF dialog (landscape, one slide per page).">print</a>
           <a class="exp" href="deck.html${q}pptx=1" target="_blank" rel="noopener" title="Downloads an editable .pptx built from the same live data — every number and sentence is a text box you can change."><b>PowerPoint</b></a>
-          <a class="exp" href="deck.html${q}email=1" target="_blank" rel="noopener" title="Downloads a self-contained, passphrase-free copy and opens an email draft to attach it to.">email</a></div>`}).join("")}
+          <a class="exp" href="deck.html${q}email=1" target="_blank" rel="noopener" title="Downloads a self-contained, passphrase-free copy and opens an email draft to attach it to.">email</a>
+          <a class="exp" href="onepager.html${q}print=1" target="_blank" rel="noopener" title="The same audience weighting on a single Letter page: receipts reordered, that bench's senior contributors named, three selected pieces.">one-pager</a></div>`}).join("")}
       </div>
     </div>
     <div id="factsBody"></div>

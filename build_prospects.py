@@ -257,6 +257,45 @@ FEATURED = {"Edward Glaeser","Vishaan Chakrabarti","Jelani Cobb","Richard Buery 
 # Six of the featured ten, in the order they read best in a single sentence,
 # with a tag short enough for a one-pager. Each tag is a plain restatement of
 # the author's own bio on vitalcitynyc.org (nothing here is inferred).
+# A short tag for every senior contributor, restating the bio on
+# vitalcitynyc.org/contributors. Used by the one-pager's audience variants.
+SHORT_TAGS = {
+  "Alex Armlovich": "Niskanen Center housing analyst, Rent Guidelines Board member",
+  "Neil Barsky": "former Wall Street Journal reporter, director of 'Koch'",
+  "Richard Buery Jr.": "CEO of Robin Hood",
+  "Vishaan Chakrabarti": "architect and urbanist",
+  "Aaron Chalfin": "Penn criminologist",
+  "Jelani Cobb": "dean of the Columbia Journalism School",
+  "Brandon del Pozo": "Brown University, former Burlington police chief",
+  "John Della Volpe": "Harvard Kennedy School polling director",
+  "Jennifer Doleac": "Arnold Ventures, criminal justice",
+  "Cara Eckholm": "Renaissance Philanthropy fellow, host of Borrow & Steal",
+  "Ingrid Gould Ellen": "NYU Furman Center",
+  "Barry Friedman": "NYU Law, Policing Project founder",
+  "Edward Glaeser": "Harvard economist",
+  "Sherry Glied": "NYU Wagner, its dean from 2013 to 2025",
+  "Gloria Gong": "Harvard Government Performance Lab",
+  "Henry Grabar": "author of 'Paved Paradise'",
+  "Arpit Gupta": "NYU Stern economist",
+  "Anna Harvey": "president of the Social Science Research Council",
+  "Nancy La Vigne": "dean of the Rutgers School of Criminal Justice",
+  "Errol Louis": "NY1 anchor",
+  "Jens Ludwig": "director of the University of Chicago Crime Lab",
+  "John MacDonald": "Penn criminologist",
+  "Tracey L. Meares": "Yale Law, Justice Collaboratory founder",
+  "Peter Moskos": "John Jay College criminologist",
+  "Alex R. Piquero": "University of Miami, former head of the Bureau of Justice Statistics",
+  "Kerri M. Raissian": "UConn, gun-injury prevention",
+  "John K. Roman": "NORC at the University of Chicago",
+  "Julie Sandorf": "president of the Revson Foundation",
+  "David Schleicher": "Yale Law professor",
+  "Harry Siegel": "The City Reporter, FAQ NYC podcast",
+  "Martha Stark": "NYU Wagner, former city finance commissioner",
+  "Carl Weisbrod": "former chair of the City Planning Commission",
+  "Claire Weisz": "founding partner of WXY",
+  "Bruce Western": "Columbia sociologist, Justice Lab director",
+  "Morgan C. Williams Jr.": "Barnard economist",
+}
 SPOTLIGHT = [
   ("Edward Glaeser", "Harvard economist"),
   ("Jens Ludwig", "director of the University of Chicago Crime Lab"),
@@ -690,6 +729,7 @@ def main():
                  "people": _roster.get("people", []),
                  # a handful to name in a sentence; only people still on the live roster
                  "spotlight": [{"n": n, "tag": t} for n, t in SPOTLIGHT if n in _roster_names],
+                 "tags": {n: t for n, t in SHORT_TAGS.items() if n in _roster_names},
                  "pool": len(authors)},
       "press": {"total": len(press), "outlets": sum(1 for v in p_out.values() if v), "since": p_first,
                 "y2026": sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))),

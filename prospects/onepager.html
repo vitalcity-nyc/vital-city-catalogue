@@ -104,7 +104,7 @@
 <div id="app" style="display:none">
   <div class="bar">
     <button class="primary" id="print">Print / save as PDF</button>
-    <a href="deck.html" target="_blank" rel="noopener">The deck</a>
+    <a id="decklink" href="deck.html" target="_blank" rel="noopener">The deck</a>
     <a href="index.html">Back</a>
     <span>One US Letter page. Every number is computed on the nightly rebuild; nothing is hand-typed.</span>
   </div>
@@ -128,11 +128,16 @@ async function decryptBlob(pass,blob){
   return JSON.parse(new TextDecoder().decode(pt));
 }
 
+const VKEY=(new URLSearchParams(location.search).get("v")||"").toLowerCase();
 function build(d){
   const FF=d.funder_facts||{};
+  const V=(d.variants||{})[VKEY]||null;
+  if(V){ document.title="Vital City — at a glance · "+VKEY; const dl=$("#decklink"); if(dl) dl.href="deck.html?v="+encodeURIComponent(VKEY); }
   const asof=FF.asof||String(d.generated_at||"").slice(0,10);
   const tiles=(FF.tiles||[]).slice(0,8).map(t=>`<div class="tile"><div class="n">${esc(t.n)}</div><div class="l">${esc(t.l)}</div><div class="s">${esc(t.s)}</div></div>`).join("");
-  const receipts=(FF.receipts||[]).slice(0,5).map(r=>`<div class="rcp"><div class="rh">${esc(r.head)}</div><div>${esc(r.claim)}${r.note?` <span class="rn">— ${esc(r.note)}</span>`:""}</div></div>`).join("");
+  let rlist=(FF.receipts||[]).slice();
+  if(V&&V.receipts) rlist.sort((a,b)=>{const i=V.receipts.indexOf(a.head),j=V.receipts.indexOf(b.head);return (i<0?99:i)-(j<0?99:j);});
+  const receipts=rlist.slice(0,5).map(r=>`<div class="rcp"><div class="rh">${esc(r.head)}</div><div>${esc(r.claim)}${r.note?` <span class="rn">— ${esc(r.note)}</span>`:""}</div></div>`).join("");
   const quotes=(FF.testimonials||[]).filter(t=>t.q.length<90).slice(0,2).map(t=>`<div class="q"><div class="qq">“${esc(t.q)}”</div><div class="qw">${esc(t.who)}${t.role?`, ${esc(t.role)}`:""}</div></div>`).join("");
   const P=FF.press||{};
   const chips=(P.top||[]).slice(0,5).map(o=>`<span class="chip">${esc(o.outlet)} <b>${esc(String(o.n))}</b></span>`).join("");
@@ -140,6 +145,9 @@ function build(d){
   const also=(FF.cited_by_notable||[]).filter(o=>!(P.top||[]).some(t=>t.outlet===o));
   const joinAnd=a=>a.length>1?a.slice(0,-1).join(", ")+" and "+a.slice(-1)[0]:(a[0]||"");
   const alsoTxt=(also.length||(FF.republished_by||[]).length)?`<p>${also.length?`Also cited by ${also.map(esc).join(", ")}.`:""}${(FF.republished_by||[]).length?` Essays are republished by ${joinAnd((FF.republished_by||[]).map(esc))}.`:""}</p>`:"";
+  const spots=V?(V.spots||[]).slice(0,3):[];
+  const clip=(t,n)=>{t=String(t||"");if(t.length<=n)return t;const c=t.slice(0,n);return c.slice(0,c.lastIndexOf(" ")>n-16?c.lastIndexOf(" "):n)+"…"};
+  const work=spots.length?`<div class="block"><div class="sec">${esc(V.spot_title||"Selected work")}</div>${spots.map(x=>`<div class="cite">${esc(clip(x.t,62))}${x.a?` <span style="color:var(--vc-charcoal)">— ${esc(x.a)}</span>`:""}</div>`).join("")}</div>`:"";
   const M=FF.mostread;
   const most=M&&M.visitors?`<div class="most"><b>Most read in ${esc(String(M.year))}:</b> “${esc(M.title)}” — ${esc(M.visitors.toLocaleString("en-US"))} readers.</div>`:"";
   const ROLE={"Journalists":"journalists","Current city government":"in city government","Nonprofit leadership":"nonprofit leaders","Academics":"academics","Foundation leadership":"foundation leaders","State government":"in state government","Judges":"judges"};
@@ -150,7 +158,9 @@ function build(d){
   const aud=audRows.map(r=>{const m=AUD[r.label]||[r.label,null];return `<div><b>${esc(m[0])}:</b> ${esc(r.value)} <span style="color:var(--vc-charcoal)">— ${esc(m[1]||r.note)}</span></div>`}).join("")
     +(PR&&PR.count?`<div><b>Power readers:</b> ${esc(PR.count.toLocaleString("en-US"))} <span style="color:var(--vc-charcoal)">— one in ${Math.round(100/(PR.pct||10))} subscribers, opening ${esc(String(Math.round(PR.open||0)))}% of everything sent; disproportionately government, academic and press</span></div>`:"");
   const S=FF.senior||{};
-  const spot=(S.spotlight||[]).slice(0,6);
+  const spot=(V&&V.authors&&S.tags)
+    ? V.authors.filter(n=>S.tags[n]).slice(0,6).map(n=>({n,tag:S.tags[n]}))
+    : (S.spotlight||[]).slice(0,6);
   const spotParts=spot.map(x=>`<b>${esc(x.n)}</b> (${esc(x.tag)})`);
   const spotTxt=joinAnd(spotParts);
   const senior=(S.count? `<div class="block"><div class="sec">Who writes it</div>
@@ -162,7 +172,7 @@ function build(d){
         <h1>The evidence New York runs on.</h1>
         <div class="dek">${FF.oneliner?esc(FF.oneliner)+" ":""}An independent policy journal, a data and research shop and a convener, all in one.</div>
       </div>
-      <div class="asof">vitalcitynyc.org<br>Computed from live data<br>as of ${esc(asof)}</div>
+      <div class="asof">${V?`<b style="color:var(--vc-black)">${esc(V.label)}</b><br>`:""}vitalcitynyc.org<br>Computed from live data as of ${esc(asof)}</div>
     </div>
     <div class="tiles">${tiles}</div>
     <div class="cols">
@@ -179,8 +189,9 @@ function build(d){
         <p><b>${esc(String(P.total||0))}</b> citations in ${esc(String(P.outlets||0))} outlets since ${esc(ym(P.since))}, an undercount, since only a fixed set of outlets is watched.</p>
         <div class="chips">${chips}</div>
         ${alsoTxt}
-        ${cites}
-        ${most}</div>
+        ${V?"":cites}
+        ${V?"":most}</div>
+        ${work}
       </div>
     </div>
     ${quotes?`<div class="quotes">${quotes}</div>`:""}
