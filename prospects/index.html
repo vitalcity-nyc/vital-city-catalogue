@@ -37,6 +37,8 @@
   .jump a{color:var(--vc-charcoal);text-decoration:none;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
   .jump a:hover{color:var(--vc-cerulean)}
   .wrap{max-width:1080px;margin:0 auto;padding:22px 30px 70px}
+  .deckbtn.onebtn{background:var(--vc-white);color:var(--vc-black);border:1.5px solid var(--vc-black);margin-left:10px}
+  .deckbtn.onebtn:hover{background:var(--vc-paper2)}
   .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin-bottom:24px}
   .kpi{background:var(--vc-white);padding:13px 14px}
   .kpi .lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;display:flex;align-items:flex-end;min-height:24px}
@@ -296,6 +298,7 @@ function boot(d){
     <div class="hint">Reach, influence and growth &mdash; every number computed fresh from the live data on each nightly rebuild (as of ${esc((d.funder_facts||{}).asof||d.generated_at)}), never hand-typed. Copy a section or the whole thing.</div>
     <div class="deckcta">
       <a href="deck.html?print=1" target="_blank" rel="noopener" class="deckbtn">&#8681;&nbsp; Download / print the current deck</a>
+      <a href="onepager.html?print=1" target="_blank" rel="noopener" class="deckbtn onebtn" title="A single Letter page: the numbers, the receipts, the press and the senior contributors, from the same nightly data. Opens with the print-to-PDF dialog.">&#9643;&nbsp; Download / print the one-pager</a>
       <div class="deckwhy">Opens the presentation deck and its print-to-PDF dialog in one click (prints landscape, one slide per page). The deck is generated from the same nightly data as this page &mdash; <b>whatever you save is current as of the last rebuild</b>, never a stale file. Each version below comes in every format.</div>
       <div class="vgrid">
         <div class="vhead"><span>Version</span><span>Open</span><span>Print / PDF</span><span>Editable PowerPoint</span><span>Email</span></div>
@@ -347,6 +350,7 @@ function boot(d){
     (FF.receipts||[]).forEach(r=>L.push(`- **${r.head}:** ${r.claim}${r.note?` — ${r.note}`:""}${(r.links||[]).length?" ("+r.links.map(l=>`[${l.t}](${l.u})`).join(", ")+")":""}`));
     if(FF.press){L.push("","## In the press",`${FF.press.total} citations across ${FF.press.outlets} tracked outlets since ${FF.press.since}: `+(FF.press.top||[]).map(o=>`${o.outlet} (${o.n})`).join(", ")+".");
       (FF.press.samples||[]).forEach(x=>L.push(`- ${x.outlet}, ${x.date}: [${x.title}](${x.url})`));}
+    if(FF.senior&&FF.senior.count){L.push("","## Senior contributors",`${FF.senior.count} on the roster (as of ${FF.senior.as_of||""}): `+(FF.senior.names||[]).join(", ")+".");}
     L.push("","## Policy products");
     (FF.products||[]).forEach(p=>L.push(`- **${p.name}** (${p.count} pieces): ${p.desc} `+(p.links||[]).map(l=>`[${l.t}](${l.u})`).join(", ")));
     L.push("","## Engagement vs industry");
@@ -369,6 +373,8 @@ function boot(d){
     <div style="font-size:12.5px">${esc(String((FF.press||{}).total||0))} citations across ${esc(String((FF.press||{}).outlets||0))} tracked outlets since ${esc((FF.press||{}).since||"")} — a floor, not a total (whitelist of ~25 outlets).</div>
     <div class="chips">${(((FF.press||{}).top)||[]).map(o=>`<span class="chip">${esc(o.outlet)} <b>${o.n}</b></span>`).join("")}</div>
     ${(((FF.press||{}).samples)||[]).map(x=>`<div class="cite"><span class="co">${esc(x.outlet)}</span><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a><span class="cd">${esc(x.date)}</span></div>`).join("")}
+    ${(FF.senior&&FF.senior.count)?`<div class="fitSec">Senior contributors</div>
+    <div style="font-size:12.5px;line-height:1.55"><b>${FF.senior.count}</b> senior contributors on the roster at <a href="https://www.vitalcitynyc.org/contributors/" target="_blank" rel="noopener">vitalcitynyc.org/contributors</a> (as of ${esc(FF.senior.as_of||"")}): ${(FF.senior.names||[]).map(esc).join(", ")}.</div>`:""}
     <div class="fitSec">Policy products</div>
     <div class="prodgrid">${(FF.products||[]).map(p=>`<div class="prod"><div class="pn">${esc(p.name)}</div><div class="pc">${p.count} pieces</div><div class="pd">${esc(p.desc)}</div><div class="pl">${(p.links||[]).map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div></div>`).join("")}</div>
     <div class="twocol" style="margin-top:16px">

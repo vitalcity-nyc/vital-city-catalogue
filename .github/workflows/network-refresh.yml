@@ -83,6 +83,11 @@ jobs:
       - name: Refresh article catalogue (live)
         run: python3 scrape.py
 
+      # The senior-contributor roster from the site. Exits non-zero if the page
+      # comes back without it, which keeps the last good data/senior_contributors.json.
+      - name: Pull the senior-contributor roster (live)
+        run: python3 senior_contributors.py || echo "WARNING: senior-contributor pull failed; keeping the last roster"
+
       # Recompute the catalogue-analysis aggregates (data/catalogue_analysis.json)
       # that the /catalogue-analysis charts read. Pure recomputation from the
       # freshly scraped catalogue.json + authors.json; non-fatal.

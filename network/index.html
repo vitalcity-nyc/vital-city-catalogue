@@ -1779,6 +1779,9 @@ const BUILTIN_VIEWS=[
   // their name should be. Active-30d is the same definition as the growth
   // dashboard's 'Active subscribers' tile, so the two tools count the same
   // people. Sorted most-engaged first so the top of the list is worth doing first.
+  {name:"✒ Senior contributors", builtin:"senior",
+   title:"Applying this view REPLACES all your current filters. The senior-contributor roster from vitalcitynyc.org/contributors, pulled nightly, as it sits in the contact database. Their type is 'Senior contributor', so they also appear under that facet in the Type/area menu.",
+   state:{want:{mem:0,don:0,auth:0}, cats:["Senior contributor"], engagement:"any", sortKey:"last", sortDir:1}},
   {name:"👤 Engaged, no confirmed name", builtin:"engaged_unnamed",
    title:"Applying this view REPLACES all your current filters. Newsletter subscribers who opened something in the last 30 days but whose name is a gray guess from their email handle, or blank. Sorted most-engaged first. These are the readers worth putting a real name to before anyone else -- about half the active-30-day pool at the last count. Narrow further with Donors or a type/area facet; widen to 'Active 1y' in the Engagement dropdown to catch people who read less often.",
    state:{want:{mem:1,don:0,auth:0}, cats:[], name:"needs_work", engagement:"mau", sortKey:"eng", sortDir:-1}},

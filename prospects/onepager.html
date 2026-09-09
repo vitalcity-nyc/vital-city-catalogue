@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Vital City — at a glance</title>
+<style>
+  @font-face{font-family:'GascogneTS';src:url('../growth/fonts/GascogneTS-Light.ttf') format('truetype');font-weight:300 900;font-style:normal;font-display:swap;}
+  :root{
+    --vc-paper:#f7f7f4; --vc-white:#fff; --vc-black:#050507; --vc-charcoal:#707175;
+    --vc-cloud:#dddddd; --vc-green:#57aa4a; --vc-orange:#ff7c53; --vc-cerulean:#217ebe;
+    --vc-paper2:#eeeeec; --vc-chartreuse:#d7df23;
+    --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --vc-serif:"GascogneTS",Georgia,serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--vc-paper2);color:var(--vc-black);font-family:var(--vc-sans);-webkit-font-smoothing:antialiased}
+  a{color:var(--vc-cerulean);text-decoration:none}
+
+  /* ---- gate (same behaviour as the deck) ---- */
+  .gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:500}
+  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:34px 38px;max-width:420px;box-shadow:7px 7px 0 rgba(5,5,7,.14)}
+  .gatebox h1{font-family:var(--vc-serif);font-weight:300;font-size:26px;margin:0 0 6px}
+  .gatebox p{font-size:13px;color:var(--vc-charcoal);margin:0 0 14px;line-height:1.5}
+  .gatebox input{width:100%;font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--vc-black);margin-bottom:10px}
+  .gatebox button{font:inherit;font-weight:900;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:11px 16px;background:var(--vc-black);color:#fff;border:0;cursor:pointer;width:100%}
+  .err{color:#c8102e;font-size:12.5px;min-height:18px;margin-top:8px}
+
+  /* ---- toolbar (screen only) ---- */
+  .bar{display:flex;gap:10px;align-items:center;justify-content:center;padding:14px;font-size:12.5px;color:var(--vc-charcoal)}
+  .bar button,.bar a{font:inherit;font-weight:800;font-size:12px;letter-spacing:.05em;text-transform:uppercase;padding:9px 14px;border:1.5px solid var(--vc-black);background:var(--vc-white);color:var(--vc-black);cursor:pointer;border-radius:3px}
+  .bar button.primary{background:var(--vc-black);color:#fff}
+
+  /* ---- the page: US Letter portrait ---- */
+  .sheet{width:8.5in;min-height:11in;margin:0 auto 24px;background:var(--vc-white);padding:.55in .6in .5in;box-shadow:0 4px 30px rgba(0,0,0,.12);display:flex;flex-direction:column;gap:14px}
+  .mast{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--vc-black);padding-bottom:10px}
+  .wordmark{font-weight:900;font-size:13px;letter-spacing:.22em;text-transform:uppercase}
+  .mast h1{font-family:var(--vc-serif);font-weight:300;font-size:34px;line-height:1;margin:6px 0 0;letter-spacing:-.01em}
+  .mast .tag{font-size:12px;color:var(--vc-charcoal);margin-top:6px}
+  .mast .asof{font-size:10.5px;color:var(--vc-charcoal);text-align:right;line-height:1.5}
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud)}
+  .tile{background:var(--vc-white);padding:10px 12px 9px}
+  .tile .n{font-weight:900;font-size:26px;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .tile .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;margin-top:5px}
+  .tile .s{font-size:10px;color:var(--vc-charcoal);margin-top:2px;line-height:1.35}
+  .cols{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;flex:1}
+  .sec{font-size:10px;text-transform:uppercase;letter-spacing:.11em;font-weight:900;border-bottom:1.5px solid var(--vc-black);padding-bottom:4px;margin:0 0 8px}
+  .rcp{display:grid;grid-template-columns:86px 1fr;gap:8px;padding:6px 0;border-bottom:1px solid var(--vc-cloud);font-size:11px;line-height:1.4}
+  .rcp:last-child{border-bottom:0}
+  .rcp .rh{font-weight:800}
+  .rcp .rn{color:var(--vc-charcoal)}
+  .press p{font-size:11px;line-height:1.45;margin:0 0 6px}
+  .chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+  .chip{font-size:10px;font-weight:700;padding:2px 7px;background:var(--vc-paper2);border-radius:2px;white-space:nowrap}
+  .chip b{font-weight:900}
+  .cite{font-size:10px;line-height:1.35;margin:3px 0;padding-left:8px;border-left:2px solid var(--vc-chartreuse)}
+  .cite .co{font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:9px;margin-right:5px}
+  .block{margin-top:12px}
+  .senior{font-size:10px;line-height:1.5;color:var(--vc-black)}
+  .senior b{font-weight:900}
+  .aud{font-size:10.5px;line-height:1.45}
+  .aud div{padding:3px 0;border-bottom:1px solid var(--vc-cloud)}
+  .aud div:last-child{border-bottom:0}
+  .aud b{font-weight:800}
+  .foot{border-top:1.5px solid var(--vc-black);padding-top:8px;font-size:9.5px;color:var(--vc-charcoal);line-height:1.5;display:flex;justify-content:space-between;gap:16px}
+  .foot b{color:var(--vc-black);font-weight:800}
+
+  @page{size:letter portrait;margin:0}
+  @media print{
+    html,body{background:#fff}
+    .bar,.gate{display:none !important}
+    .sheet{width:auto;min-height:0;margin:0;box-shadow:none;padding:.5in .6in .45in;page-break-after:avoid}
+    .cols,.tiles,.rcp{break-inside:avoid}
+    a{color:inherit}
+  }
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <div class="wordmark">Vital City</div>
+    <h1>At a glance</h1>
+    <p>The one-page case for support, built from the same nightly data as the deck. Enter the shared passphrase.</p>
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="current-password">
+    <button id="unlock">Unlock</button>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="bar">
+    <button class="primary" id="print">Print / save as PDF</button>
+    <a href="deck.html" target="_blank" rel="noopener">The deck</a>
+    <a href="index.html">Back</a>
+    <span>One US Letter page. Every number is computed on the nightly rebuild; nothing is hand-typed.</span>
+  </div>
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const PASSKEY="vc_net_pass", TTL=90*24*3600*1000;
+function savePass(p){try{localStorage.setItem(PASSKEY,JSON.stringify({pass:p,exp:Date.now()+TTL}))}catch{}}
+function loadPass(){try{const r=localStorage.getItem(PASSKEY);if(!r)return null;if(r[0]!=="{")return r;
+  const o=JSON.parse(r);if(o&&o.pass&&o.exp>Date.now())return o.pass;localStorage.removeItem(PASSKEY);return null}catch{return null}}
+function b64d(s){const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+async function decryptBlob(pass,blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64d(blob.salt),iterations:blob.iters,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64d(blob.iv)},key,b64d(blob.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+
+function build(d){
+  const FF=d.funder_facts||{};
+  const asof=FF.asof||String(d.generated_at||"").slice(0,10);
+  const tiles=(FF.tiles||[]).slice(0,6).map(t=>`<div class="tile"><div class="n">${esc(t.n)}</div><div class="l">${esc(t.l)}</div><div class="s">${esc(t.s)}</div></div>`).join("");
+  const receipts=(FF.receipts||[]).slice(0,5).map(r=>`<div class="rcp"><div class="rh">${esc(r.head)}</div><div>${esc(r.claim)}${r.note?` <span class="rn">— ${esc(r.note)}</span>`:""}</div></div>`).join("");
+  const P=FF.press||{};
+  const chips=(P.top||[]).slice(0,7).map(o=>`<span class="chip">${esc(o.outlet)} <b>${esc(String(o.n))}</b></span>`).join("");
+  const cites=(P.samples||[]).slice(0,3).map(x=>`<div class="cite"><span class="co">${esc(x.outlet)}</span>${esc(x.title)}</div>`).join("");
+  const S=FF.senior||{};
+  const senior=(S.count? `<div class="block"><div class="sec">Senior contributors</div>
+      <div class="senior"><b>${esc(String(S.count))}</b> on the roster: ${(S.names||[]).map(esc).join(", ")}.</div></div>` : "");
+  const aud=(FF.audience||[]).slice(0,3).map(r=>`<div><b>${esc(r.label)}:</b> ${esc(r.value)} <span style="color:var(--vc-charcoal)">— ${esc(r.note)}</span></div>`).join("");
+  $("#sheet").innerHTML=`
+    <div class="mast">
+      <div>
+        <div class="wordmark">Vital City</div>
+        <h1>At a glance</h1>
+        <div class="tag">Pragmatic ideas to solve cities' hardest problems &middot; vitalcitynyc.org</div>
+      </div>
+      <div class="asof">Computed from live data<br>as of ${esc(asof)}</div>
+    </div>
+    <div class="tiles">${tiles}</div>
+    <div class="cols">
+      <div>
+        <div class="sec">Policy impact — the receipts</div>
+        ${receipts}
+        ${aud?`<div class="block"><div class="sec">Who reads it</div><div class="aud">${aud}</div></div>`:""}
+      </div>
+      <div class="press">
+        <div class="sec">In the press</div>
+        <p><b>${esc(String(P.total||0))}</b> citations across ${esc(String(P.outlets||0))} tracked outlets since ${esc(P.since||"")} — a floor, not a total.</p>
+        <div class="chips">${chips}</div>
+        ${cites}
+        ${senior}
+      </div>
+    </div>
+    <div class="foot">
+      <div><b>Vital City</b> is a project of the Fund for the City of New York, a 501(c)(3), EIN 13-2612524. Editors Elizabeth Glazer and Greg Berman; managing editor Josh Greenman.</div>
+      <div style="text-align:right;white-space:nowrap">Deck, PowerPoint and sources: the case for funders page</div>
+    </div>`;
+}
+
+async function unlock(fromStore){
+  $("#err").textContent="";
+  const pass=$("#pw").value.trim(); if(!pass){$("#err").textContent="Enter the passphrase.";return}
+  try{
+    const blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
+    const data=await decryptBlob(pass,blob);
+    savePass(pass); $("#gate").style.display="none"; $("#app").style.display="";
+    build(data);
+  }catch(e){console.error(e);$("#err").textContent="Wrong passphrase, or data unavailable.";if(fromStore)try{localStorage.removeItem(PASSKEY)}catch{}}
+}
+$("#unlock").addEventListener("click",()=>unlock(false));
+$("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
+$("#print").addEventListener("click",()=>window.print());
+document.addEventListener("keydown",e=>{if((e.key==="p"||e.key==="P")&&!e.metaKey&&!e.ctrlKey&&$("#app").style.display!=="none")window.print()});
+(async()=>{const p=loadPass();if(p){$("#pw").value=p;await unlock(true)}})();
+// ?print=1 from the funders page: open the print dialog once the page has content.
+if(/[?&]print=1/.test(location.search)){
+  const _t=setInterval(()=>{ if(($("#sheet").textContent||"").length>800){clearInterval(_t);setTimeout(()=>window.print(),500);} },150);
+}
+</script>
+</body>
+</html>

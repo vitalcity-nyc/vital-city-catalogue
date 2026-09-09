@@ -20,7 +20,7 @@ import openpyxl
 
 ROOT = Path(__file__).resolve().parent
 PRIV = ROOT / "private"
-PERSON_CATS = ["VC contributor", "VC advisor", "journalist", "academic",
+PERSON_CATS = ["VC contributor", "Senior contributor", "VC advisor", "journalist", "academic",
                "foundation leadership", "nonprofit leadership", "city gov",
                "current nyc.gov", "state gov", "fed gov", "judge"]
 # Domain-area interests (specialties). "architecture" lives here (was a top-level type).
@@ -759,6 +759,7 @@ def fold(q, p):
     q["arts"] = max(q["arts"], p["arts"])
     q["alast"] = max(q.get("alast", ""), p.get("alast", ""))   # most recent VC contribution date
     q["hp"] = merge_hp(q.get("hp") or [], p.get("hp") or [])
+    q["senior"] = q.get("senior") or p.get("senior") or 0
     q["damt"] = round(q["damt"] + p["damt"], 2)
     q["dcnt"] += p["dcnt"]
     q["d7"] = round(q["d7"] + p["d7"], 2); q["d7c"] += p["d7c"]
@@ -1203,6 +1204,41 @@ def main():
                     rec["nyc"] = 1
                 if (row.get("oom") or "").strip() in ("1", "y", "yes", "true"):
                     rec["oom"] = 1
+
+    # ---- 5a. Senior contributors (data/senior_contributors.json) ----
+    # The roster on vitalcitynyc.org/contributors/, pulled by
+    # senior_contributors.py each run. A type of its own so it is a facet, a
+    # filter and a column everywhere, plus a flag for the products that want
+    # just the yes/no. Matched by name; every one of the 35 has a byline.
+    sc_path = ROOT / "data" / "senior_contributors.json"
+    if sc_path.exists():
+        sc = json.loads(sc_path.read_text()).get("people") or []
+        sc_hit, sc_miss = 0, []
+        for person in sc:
+            nm = person.get("name", "")
+            # Try the name as written, then without middle initials and suffixes
+            # ("Tracey L. Meares" -> "Tracey Meares", "Morgan C. Williams Jr." ->
+            # "Morgan Williams"), then first+last through the by_fl index.
+            toks = [t for t in re.split(r"\s+", nm.strip()) if t]
+            core = [t for t in toks if not re.fullmatch(r"[A-Z]\.?", t) and t.lower().strip(".,") not in ("jr", "sr", "ii", "iii")]
+            cands = [nm, " ".join(core)]
+            if len(core) >= 2: cands.append(core[0] + " " + core[-1])
+            q = None
+            for c in cands:
+                q = by_name.get(norm(c)) or by_tight.get(tight(c))
+                if q: break
+            if q is None and len(core) >= 2:
+                fl = norm(core[0]) + "|" + norm(core[-1])
+                q = by_fl.get(fl) or by_fl.get(norm(core[0] + " " + core[-1]))
+            if q is None:
+                sc_miss.append(nm); continue
+            q["types"] = sorted(set(q.get("types") or []) | {"Senior contributor"})
+            q["senior"] = 1
+            if person.get("bio") and not q.get("role"):
+                q["role"] = person["bio"].removeprefix("is ").strip().rstrip(".")[:120]
+            sc_hit += 1
+        print(f"senior contributors: {sc_hit} of {len(sc)} matched to people"
+              + (f"; unmatched: {', '.join(sc_miss)}" if sc_miss else ""), file=__import__("sys").stderr)
 
     # ---- 5b. House-party guest lists (private/events/*.csv) ----
     # One file per party, named YYYY-MM-<anything>.csv. Two shapes are read:

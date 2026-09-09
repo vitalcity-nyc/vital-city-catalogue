@@ -107,6 +107,7 @@ COLS = [
  ("prospect_score", lambda p: p.get("pros") or 0),
  ("likely_prospect", lambda p: yn((p.get("pros") or 0) >= 4)),
  ("prospect_why", lambda p: p.get("prosw", "")),
+ ("senior_contributor", lambda p: yn(p.get("senior"))),
  ("author", lambda p: yn(p.get("auth"))),
  ("articles", lambda p: p.get("arts") or 0),
  ("byline", lambda p: p.get("aname", "")),

@@ -603,6 +603,12 @@ def main():
          "links": [{"t":"the annual analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"},
                    {"t":"why the numbers change","u":"https://www.vitalcitynyc.org/real-crime-numbers-nyc-nypd/"}]},
       ],
+      # The senior-contributor roster from the site (senior_contributors.py).
+      "senior": (lambda f: {"count": f.get("count", 0), "as_of": f.get("as_of", ""),
+                            "names": [x["name"] for x in f.get("people", [])],
+                            "people": f.get("people", [])} if f else {"count": 0, "names": [], "people": []})(
+                    json.loads((ROOT / "data" / "senior_contributors.json").read_text())
+                    if (ROOT / "data" / "senior_contributors.json").exists() else None),
       "press": {"total": len(press), "outlets": sum(1 for v in p_out.values() if v), "since": p_first,
                 "y2026": sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))),
                 "permonth": round(sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))) / max(1, TODAY.month - 0.5), 1),
