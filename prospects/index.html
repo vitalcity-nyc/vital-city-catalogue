@@ -370,7 +370,7 @@ function boot(d){
     <div class="fitSec">Policy impact — the receipts</div>
     ${(FF.receipts||[]).map(r=>`<div class="rcp"><div class="rh">${esc(r.head)}</div><div class="rb">${esc(r.claim)}${r.note?` <span class="rn">— ${esc(r.note)}</span>`:""}<div class="rl">${(r.links||[]).map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div></div></div>`).join("")}
     <div class="fitSec">In the press</div>
-    <div style="font-size:12.5px">${esc(String((FF.press||{}).total||0))} citations across ${esc(String((FF.press||{}).outlets||0))} tracked outlets since ${esc((FF.press||{}).since||"")} — a floor, not a total (whitelist of ~25 outlets).</div>
+    <div style="font-size:12.5px">${esc(String((FF.press||{}).total||0))} citations across ${esc(String((FF.press||{}).outlets||0))} outlets since ${esc((FF.press||{}).since||"")} — a floor, not a total, since only about 25 named outlets are watched.</div>
     <div class="chips">${(((FF.press||{}).top)||[]).map(o=>`<span class="chip">${esc(o.outlet)} <b>${o.n}</b></span>`).join("")}</div>
     ${(((FF.press||{}).samples)||[]).map(x=>`<div class="cite"><span class="co">${esc(x.outlet)}</span><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a><span class="cd">${esc(x.date)}</span></div>`).join("")}
     ${(FF.senior&&FF.senior.count)?`<div class="fitSec">Senior contributors</div>

@@ -392,7 +392,7 @@ async function exportPptx(){
   { const s=slide("Media influence","When New York's press corps needs intelligent, honest analysis, it comes here.");
     let y=figs(s,s._bodyY||2.3,[
       {v:P.total||"—",k:"Press citations tracked",n:"Across "+(P.outlets||"—")+" outlets since "+(P.since||""),hero:true},
-      {v:tile("New York Times").n||"—",k:"New York Times citations",n:"The most-cited outlet in the tracker"},
+      {v:tile("New York Times").n||"—",k:"New York Times citations",n:"No outlet cites Vital City more often"},
       {v:P.y2026||"—",k:"Citations in "+asof.slice(0,4),n:P.permonth?("~"+P.permonth+" a month — one every day and a half"):""}]);
     if((P.by_year||[]).length){
       barchart(s,L,y,5.6,2.35,"Mentions per year (hand-kept archive)",P.by_year.map(r=>r.y),P.by_year.map(r=>r.n),ORG);
@@ -403,7 +403,7 @@ async function exportPptx(){
       });
       y+=2.5;
     }
-    caveat(s,Math.min(y,6.25),"These counts are floors.","The tracker watches a whitelist of ~25 outlets; podcast mentions, paywalled uses and everything outside the whitelist are missed."); }
+    caveat(s,Math.min(y,6.25),"These counts are floors.","The count comes from watching about 25 named outlets; podcast mentions, paywalled uses and everything outside that set are missed."); }
   // 5 cited across the spectrum
   { const s=slide("Media influence, continued","Cited from City Journal to Mother Jones.");
     let y=lede(s,s._bodyY||2.2,"Vital City is cited approvingly by City Journal and Mother Jones alike — read closely by the correction commissioner, quoted by the mayor. The analyses are built to be usable by people who disagree with each other, and they are.",{h:1.0});
@@ -475,8 +475,8 @@ async function exportPptx(){
   // 13 sources
   { const s=slide("Sources","Every number in this deck, and where it comes from.");
     const paras=[
-      [{text:"Every figure is computed from a primary system; none is typed in by hand. ",options:{bold:true}},{text:"Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed "+asof+". Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News tracker over a ~25-outlet whitelist; giving from Donorbox; the catalogue from the Ghost publishing platform; the senior-contributor roster from vitalcitynyc.org/contributors; audience composition from the Vital City contact database."}],
-      [{text:"Caveats that travel with these numbers. ",options:{bold:true}},{text:"Giving is Donorbox only. The 2025 signup surge is bot-inflated; 2024 is the volume baseline. Open rates are inflated industry-wide by Apple Mail, which is why click-to-open leads. Press counts are floors set by the tracker's whitelist."}],
+      [{text:"Every figure is computed from a primary system; none is typed in by hand. ",options:{bold:true}},{text:"Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed "+asof+". Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News search across about 25 named outlets; giving from Donorbox; the catalogue from the Ghost publishing platform; the senior-contributor roster from vitalcitynyc.org/contributors; audience composition from the Vital City contact database."}],
+      [{text:"Caveats that travel with these numbers. ",options:{bold:true}},{text:"Giving is Donorbox only. The 2025 signup surge is bot-inflated; 2024 is the volume baseline. Open rates are inflated industry-wide by Apple Mail, which is why click-to-open leads. Press counts are floors, since only those outlets are watched."}],
       [{text:"Impact claims ",options:{bold:true}},{text:"are Vital City's own accounting, each carrying its source links on the impact slide. The Mamdani conversation took place while he was a candidate."}],
       [{text:"This deck was assembled with AI assistance. ",options:{bold:true}},{text:"Every figure comes from a primary Vital City system; verify any figure before it goes to a funder."}]];
     paras.forEach((p,i)=>TX(s,p,{x:L,y:(s._bodyY||2.2)+i*1.0,w:CW,h:1.0,fontSize:10.5,color:BLK,fontFace:SANS,valign:"top",lineSpacingMultiple:1.2,fit:"shrink"})); }
@@ -574,7 +574,7 @@ function slides(){
     <h2>When New York's press corps needs intelligent, honest analysis, it comes here.</h2>
     ${figs([
       {v:String(P.total||"—"),k:"Press citations tracked",n:"Across "+(P.outlets||"—")+" outlets since "+esc(P.since||""),hero:true},
-      {v:String(tile("New York Times").n||"—"),k:"New York Times citations",n:"The most-cited outlet in the tracker"},
+      {v:String(tile("New York Times").n||"—"),k:"New York Times citations",n:"No outlet cites Vital City more often"},
       {v:String(P.y2026||"—"),k:"Citations in "+asof.slice(0,4),n:(P.permonth?("~"+P.permonth+" a month — one every day and a half"):"")}
     ])}
     ${(P.by_year||[]).length?`<h3 style="margin-top:18px">Mentions per year</h3>
@@ -582,12 +582,12 @@ function slides(){
       return `<div class="yrchart" style="max-width:520px">${rows.map(r=>`
         <div class="yrrow"><span class="yl">${esc(r.y)}</span>
           <span class="ytrack"><span class="yb" style="width:${Math.max(1,(r.n/mx*100)).toFixed(1)}%"></span></span>
-          <span class="ymeta"><span class="yv">${r.n}</span>${r.y==="2026"?`<span class="yn">through ${esc(P.by_year_asof||"")} in the hand-kept archive — the automated tracker separately counts ${esc(String(P.y2026||""))} in 2026 on its narrower whitelist</span>`:""}</span>
+          <span class="ymeta"><span class="yv">${r.n}</span>${r.y==="2026"?`<span class="yn">through ${esc(P.by_year_asof||"")} in the hand-kept archive — the automated count separately finds ${esc(String(P.y2026||""))} in 2026 across its narrower set of outlets</span>`:""}</span>
         </div>`).join("")}</div>`;})()}
-    <div class="bf-cap">From the hand-maintained mentions archive (methodology constant since 2022, broader than the tracker's whitelist). The two counting systems are shown side by side, never merged.</div>`:""}
+    <div class="bf-cap">From the hand-maintained mentions archive (methodology constant since 2022, broader than the automated count's set of outlets). The two counting systems are shown side by side, never merged.</div>`:""}
     <div class="chips" style="margin-top:14px">${(P.top||[]).map((o,i)=>`<span class="chip${i===0?" first":""}">${esc(o.outlet)}<b>${o.n}</b></span>`).join("")}</div>
     ${(P.samples||[]).slice(0,4).map(x=>`<div class="cite"><span class="co">${esc(x.outlet)}</span><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a><span class="cd">${esc(x.date)}</span></div>`).join("")}
-    <div class="caveat"><b>These counts are floors.</b> The tracker watches a whitelist of ~25 outlets for the exact phrase, the handle and URL shares — podcast mentions, paywalled uses and everything outside the whitelist are missed.</div>`});
+    <div class="caveat"><b>These counts are floors.</b> The count comes from watching about 25 named outlets for the exact phrase, the handle and URL shares — podcast mentions, paywalled uses and everything outside that set are missed.</div>`});
 
   S.push({eyebrow:"Media influence, continued",html:`
     <h2>Cited from City Journal to Mother Jones.</h2>
@@ -703,8 +703,8 @@ function slides(){
   S.push({eyebrow:"Sources",html:`
     <h2>Every number in this deck, and where it comes from.</h2>
     <div class="src">
-      <p><b>Every figure is computed from a primary system; none is typed in by hand.</b> Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed <b>${esc(asof)}</b>. Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News tracker over a ~25-outlet whitelist; giving from Donorbox; the catalogue from the Ghost publishing platform; the senior-contributor roster from vitalcitynyc.org/contributors; audience composition from the Vital City contact database, which fuses subscribers, contributors and contacts.</p>
-      <p><b>Caveats that travel with these numbers.</b> Giving is Donorbox only. The 2025 signup surge is bot-inflated; 2024 is the volume baseline. Open rates are inflated industry-wide by Apple Mail, which is why click-to-open leads. Press counts are floors set by the tracker's ~25-outlet whitelist.</p>
+      <p><b>Every figure is computed from a primary system; none is typed in by hand.</b> Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed <b>${esc(asof)}</b>. Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News search across about 25 named outlets; giving from Donorbox; the catalogue from the Ghost publishing platform; the senior-contributor roster from vitalcitynyc.org/contributors; audience composition from the Vital City contact database, which fuses subscribers, contributors and contacts.</p>
+      <p><b>Caveats that travel with these numbers.</b> Giving is Donorbox only. The 2025 signup surge is bot-inflated; 2024 is the volume baseline. Open rates are inflated industry-wide by Apple Mail, which is why click-to-open leads. Press counts are floors, since only those outlets are watched.</p>
       <p><b>Impact claims</b> are Vital City's own accounting, each carrying its source links on the impact slide. The Mamdani conversation took place while he was a candidate.</p>
       <p><b>This deck was assembled with AI assistance.</b> Every figure comes from a primary Vital City system; verify any figure before it goes to a funder.</p>
     </div>`});
