@@ -4112,7 +4112,7 @@ def pull_donorbox():
 MANUAL_FOLLOWERS = {
     "x":         {"followers": 4515, "as_of": "2026-09-09"},
     "instagram":         {"followers": 836, "as_of": "2026-09-09"},
-    "facebook":  {"followers": 208, "as_of": "2026-08-14"},
+    "facebook":         {"followers": 214, "as_of": "2026-09-09"},
 }
 
 
