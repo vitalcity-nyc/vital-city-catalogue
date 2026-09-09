@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T19:51:47.962625+00:00",
+  "generated_at": "2026-09-09T21:23:46.952475+00:00",
   "site": "https://www.vitalcitynyc.org",
   "total_posts": 912,
   "total_authors": 507,
@@ -10,61 +10,6 @@
     "2026-09-09"
   ],
   "first_run": false,
-  "new_article_count": 9,
-  "new_articles": [
-    {
-      "title": "She Buys It, He Fires It",
-      "url": "https://www.vitalcitynyc.org/women-and-illegal-firearm-diversion/",
-      "published_date": "2026-09-09",
-      "primary_author": null
-    },
-    {
-      "title": "Unpacking the Triggers",
-      "url": "https://www.vitalcitynyc.org/urban-gun-violence-black-women/",
-      "published_date": "2026-09-09",
-      "primary_author": null
-    },
-    {
-      "title": "Stand Your Ground Laws and Women’s Safety",
-      "url": "https://www.vitalcitynyc.org/stand-your-ground-laws-womens-safety/",
-      "published_date": "2026-09-09",
-      "primary_author": null
-    },
-    {
-      "title": "Carrying Care",
-      "url": "https://www.vitalcitynyc.org/how-women-think-about-guns-lethal-force/",
-      "published_date": "2026-09-09",
-      "primary_author": null
-    },
-    {
-      "title": "The Recent Rise of Women Gun Owners",
-      "url": "https://www.vitalcitynyc.org/women-gun-owners-recent-rise/",
-      "published_date": "2026-09-09",
-      "primary_author": null
-    },
-    {
-      "title": "What Data Can’t Tell Us",
-      "url": "https://www.vitalcitynyc.org/crime-data-gaps-women-firearms/",
-      "published_date": "2026-09-09",
-      "primary_author": null
-    },
-    {
-      "title": "Pointing a Firearm or Looking Down Its Barrel",
-      "url": "https://www.vitalcitynyc.org/pointing-a-firearm-or-looking-down-its-barrel/",
-      "published_date": "2025-09-10",
-      "primary_author": null
-    },
-    {
-      "title": "Editors’ Note",
-      "url": "https://www.vitalcitynyc.org/editors-note-issue-13/",
-      "published_date": "2025-09-10",
-      "primary_author": null
-    },
-    {
-      "title": "Guns, My Family and Me",
-      "url": "https://www.vitalcitynyc.org/guns-my-family-and-me/",
-      "published_date": "2025-09-10",
-      "primary_author": null
-    }
-  ]
+  "new_article_count": 0,
+  "new_articles": []
 }
