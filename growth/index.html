@@ -5202,7 +5202,7 @@ function renderWeekPulse(data, span){
     const days=(new Date(String(hist[hist.length-1][dateKey]).slice(0,10))-new Date(String(hist[0][dateKey]).slice(0,10)))/86400000+1;
     if(days<28) return null;
     const tot=hist.reduce((s,r)=>s+(+r[valKey]||0),0);
-    return {val:tot/days*N, months:Math.round(days/30)};
+    return {val:tot/days*N, months:Math.round(days/30), thin: days < 2*N};
   }
   // Fundraising is lumpy -- one launch campaign dominates the mean, so the
   // "average week" reads ~$2,500 and every quiet week shows as -100%. The
@@ -5218,7 +5218,9 @@ function renderWeekPulse(data, span){
     hist.forEach(r=>{const d=new Date(String(r[dateKey]).slice(0,10)+"T00:00:00Z");
       const k=Math.floor(d.getTime()/(N*86400000)); wk[k]=(wk[k]||0)+(+r[valKey]||0);});
     const vals=Object.values(wk).sort((a,b)=>a-b);
-    if(vals.length<4) return null;
+    // Three 90-day blocks, one of them December, is not a "typical quarter".
+    // Under eight blocks the tile shows the count alone.
+    if(vals.length<8) return null;
     const mid=vals.length>>1;
     const med=vals.length%2?vals[mid]:(vals[mid-1]+vals[mid])/2;
     return {val:med, months:Math.round(hist.length/30), median:true};
@@ -5237,8 +5239,21 @@ function renderWeekPulse(data, span){
       return {val:perDay*N, months:Math.round(ser.length*7/30)};
     })(),
   };
-  if(norms.signups&&norms.unsubs)
-    norms.net={val:norms.signups.val-norms.unsubs.val, months:norms.signups.months};
+  // Net change is signups minus unsubscribes over ONE shared stretch of
+  // history. Subtracting a 3-month signup norm from a 12-month unsubscribe
+  // norm produced a "typical" net of 61 against an actual 343 and a +461%
+  // that no reader should trust. The signup feed is the shorter one (real
+  // data from March 2026), so both sides are measured from its first real day.
+  (function(){
+    const seq=(act||[]).filter(r=>r.d && r.d<curStart).slice().sort((a,b)=>a.d.localeCompare(b.d));
+    let i=0; while(i<seq.length && !((+seq[i].subs||0)>0)) i++;
+    const hist=seq.slice(i).slice(-365);
+    if(hist.length<28) return;
+    const days=(new Date(hist[hist.length-1].d)-new Date(hist[0].d))/86400000+1;
+    if(days<28) return;
+    const s=hist.reduce((t,r)=>t+(+r.subs||0),0), u=hist.reduce((t,r)=>t+(+r.unsubs||0),0);
+    norms.net={val:(s-u)/days*N, months:Math.round(days/30), thin: days < 2*N};
+  })();
   // Articles get a norm only when the full history is present; the 90-day
   // feed cannot support one.
   if(gh.pub_dates && gh.pub_dates.length){
@@ -5341,7 +5356,20 @@ function renderWeekPulse(data, span){
       const up=d>0, good = t.neutral ? null : (t.goodDown ? !up : up);
       cls = good===null ? "flat" : (good ? "up" : "down");
       const dv = t.fmt===fmtMoney ? fmtMoney(Math.abs(d)) : (t.dec ? t.fmt(Math.abs(d)) : fmtN(Math.round(Math.abs(d))));
-      dtxt=`${up?"▲":"▼"} ${dv}${pctChg(now,base)} ${baseLbl}`;
+      // A norm built from less history than twice the window is shown, but
+      // without a percentage: "+250% on three months of history" reads as
+      // a trend when it is mostly a base problem.
+      const thin = nm7 && nm7.thin;
+      dtxt = thin
+        ? `${up?"▲":"▼"} ${dv} ${baseLbl} · thin base, no % shown`
+        : `${up?"▲":"▼"} ${dv}${pctChg(now,base)} ${baseLbl}`;
+    }
+    // Money on a small base: under 20 gifts in the window, a percentage is
+    // noise (the monthly report's suppression rule). Show the figure and the
+    // gift count, and say why there is no rate.
+    if((t.k==="raised"||t.k==="gifts") && (cur.gifts||0) < 20){
+      cls="flat";
+      dtxt=`${fmtN(cur.gifts||0)} gift${(cur.gifts||0)===1?"":"s"} in the window · no rate on a base under 20`;
     }
     const nm=clickable[t.k] && window._weekNames[t.k];
     const canClick = nm && nm.list.length>0 && nm.list.length<=CLICK_MAX;
