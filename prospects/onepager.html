@@ -123,8 +123,11 @@ function build(d){
   const chips=(P.top||[]).slice(0,7).map(o=>`<span class="chip">${esc(o.outlet)} <b>${esc(String(o.n))}</b></span>`).join("");
   const cites=(P.samples||[]).slice(0,3).map(x=>`<div class="cite"><span class="co">${esc(x.outlet)}</span>${esc(x.title)}</div>`).join("");
   const S=FF.senior||{};
-  const senior=(S.count? `<div class="block"><div class="sec">Senior contributors</div>
-      <div class="senior"><b>${esc(String(S.count))}</b> on the roster: ${(S.names||[]).map(esc).join(", ")}.</div></div>` : "");
+  const spot=(S.spotlight||[]).slice(0,6);
+  const spotParts=spot.map(x=>`${esc(x.n)} (${esc(x.tag)})`);
+  const spotTxt=spotParts.length>1?spotParts.slice(0,-1).join(", ")+" and "+spotParts.slice(-1)[0]:(spotParts[0]||"");
+  const senior=(S.count? `<div class="block"><div class="sec">Who writes it</div>
+      <div class="senior"><b>${esc(String(S.pool||""))}</b> contributors since 2021, <b>${esc(String(S.count))}</b> of them named senior contributors on the masthead${spotTxt?`: ${spotTxt}`:""}.</div></div>` : "");
   const aud=(FF.audience||[]).slice(0,3).map(r=>`<div><b>${esc(r.label)}:</b> ${esc(r.value)} <span style="color:var(--vc-charcoal)">— ${esc(r.note)}</span></div>`).join("");
   $("#sheet").innerHTML=`
     <div class="mast">

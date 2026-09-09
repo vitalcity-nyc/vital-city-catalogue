@@ -412,7 +412,9 @@ async function exportPptx(){
   // 6 bylines
   { const s=slide("The bylines","The people who shape the debate.");
     const people=V?V.authors.map(nm=>((FF.seniors||{}).people||[]).find(p=>p.n===nm)).filter(Boolean):((FF.seniors||{}).people||[]).filter(p=>p.feat);
-    const cols=2, cw=(CW-0.2)/cols, ch=0.86;
+    const RN=(FF.senior||{}).count||(FF.seniors||{}).roster_count||"";
+    if(RN){ TX(s,`Vital City names ${RN} senior contributors on its masthead: economists, criminologists, planners, deans, a news anchor, the CEO of Robin Hood. Ten of them:`,{x:L,y:(s._bodyY||2.15)-0.05,w:CW,h:0.3,fontSize:10.5,color:CHAR,fontFace:SANS}); s._bodyY=(s._bodyY||2.15)+0.3; }
+    const cols=2, cw=(CW-0.2)/cols, ch=RN?0.80:0.86;
     const clip=(t,n)=>{t=(t||"").trim(); if(t.length<=n) return t; const c=t.slice(0,n); return c.slice(0,c.lastIndexOf(" ")>n-18?c.lastIndexOf(" "):n)+"…";};
     people.slice(0,10).forEach((p,i)=>{
       const x=L+(i%cols)*(cw+0.2), y=(s._bodyY||2.15)+Math.floor(i/cols)*(ch+0.06);
@@ -422,7 +424,7 @@ async function exportPptx(){
       const pc=(p.pieces||[])[0];
       if(pc) TX(s,[{text:"“"+clip(pc.t,70)+"”",options:{color:CER,hyperlink:{url:pc.u}}},{text:p.npieces>1?"   +"+(p.npieces-1)+" more":"",options:{color:CHAR}}],{x:x+0.15,y:y+0.57,w:cw-0.3,h:0.24,fontSize:8.5,fontFace:SANS});
     });
-    TX(s,`Ten of a deeper bench: ${(FF.seniors||{}).count||""} leading authors have written ${(FF.seniors||{}).pieces_total||""} pieces for Vital City among them, within a contributor pool of 492.`,{x:L,y:6.55,w:CW,h:0.35,fontSize:8.5,color:CHAR,fontFace:SANS}); }
+    TX(s,`The ${RN||(FF.seniors||{}).count||""} senior contributors have written ${(FF.seniors||{}).pieces_total||""} pieces for Vital City among them, within a contributor pool of ${(FF.seniors||{}).pool||FF.senior&&FF.senior.pool||""}. Descriptors come from each author's own bio.`,{x:L,y:RN?6.85:6.55,w:CW,h:0.35,fontSize:8.5,color:CHAR,fontFace:SANS}); }
   // 7 audience
   { const s=slide("The audience","The value of this list is who is on it.");
     let y=figs(s,s._bodyY||2.2,[
@@ -467,13 +469,13 @@ async function exportPptx(){
     let y=lede(s,s._bodyY||2.2,"Vital City is built on one conviction: tough urban problems have pragmatic solutions, and the gap between the two is evidence put in the right hands. A gift here does not disappear into overhead — it buys a specific piece of that machine.",{h:0.95});
     bullets(s,y,[
       {b:"More original analysis.",t:"The data work is what gets cited — "+(P.total||"")+" times and counting — and it is the most expensive thing we do."},
-      {b:"More convening.",t:"The people who decide and the people with the evidence, in one room, on the record."},
+      {b:"More convening.",t:"The people who decide and the people with the evidence"+(((FF.senior||{}).count)?" — starting with the "+(FF.senior||{}).count+" senior contributors —":",")+" in one room, on the record."},
       {b:"More reach into City Hall.",t:"The readers are already there; the work is getting the right piece in front of them at the right moment."},
       {b:"Capacity to answer fast.",t:"The permitting fixes ran days before City Hall's own report. That speed took standing capacity."}]); }
   // 13 sources
   { const s=slide("Sources","Every number in this deck, and where it comes from.");
     const paras=[
-      [{text:"Every figure is computed from a primary system; none is typed in by hand. ",options:{bold:true}},{text:"Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed "+asof+". Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News tracker over a ~25-outlet whitelist; giving from Donorbox; the catalogue from the Ghost publishing platform; audience composition from the Vital City contact database."}],
+      [{text:"Every figure is computed from a primary system; none is typed in by hand. ",options:{bold:true}},{text:"Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed "+asof+". Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News tracker over a ~25-outlet whitelist; giving from Donorbox; the catalogue from the Ghost publishing platform; the senior-contributor roster from vitalcitynyc.org/contributors; audience composition from the Vital City contact database."}],
       [{text:"Caveats that travel with these numbers. ",options:{bold:true}},{text:"Giving is Donorbox only. The 2025 signup surge is bot-inflated; 2024 is the volume baseline. Open rates are inflated industry-wide by Apple Mail, which is why click-to-open leads. Press counts are floors set by the tracker's whitelist."}],
       [{text:"Impact claims ",options:{bold:true}},{text:"are Vital City's own accounting, each carrying its source links on the impact slide. The Mamdani conversation took place while he was a candidate."}],
       [{text:"This deck was assembled with AI assistance. ",options:{bold:true}},{text:"Every figure comes from a primary Vital City system; verify any figure before it goes to a funder."}]];
@@ -595,6 +597,7 @@ function slides(){
 
   S.push({eyebrow:"The bylines",html:`
     <h2>The people who shape the debate.</h2>
+    ${(FF.senior&&FF.senior.count)?`<p class="lede">Vital City names <b>${esc(String(FF.senior.count))} senior contributors</b> on its masthead: economists, criminologists, planners, deans, a news anchor, the CEO of Robin Hood. Ten of them:</p>`:""}
     <div class="bygrid">${(V
       ? V.authors.map(n=>((FF.seniors||{}).people||[]).find(p=>p.n===n)).filter(Boolean)
       : ((FF.seniors||{}).people||[]).filter(p=>p.feat)).map(p=>`
@@ -605,7 +608,7 @@ function slides(){
           ${p.npieces>1?`<span class="more"> +${p.npieces-1} more</span>`:""}</div>
       </div>`).join("")}
     </div>
-    <div class="bf-cap" style="margin-top:10px">Ten of a deeper bench: ${esc(String((FF.seniors||{}).count||""))} leading authors &mdash; economists, criminologists, planners, deans, a sitting news anchor, the CEO of Robin Hood &mdash; have written ${esc(String((FF.seniors||{}).pieces_total||""))} pieces for Vital City among them, within a contributor pool of 492. Descriptors come from each author's own bio; pieces and counts are matched live from the catalogue.</div>`});
+    <div class="bf-cap" style="margin-top:10px">The ${esc(String((FF.senior&&FF.senior.count)||(FF.seniors||{}).count||""))} senior contributors have written ${esc(String((FF.seniors||{}).pieces_total||""))} pieces for Vital City among them, within a contributor pool of ${esc(String((FF.seniors||{}).pool||(FF.senior||{}).pool||""))}. The roster is read nightly from <a href="https://www.vitalcitynyc.org/contributors/" target="_blank" rel="noopener">vitalcitynyc.org/contributors</a>; descriptors come from each author's own bio; pieces and counts are matched live from the catalogue.</div>`});
 
   S.push({eyebrow:"The audience",html:`
     <h2>The value of this list is who is on it.</h2>
@@ -692,7 +695,7 @@ function slides(){
     <p class="lede">Vital City is built on one conviction: tough urban problems have pragmatic solutions, and the gap between the two is evidence put in the right hands. A gift here does not disappear into overhead — it buys a specific piece of that machine.</p>
     <ul class="bullets">
       <li><b>More original analysis.</b> The data work is what gets cited — ${esc(String((FF.press||{}).total||""))} times and counting — and it is the most expensive thing we do.</li>
-      <li><b>More convening.</b> The people who decide and the people with the evidence, in one room, on the record.</li>
+      <li><b>More convening.</b> The people who decide and the people with the evidence${(FF.senior&&FF.senior.count)?` &mdash; starting with the ${esc(String(FF.senior.count))} senior contributors &mdash;`:","} in one room, on the record.</li>
       <li><b>More reach into City Hall.</b> The readers are already there; the work is getting the right piece in front of them at the right moment.</li>
       <li><b>Capacity to answer fast.</b> The permitting fixes ran days before City Hall's own report. That speed took standing capacity.</li>
     </ul>`});
@@ -700,7 +703,7 @@ function slides(){
   S.push({eyebrow:"Sources",html:`
     <h2>Every number in this deck, and where it comes from.</h2>
     <div class="src">
-      <p><b>Every figure is computed from a primary system; none is typed in by hand.</b> Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed <b>${esc(asof)}</b>. Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News tracker over a ~25-outlet whitelist; giving from Donorbox; the catalogue from the Ghost publishing platform; audience composition from the Vital City contact database, which fuses subscribers, contributors and contacts.</p>
+      <p><b>Every figure is computed from a primary system; none is typed in by hand.</b> Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed <b>${esc(asof)}</b>. Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News tracker over a ~25-outlet whitelist; giving from Donorbox; the catalogue from the Ghost publishing platform; the senior-contributor roster from vitalcitynyc.org/contributors; audience composition from the Vital City contact database, which fuses subscribers, contributors and contacts.</p>
       <p><b>Caveats that travel with these numbers.</b> Giving is Donorbox only. The 2025 signup surge is bot-inflated; 2024 is the volume baseline. Open rates are inflated industry-wide by Apple Mail, which is why click-to-open leads. Press counts are floors set by the tracker's ~25-outlet whitelist.</p>
       <p><b>Impact claims</b> are Vital City's own accounting, each carrying its source links on the impact slide. The Mamdani conversation took place while he was a candidate.</p>
       <p><b>This deck was assembled with AI assistance.</b> Every figure comes from a primary Vital City system; verify any figure before it goes to a funder.</p>

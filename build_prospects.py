@@ -219,7 +219,10 @@ def load_event(people):
 # unconfirmed at read time. Display name -> exact catalogue author name (None =
 # no byline yet). Descriptors are pulled from each author's own Ghost bio at
 # build time, so they stay current and are never invented here.
-SENIORS = [
+# The senior-contributor roster comes from the site (data/senior_contributors.json,
+# refreshed nightly by senior_contributors.py). This hand list is only the
+# fallback for a checkout that has never pulled it.
+SENIORS_FALLBACK = [
   ("Alex Armlovich","Alex Armlovich"),("Neil Barsky","Neil Barsky"),
   ("Richard Buery Jr.","Richard Buery Jr."),("Vishaan Chakrabarti","Vishaan Chakrabarti"),
   ("Aaron Chalfin","Aaron Chalfin"),("Jelani Cobb","Jelani Cobb"),
@@ -238,6 +241,12 @@ SENIORS = [
   ("Martha Stark","Martha Stark"),("Carl Weisbrod","Carl Weisbrod"),
   ("Claire Weisz","Claire Weisz"),("Bruce Western","Bruce Western"),
 ]
+def _live_seniors(authors_by_name):
+    f = ROOT / "data" / "senior_contributors.json"
+    if not f.exists():
+        return SENIORS_FALLBACK
+    names = [x["name"] for x in (json.loads(f.read_text()) or {}).get("people", [])]
+    return [(n, n if n in authors_by_name else None) for n in names] or SENIORS_FALLBACK
 
 # The ten to feature as cards on the influence slide (breadth of discipline:
 # economics, architecture, policing, law, housing, media, philanthropy). The
@@ -245,6 +254,17 @@ SENIORS = [
 FEATURED = {"Edward Glaeser","Vishaan Chakrabarti","Jelani Cobb","Richard Buery Jr.",
             "Tracey L. Meares","Jens Ludwig","Ingrid Gould Ellen","Aaron Chalfin",
             "Brandon del Pozo","Errol Louis"}
+# Six of the featured ten, in the order they read best in a single sentence,
+# with a tag short enough for a one-pager. Each tag is a plain restatement of
+# the author's own bio on vitalcitynyc.org (nothing here is inferred).
+SPOTLIGHT = [
+  ("Edward Glaeser", "Harvard economist"),
+  ("Jens Ludwig", "director of the University of Chicago Crime Lab"),
+  ("Ingrid Gould Ellen", "NYU Furman Center"),
+  ("Jelani Cobb", "dean of the Columbia Journalism School"),
+  ("Errol Louis", "NY1 anchor"),
+  ("Richard Buery Jr.", "CEO of Robin Hood"),
+]
 
 # Audience-targeted deck variants. Same skeleton, different emphasis: which
 # receipts lead, which authors are carded, which pieces are spotlit, which
@@ -533,6 +553,11 @@ def main():
     mentions = growth.get("news_mentions") or []
     m_outlets = len({(x.get("domain") or x.get("source") or "") for x in mentions if not x.get("own_post")})
     authors = {a for p in cat for a in (p.get("authors") or [])}
+    # The site's own senior-contributor roster (senior_contributors.py, nightly).
+    _roster = (json.loads((ROOT / "data" / "senior_contributors.json").read_text())
+               if (ROOT / "data" / "senior_contributors.json").exists() else {}) or {}
+    _roster_names = {x["name"] for x in _roster.get("people", [])}
+    _roster_n = len(_roster_names)
     # v2: a showcase, not a stat dump. Tiles for the big numbers, receipts with
     # verified links, real press citations, and the named policy products.
     yoy_now = None; yoy_prev = None
@@ -578,7 +603,8 @@ def main():
         {"n": f"{len(gov)+len(edu):,}", "l": "Government + university subscribers",
          "s": f"{sum(1 for r in gov if 'nyc.gov' in dom(r)):,} on nyc.gov — City Hall, the courts, both DAs"},
         {"n": f"{len(cat):,}", "l": "Pieces published",
-         "s": f"by {len(authors):,} contributors since 2021"},
+         "s": (f"by {len(authors):,} contributors since 2021, {_roster_n} of them named senior contributors"
+               if _roster_n else f"by {len(authors):,} contributors since 2021")},
       ],
       "receipts": [
         {"head": "Zohran Mamdani", "claim": "As a candidate, sat with Vital City for an hour on public safety",
@@ -604,11 +630,12 @@ def main():
                    {"t":"why the numbers change","u":"https://www.vitalcitynyc.org/real-crime-numbers-nyc-nypd/"}]},
       ],
       # The senior-contributor roster from the site (senior_contributors.py).
-      "senior": (lambda f: {"count": f.get("count", 0), "as_of": f.get("as_of", ""),
-                            "names": [x["name"] for x in f.get("people", [])],
-                            "people": f.get("people", [])} if f else {"count": 0, "names": [], "people": []})(
-                    json.loads((ROOT / "data" / "senior_contributors.json").read_text())
-                    if (ROOT / "data" / "senior_contributors.json").exists() else None),
+      "senior": {"count": _roster_n, "as_of": _roster.get("as_of", ""),
+                 "names": sorted(_roster_names, key=lambda n: n.split()[-1]),
+                 "people": _roster.get("people", []),
+                 # a handful to name in a sentence; only people still on the live roster
+                 "spotlight": [{"n": n, "tag": t} for n, t in SPOTLIGHT if n in _roster_names],
+                 "pool": len(authors)},
       "press": {"total": len(press), "outlets": sum(1 for v in p_out.values() if v), "since": p_first,
                 "y2026": sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))),
                 "permonth": round(sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))) / max(1, TODAY.month - 0.5), 1),
@@ -645,13 +672,16 @@ def main():
              "who": bio_descriptor((au.get(cn) or {}).get("bio")) if cn else "",
              "npieces": len([p for p in cat if cn and (cn in (p.get("authors") or []) or p.get("primary_author") == cn)]),
              "feat": 1 if disp in FEATURED else 0,
+             "roster": 1 if disp in _roster_names else 0,
              "pieces": [{"t": p["title"], "u": p["url"]} for p in sorted(
                  [p for p in cat if cn and (cn in (p.get("authors") or []) or p.get("primary_author") == cn)],
                  key=lambda p: p.get("published_date") or "", reverse=True)[:1]]}
-            for disp, cn in SENIORS],
-          "count": len(SENIORS),
+            for disp, cn in _live_seniors(au)],
+          "count": len(_live_seniors(au)),
+          "roster_count": _roster_n,
+          "pool": len(authors),
           "pieces_total": sum(len([p for p in cat if cn and (cn in (p.get("authors") or []) or p.get("primary_author") == cn)])
-                              for _, cn in SENIORS),
+                              for _, cn in _live_seniors(au)),
       })({x["name"]: x for x in (load(ROOT / "data" / "authors.json") or [])}),
       "longview": {
         # list size at each year end (current year = latest month available)
