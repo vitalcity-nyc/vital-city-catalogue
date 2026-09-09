@@ -43,6 +43,7 @@
   main .card h3.subh{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);
     font-weight:700;margin:24px 0 8px;padding-top:14px;border-top:1px solid var(--vc-cloud)}
   main .card h3.subh .hint{text-transform:none;letter-spacing:0;font-weight:400;font-size:11px;margin-left:8px;color:var(--vc-charcoal)}
+  .dombar .bar{max-width:100%}
   .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin:0 0 0}
   /* Second tier: same tiles, quieter. Subsidiary by Josh's own ranking of the
      objectives, so they sit under the six rather than competing with them. */
@@ -3900,6 +3901,10 @@ function renderAcquisition(attr){
   const landings = (attr.by_landing || []);
   const maxSrc = Math.max(1, ...sources.map(s=>s.n));
   const maxMed = Math.max(1, ...mediums.map(s=>s.n));
+  // Each list scales against its own largest value. The landing-page bars
+  // were dividing by the referrer list's maximum, so 393 article-page signups
+  // against a referrer maximum of 245 drew a bar at 160% and out of the card.
+  const maxLand = Math.max(1, ...landings.map(s=>s.n));
   // Friendly display names for landing-page types (the raw Ghost values are
   // post/page/url/tag/author/unknown — opaque without context)
   const labelType = (t) => ({
@@ -3983,7 +3988,7 @@ function renderAcquisition(attr){
           'unknown':"Ghost didn't capture which page the visitor was on. Usually means the signup happened on a custom page or before page-attribution was enabled.",
         })[s.type] || s.type)}">
           <div style="font-size:12px">${esc(labelType(s.type))}</div>
-          <div class="bar" style="background:var(--vc-green);width:${(s.n/maxSrc*100)}%"></div>
+          <div class="bar" style="background:var(--vc-green);width:${(s.n/maxLand*100)}%"></div>
           <div class="v">${fmtN(s.n)}</div>
         </div>`).join("")}
       </div>

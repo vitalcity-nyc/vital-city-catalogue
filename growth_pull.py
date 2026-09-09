@@ -4110,7 +4110,7 @@ def pull_donorbox():
 # these by hand (and bump as_of). Used only when the live fetch can't get a
 # count, so the Social-followers total can still include all four platforms.
 MANUAL_FOLLOWERS = {
-    "x":         {"followers": 4484, "as_of": "2026-08-14"},
+    "x":         {"followers": 4515, "as_of": "2026-09-09"},
     "instagram": {"followers": 765, "as_of": "2026-08-14"},
     "facebook":  {"followers": 208, "as_of": "2026-08-14"},
 }
