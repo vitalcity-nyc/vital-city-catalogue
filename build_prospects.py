@@ -127,7 +127,7 @@ FUNDERS = [
  {"name":"Renaissance Philanthropy","domain":"renaissancephilanthropy.org","lead":True,"cat":"abundance",
   "focus":"Ambitious science, technology and state-capacity initiatives",
   "fit":["city government","technology"],
-  "note":"Newer shop (Tom Kalil). Confidence on current programs is lower — verify before investing time."},
+  "note":"Kumar Garg (president; Tom Kalil is CEO). Garg co-wrote the Sept. 2026 'Building the bridge from innovation to impact' post arguing philanthropy should fund the whole path from a finding to adoption, which is Vital City's follow-through pitch in their own words. Warm door: senior contributor Cara Eckholm is a Renaissance fellow. Confidence on current programs is lower — verify before investing time."},
  # ---- leads: journalism — OFF-CENTER for a commentary/analysis shop ----
  {"name":"Press Forward","domain":"pressforward.news","lead":True,"cat":"journalism",
   "focus":"National coalition funding local news (>$500M pooled)",
@@ -172,6 +172,7 @@ GRANTEES = {
  "Arnold Ventures — government performance": {"who":"See Arnold Ventures above — same grants database covers the government-performance portfolio","src":"arnoldventures.org/grants"},
  "Harry Frank Guggenheim Foundation": {"who":"Grants to individual scholars researching violence (its core program), plus research prizes — it funds researchers more than organizations","src":"hfg.org (program structure; verify)"},
  "Revson Foundation": {"who":"Helped launch THE CITY; long record of NYC journalism and civic grants","src":"widely reported; verify at revsonfoundation.org/grants"},
+ "Renaissance Philanthropy": {"who":"Fellows and programs in science, technology and state capacity; Cara Eckholm (Vital City senior contributor) is a fellow. Kumar Garg, president, co-wrote 'Building the bridge from innovation to impact' (Sept. 2026)","src":"renaissancephilanthropy.substack.com/p/building-the-bridge-from-innovation (added 2026-09-10; verify current programs at renaissancephilanthropy.org)"},
  "Emergent Ventures (Mercatus)": {"who":"Small fast grants to individual researchers, writers and founders rather than organizations — the fit is a person or project, not general support","src":"mercatus.org/emergent-ventures (program structure)"},
 }
 
