@@ -18,7 +18,7 @@ Design rules, deliberately repeated from the rest of the repo:
   tag) that put a person on it.
 """
 import json, os, re, base64, secrets, statistics as st
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from collections import defaultdict, Counter
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
@@ -366,6 +366,31 @@ VARIANTS = {
              "mamdani-first-100-days-scorecard-nyc"]},
 }
 
+# Online giving opened in November 2025 (Donorbox; the first gift was Nov. 12, 2025).
+GIVING_OPENED = "November 2025"
+
+def _current_funders():
+    """The underwriters named on vitalcitynyc.org/about. Fetched live; the last
+    good list is cached so a fetch failure never blanks the section."""
+    import urllib.request
+    cache = ROOT / "data" / "funders_current.json"
+    names = []
+    try:
+        req = urllib.request.Request("https://www.vitalcitynyc.org/about/", headers={"User-Agent": "Mozilla/5.0 (vital-city-catalogue build)"})
+        page = urllib.request.urlopen(req, timeout=25).read().decode("utf-8", "ignore")
+        txt = re.sub(r"<[^>]+>", " ", page); txt = re.sub(r"\s+", " ", txt).replace("&amp;", "&")
+        m = re.search(r"underwritten by (.+?), as well as", txt) or re.search(r"underwritten by (.+?)\.\s", txt)
+        if m:
+            names = [re.sub(r"^the\s+", "", x.strip()) for x in re.split(r",\s*|\s+and\s+", m.group(1)) if x.strip()]
+    except Exception as e:
+        print(f"  WARNING: about-page fetch failed ({e}); using the cached funder list")
+    if len(names) >= 3:
+        cache.write_text(json.dumps({"as_of": TODAY.isoformat(), "source": "https://www.vitalcitynyc.org/about/", "names": names}, indent=1) + "\n")
+        return {"names": names, "as_of": TODAY.isoformat()}
+    if cache.exists():
+        c = json.loads(cache.read_text()); return {"names": c.get("names", []), "as_of": c.get("as_of", "")}
+    return {"names": [], "as_of": ""}
+
 def bio_descriptor(bio):
     """First clause of the author's own Ghost bio, as the safe descriptor."""
     b = re.sub(r"^\s*(is|was|became)\s+(an?|the)?\s*", "", (bio or "").strip(), flags=re.I)
@@ -601,6 +626,21 @@ def main():
     _top26 = ((ga4.get("top_pages_by_year") or {}).get(str(TODAY.year)) or [{}])[0]
     _mbx = {m.get("label"): m for m in ((growth.get("engagement_extras") or {}).get("mailbox_engagement") or [])}
     _AP = {1:"Jan.",2:"Feb.",3:"March",4:"April",5:"May",6:"June",7:"July",8:"Aug.",9:"Sept.",10:"Oct.",11:"Nov.",12:"Dec."}
+    _md = lambda d: f"{_AP[d.month]} {d.day}"
+    # Last four full weeks against the same four weeks a year earlier (GA4 weekly visits).
+    def _wk_sum(rows): return sum(w.get("visits") or 0 for w in rows)
+    _tw_sorted = sorted(_tw, key=lambda w: w.get("wk") or "")
+    _last4 = [w for w in _tw_sorted if (w.get("wk") or "") <= TODAY.isoformat()][-5:-1]
+    _last4_prev = []
+    for w in _last4:
+        # 52 weeks back lands on the same weekday, so the week keys line up.
+        try: back = (date.fromisoformat(w.get("wk")) - timedelta(days=364)).isoformat()
+        except Exception: continue
+        _last4_prev += [x for x in _tw_sorted if (x.get("wk") or "") == back]
+    _v4, _v4p = _wk_sum(_last4), _wk_sum(_last4_prev)
+    _v30_pct = round(100 * (_v4 - _v4p) / _v4p) if len(_last4) == 4 and len(_last4_prev) == 4 and _v4p >= 1000 else None
+    # Reader giving, Donorbox only (see project notes): gifts of $1,000 and up.
+    _big_gifts = sum(1 for r in donors if (r.get("damt") or 0) >= 1000)
     def _ym(v):
         """2021-10 -> Oct. 2021 (AP month style); anything else passes through."""
         try: y, m = str(v)[:7].split("-"); return f"{_AP[int(m)]} {y}"
@@ -653,20 +693,20 @@ def main():
       "asof": TODAY.isoformat(),
       "tiles": [
         {"n": f"{mc.get('total_subscribers', len(sub)):,}", "l": "Newsletter subscribers",
-         "s": (f"up {yoy_pct}% year over year" if yoy_pct else "Mailchimp, current")},
+         "s": (f"up {yoy_pct}% on {_ym(_prev)}" if yoy_pct else "Mailchimp, current")},
         {"n": f"{len(press):,}", "l": "Press citations",
          "s": f"in {sum(1 for v in p_out.values() if v)} outlets since {_ym(p_first)}; an undercount, since only a fixed set of outlets is watched"},
         {"n": f"{p_out.get('nytimes.com', 0)}", "l": "New York Times citations",
          "s": "no outlet cites Vital City more often"},
-      ] + ([{"n": f"{ytd_users:,}", "l": f"Visitors so far in {TODAY.year}",
-             "s": (f"visits up {ytd_visits_pct}% on the same weeks of {TODAY.year-1}" if ytd_visits_pct is not None
+      ] + ([{"n": f"{ytd_users:,}", "l": f"Visitors, Jan. 1 to {_md(TODAY)}, {TODAY.year}",
+             "s": (f"visits up {ytd_visits_pct}% on the same dates in {TODAY.year-1}" if ytd_visits_pct is not None
                    else "unique visitors, Google Analytics")}] if ytd_users else []) + [
-        {"n": f"{gt.get('visitors_30d') or 0:,}", "l": "Site visitors, last 30 days",
-         "s": (f"weekly visitors up {tgrow}% across {TODAY.year}" if tgrow else "Ghost analytics")},
+        {"n": f"{gt.get('visitors_30d') or 0:,}", "l": f"Site visitors, {_md(TODAY - timedelta(days=29))} to {_md(TODAY)}",
+         "s": (f"{'up' if _v30_pct >= 0 else 'down'} {abs(_v30_pct)}% on the same four weeks of {TODAY.year-1}" if _v30_pct is not None else "the last 30 days, Ghost analytics")},
       ] + ([{"n": f"{_sct['impressions']:,}", "l": "Times shown in Google results, last 28 days",
-             "s": f"{_sct.get('clicks') or 0:,} clicks through to the site"}] if _sct.get("impressions") else []) + [
+             "s": f"{_sct.get('clicks') or 0:,} clicks through to the site in those 28 days"}] if _sct.get("impressions") else []) + [
         {"n": f"{len(gov)+len(edu):,}", "l": "Government + university subscribers",
-         "s": f"{sum(1 for r in gov if 'nyc.gov' in dom(r)):,} on nyc.gov — City Hall, the courts, both DAs"},
+         "s": f"{sum(1 for r in gov if 'nyc.gov' in dom(r)):,} on nyc.gov — City Hall, the courts, the DAs"},
         {"n": f"{len(cat):,}", "l": "Pieces published",
          "s": (f"by {len(authors):,} contributors since 2021, {_roster_n} of them named senior contributors"
                if _roster_n else f"by {len(authors):,} contributors since 2021")},
@@ -764,6 +804,11 @@ def main():
              "note": (f"{_mbx['Government'].get('subs'):,} government addresses" +
                       (f"; academic addresses {_mbx['Academic'].get('avg_open_pct')}%" if _mbx.get("Academic") else ""))}]
             if _mbx.get("Government") and _mbx["Government"].get("avg_open_pct") else []),
+      # Who funds Vital City: the "underwritten by" sentence on vitalcitynyc.org/about,
+      # read at build time and cached in data/funders_current.json.
+      "funders_current": _current_funders(),
+      "giving": {"donors": len(donors), "raised": round(total), "median": round(st.median(amts)) if amts else 0,
+                 "big_gifts": _big_gifts, "since": GIVING_OPENED},
       # The most-read piece of the current year, for the one-pager.
       "mostread": ({"title": _top26.get("title"), "url": "https://www.vitalcitynyc.org" + (_top26.get("path") or ""),
                     "visitors": _top26.get("visitors"), "year": TODAY.year} if _top26.get("visitors") else None),

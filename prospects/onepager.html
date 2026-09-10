@@ -33,7 +33,7 @@
   .bar button.primary{background:var(--vc-black);color:#fff}
 
   /* ---- the page: US Letter portrait ---- */
-  .sheet{width:8.5in;min-height:11in;margin:0 auto 24px;background:var(--vc-white);padding:.5in .58in .45in;box-shadow:0 4px 30px rgba(0,0,0,.12);display:flex;flex-direction:column;gap:12px}
+  .sheet{width:8.5in;min-height:11in;margin:0 auto 24px;background:var(--vc-white);padding:.5in .58in .45in;box-shadow:0 4px 30px rgba(0,0,0,.12);display:flex;flex-direction:column;gap:11px}
   .mast{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--vc-black);padding-bottom:10px}
   .wordmark{font-weight:900;font-size:13px;letter-spacing:.22em;text-transform:uppercase}
   .mast h1{font-family:var(--vc-serif);font-weight:300;font-size:34px;line-height:1;margin:6px 0 0;letter-spacing:-.01em}
@@ -47,10 +47,8 @@
   .tile .l{font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-top:4px;line-height:1.25}
   .tile .s{font-size:9.5px;color:var(--vc-charcoal);margin-top:2px;line-height:1.3}
   .cols{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;flex:1}
-  .quotes{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .q{border-left:2.5px solid var(--vc-black);padding:2px 0 2px 9px}
-  .q .qq{font-family:var(--vc-serif);font-size:12.5px;line-height:1.3}
-  .q .qw{font-size:9.5px;color:var(--vc-charcoal);margin-top:3px}
+  .funds .fx{font-size:10px;line-height:1.4}
+  .funds .fx b{font-weight:800}
   .roles{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}
   .role{font-size:9.5px;padding:2px 7px;background:var(--vc-paper2);border-radius:2px;white-space:nowrap}
   .role b{font-weight:900}
@@ -104,6 +102,7 @@
 <div id="app" style="display:none">
   <div class="bar">
     <button class="primary" id="print">Print / save as PDF</button>
+    <button id="docx" title="An editable Word document with the same sections and numbers.">Download Word</button>
     <a id="decklink" href="deck.html" target="_blank" rel="noopener">The deck</a>
     <a href="index.html">Back</a>
     <span>One US Letter page. Every number is computed on the nightly rebuild; nothing is hand-typed.</span>
@@ -111,6 +110,7 @@
   <div class="sheet" id="sheet"></div>
 </div>
 
+<script src="vendor/docx.umd.js"></script>
 <script>
 const $=s=>document.querySelector(s);
 const AP=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
@@ -138,16 +138,19 @@ function build(d){
   let rlist=(FF.receipts||[]).slice();
   if(V&&V.receipts) rlist.sort((a,b)=>{const i=V.receipts.indexOf(a.head),j=V.receipts.indexOf(b.head);return (i<0?99:i)-(j<0?99:j);});
   const receipts=rlist.slice(0,5).map(r=>`<div class="rcp"><div class="rh">${esc(r.head)}</div><div>${esc(r.claim)}${r.note?` <span class="rn">— ${esc(r.note)}</span>`:""}</div></div>`).join("");
-  const quotes=(FF.testimonials||[]).filter(t=>t.q.length<90).slice(0,2).map(t=>`<div class="q"><div class="qq">“${esc(t.q)}”</div><div class="qw">${esc(t.who)}${t.role?`, ${esc(t.role)}`:""}</div></div>`).join("");
+  const joinAnd=a=>a.length>1?a.slice(0,-1).join(", ")+" and "+a.slice(-1)[0]:(a[0]||"");
+  const FU=FF.funders_current||{}, G=FF.giving||{};
+  const money=n=>"$"+Math.round(n||0).toLocaleString("en-US");
+  const funders=(FU.names||[]).length?`<div class="funds"><div class="sec">Who funds us</div>
+      <div class="fx">Vital City is underwritten by ${joinAnd((FU.names||[]).map(esc))}${G.donors?`, and by its readers: <b>${esc(G.donors.toLocaleString("en-US"))}</b> individual donors since online giving opened in ${esc(G.since||"")}, median gift ${esc(money(G.median))}${G.big_gifts?`, ${esc(String(G.big_gifts))} gifts of $1,000 or more`:""}`:""}.</div></div>`:"";
   const P=FF.press||{};
   const chips=(P.top||[]).slice(0,5).map(o=>`<span class="chip">${esc(o.outlet)} <b>${esc(String(o.n))}</b></span>`).join("");
   const cites=(P.samples||[]).slice(0,1).map(x=>`<div class="cite"><span class="co">${esc(x.outlet)}</span>${esc(x.title)}</div>`).join("");
   const also=(FF.cited_by_notable||[]).filter(o=>!(P.top||[]).some(t=>t.outlet===o));
-  const joinAnd=a=>a.length>1?a.slice(0,-1).join(", ")+" and "+a.slice(-1)[0]:(a[0]||"");
   const alsoTxt=(also.length||(FF.republished_by||[]).length)?`<p>${also.length?`Also cited by ${also.map(esc).join(", ")}.`:""}${(FF.republished_by||[]).length?` Essays are republished by ${joinAnd((FF.republished_by||[]).map(esc))}.`:""}</p>`:"";
   const spots=V?(V.spots||[]).slice(0,3):[];
   const clip=(t,n)=>{t=String(t||"");if(t.length<=n)return t;const c=t.slice(0,n);return c.slice(0,c.lastIndexOf(" ")>n-16?c.lastIndexOf(" "):n)+"…"};
-  const work=spots.length?`<div class="block"><div class="sec">${esc(V.spot_title||"Selected work")}</div>${spots.map(x=>`<div class="cite">${esc(clip(x.t,62))}${x.a?` <span style="color:var(--vc-charcoal)">— ${esc(x.a)}</span>`:""}</div>`).join("")}</div>`:"";
+  const work=spots.length?`<div class="block"><div class="sec">${esc(V.spot_title||"Selected work")}</div>${spots.map(x=>`<div class="cite">${esc(clip(x.t,56))}${x.a?` <span style="color:var(--vc-charcoal)">— ${esc(x.a)}</span>`:""}</div>`).join("")}</div>`:"";
   const M=FF.mostread;
   const most=M&&M.visitors?`<div class="most"><b>Most read in ${esc(String(M.year))}:</b> “${esc(M.title)}” — ${esc(M.visitors.toLocaleString("en-US"))} readers.</div>`:"";
   const ROLE={"Journalists":"journalists","Current city government":"in city government","Nonprofit leadership":"nonprofit leaders","Academics":"academics","Foundation leadership":"foundation leaders","State government":"in state government","Judges":"judges"};
@@ -161,10 +164,16 @@ function build(d){
   const spot=(V&&V.authors&&S.tags)
     ? V.authors.filter(n=>S.tags[n]).slice(0,6).map(n=>({n,tag:S.tags[n]}))
     : (S.spotlight||[]).slice(0,6);
+  const last=n=>n.replace(/\s+(Jr\.|Sr\.|II|III)$/,"").split(" ").slice(-1)[0];
+  spot.sort((a,b)=>last(a.n).localeCompare(last(b.n)));
   const spotParts=spot.map(x=>`<b>${esc(x.n)}</b> (${esc(x.tag)})`);
   const spotTxt=joinAnd(spotParts);
   const senior=(S.count? `<div class="block"><div class="sec">Who writes it</div>
       <div class="senior">${esc(String(S.pool||""))} contributors since 2021: criminologists, economists, planners, prosecutors, agency heads, mayors. ${esc(String(S.count))} are named senior contributors on the masthead${spotTxt?`, among them ${spotTxt}`:""}.</div></div>` : "");
+  window.__model={asof,V,FF,tiles:(FF.tiles||[]).slice(0,8),receipts:rlist.slice(0,5),roles:(FF.roles||[]).filter(r=>r.label!=="Contributors"&&r.n).map(r=>({n:r.n,label:ROLE[r.label]||r.label.toLowerCase()})),
+    aud:audRows.map(r=>{const m=AUD[r.label]||[r.label,null];return {label:m[0],value:r.value,note:m[1]||r.note}}).concat(PR&&PR.count?[{label:"Power readers",value:PR.count.toLocaleString("en-US"),note:`one in ${Math.round(100/(PR.pct||10))} subscribers, opening ${Math.round(PR.open||0)}% of everything sent; disproportionately government, academic and press`}]:[]),
+    press:{total:P.total,outlets:P.outlets,since:ym(P.since),top:(P.top||[]).slice(0,5),also,republished:FF.republished_by||[],sample:V?null:(P.samples||[])[0]||null,most:V?null:M},
+    spots,writes:{pool:S.pool,count:S.count,spot},funders:{names:FU.names||[],giving:G}};
   $("#sheet").innerHTML=`
     <div class="mast">
       <div>
@@ -194,12 +203,51 @@ function build(d){
         ${work}
       </div>
     </div>
-    ${quotes?`<div class="quotes">${quotes}</div>`:""}
+    ${funders}
     <div class="foot">
       <div><b>Vital City</b> is a project of the Fund for the City of New York, a 501(c)(3), EIN 13-2612524. Editors Elizabeth Glazer and Greg Berman; managing editor Josh Greenman.</div>
       <div style="text-align:right;white-space:nowrap">Deck, PowerPoint and sources:<br>the case for funders page</div>
     </div>`;
 }
+
+async function exportDocx(){
+  const m=window.__model; if(!m||!window.docx){alert("The page has not finished loading.");return;}
+  const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,AlignmentType,BorderStyle,HeadingLevel,ShadingType}=docx;
+  const F="Arial", noB={style:BorderStyle.NONE,size:0,color:"FFFFFF"}, hair={style:BorderStyle.SINGLE,size:4,color:"DDDDDD"};
+  const P=(runs,o={})=>new Paragraph({spacing:{after:o.after??80,before:o.before??0},alignment:o.align,children:(Array.isArray(runs)?runs:[runs]).map(r=>typeof r==="string"?new TextRun({text:r,font:F,size:o.size||19,bold:o.bold,color:o.color}):r)});
+  const R=(text,o={})=>new TextRun({text,font:F,size:o.size||19,bold:o.bold,color:o.color,italics:o.italics});
+  const H=(t)=>new Paragraph({spacing:{before:200,after:60},border:{bottom:{style:BorderStyle.SINGLE,size:8,color:"050507"}},children:[new TextRun({text:t.toUpperCase(),font:F,size:17,bold:true,characterSpacing:20})]});
+  const cell=(children,o={})=>new TableCell({children,width:o.w?{size:o.w,type:WidthType.PERCENTAGE}:undefined,borders:{top:o.b||noB,bottom:o.b||noB,left:o.b||noB,right:o.b||noB},margins:{top:80,bottom:80,left:100,right:100},shading:o.fill?{fill:o.fill,type:ShadingType.CLEAR,color:"auto"}:undefined});
+  const kids=[];
+  kids.push(P([R("VITAL CITY",{bold:true,size:18})],{after:40}));
+  kids.push(P([R("The evidence New York runs on.",{size:40})],{after:60}));
+  kids.push(P([R((m.FF.oneliner?m.FF.oneliner+" ":"")+"An independent policy journal, a data and research shop and a convener, all in one.")],{after:60}));
+  kids.push(P([R((m.V?m.V.label+" · ":"")+"vitalcitynyc.org · Computed from live data as of "+m.asof,{color:"707175",size:16})],{after:160}));
+  // tiles as a 2x4 table
+  const tiles=m.tiles; const rows=[];
+  for(let i=0;i<tiles.length;i+=4){ rows.push(new TableRow({children:tiles.slice(i,i+4).map(t=>cell([P([R(t.n,{bold:true,size:30})],{after:20}),P([R(t.l.toUpperCase(),{bold:true,size:14})],{after:20}),P([R(t.s,{size:15,color:"707175"})],{after:0})],{w:25,b:hair}))})); }
+  kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows}));
+  kids.push(H("The receipts — where the work moved policy"));
+  kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:m.receipts.map(r=>new TableRow({children:[cell([P([R(r.head,{bold:true,size:18})],{after:0})],{w:22,b:hair}),cell([P([R(r.claim,{size:18}),...(r.note?[R(" — "+r.note,{size:18,color:"707175"})]:[])],{after:0})],{w:78,b:hair})]}))}));
+  kids.push(H("Who writes it"));
+  const w=m.writes; kids.push(P([R(`${w.pool} contributors since 2021: criminologists, economists, planners, prosecutors, agency heads, mayors. ${w.count} are named senior contributors on the masthead`+(w.spot.length?", among them ":".")),...w.spot.flatMap((x,i)=>[R(x.n,{bold:true}),R(` (${x.tag})`+(i<w.spot.length-2?", ":i===w.spot.length-2?" and ":"."))])]));
+  kids.push(H("Who reads it"));
+  if(m.roles.length) kids.push(P([R(m.roles.map(r=>`${r.n.toLocaleString("en-US")} ${r.label}`).join(" · "))]));
+  m.aud.forEach(a=>kids.push(P([R(a.label+": ",{bold:true}),R(a.value),R(a.note?" — "+a.note:"",{color:"707175"})],{after:40})));
+  kids.push(H("In the press"));
+  const pr=m.press; kids.push(P([R(`${pr.total} citations in ${pr.outlets} outlets since ${pr.since}, an undercount, since only a fixed set of outlets is watched. `),R(pr.top.map(o=>`${o.outlet} ${o.n}`).join(" · "),{bold:true})]));
+  if(pr.also.length||pr.republished.length) kids.push(P([R((pr.also.length?`Also cited by ${pr.also.join(", ")}.`:"")+(pr.republished.length?` Essays are republished by ${pr.republished.slice(0,-1).join(", ")} and ${pr.republished.slice(-1)[0]}.`:""))]));
+  if(pr.sample) kids.push(P([R(pr.sample.outlet.toUpperCase()+"  ",{bold:true,size:15}),R(pr.sample.title)]));
+  if(pr.most&&pr.most.visitors) kids.push(P([R(`Most read in ${pr.most.year}: `,{bold:true}),R(`“${pr.most.title}” — ${pr.most.visitors.toLocaleString("en-US")} readers.`)]));
+  if(m.spots.length){ kids.push(H(m.V.spot_title||"Selected work")); m.spots.forEach(x=>kids.push(P([R(x.t),R(x.a?" — "+x.a:"",{color:"707175"})],{after:40}))); }
+  if(m.funders.names.length){ kids.push(H("Who funds us")); const G=m.funders.giving||{}; const money=n=>"$"+Math.round(n||0).toLocaleString("en-US");
+    kids.push(P([R("Vital City is underwritten by "+m.funders.names.slice(0,-1).join(", ")+" and "+m.funders.names.slice(-1)[0]+(G.donors?`, and by its readers: ${G.donors.toLocaleString("en-US")} individual donors since online giving opened in ${G.since||""}, median gift ${money(G.median)}${G.big_gifts?`, ${G.big_gifts} gifts of $1,000 or more`:""}`:"")+".")])); }
+  kids.push(P([R("Vital City is a project of the Fund for the City of New York, a 501(c)(3), EIN 13-2612524. Editors Elizabeth Glazer and Greg Berman; managing editor Josh Greenman.",{size:15,color:"707175"})],{before:200}));
+  const doc=new Document({styles:{default:{document:{run:{font:F,size:19}}}},sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:864,bottom:864,left:864,right:864}}},children:kids}]});
+  const blob=await Packer.toBlob(doc); window.__lastDocxSize=blob.size;
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`Vital-City-one-pager-${VKEY?VKEY+"-":""}${m.asof}.docx`; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);
+}
+$("#docx").addEventListener("click",exportDocx);
 
 async function unlock(fromStore){
   $("#err").textContent="";
@@ -216,6 +264,10 @@ $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
 $("#print").addEventListener("click",()=>window.print());
 document.addEventListener("keydown",e=>{if((e.key==="p"||e.key==="P")&&!e.metaKey&&!e.ctrlKey&&$("#app").style.display!=="none")window.print()});
 (async()=>{const p=loadPass();if(p){$("#pw").value=p;await unlock(true)}})();
+// ?docx=1 from the funders page: build and download the Word version once the page has content.
+if(/[?&]docx=1/.test(location.search)){
+  const _d=setInterval(()=>{ if(window.__model){clearInterval(_d);setTimeout(exportDocx,400);} },150);
+}
 // ?print=1 from the funders page: open the print dialog once the page has content.
 if(/[?&]print=1/.test(location.search)){
   const _t=setInterval(()=>{ if(($("#sheet").textContent||"").length>800){clearInterval(_t);setTimeout(()=>window.print(),500);} },150);
