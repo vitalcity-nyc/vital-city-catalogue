@@ -598,7 +598,10 @@
           <span id="pulseWin" style="display:inline-flex;gap:5px;margin-left:10px;vertical-align:2px">
             <button class="winbtn on" data-w="7">7 days</button><button class="winbtn" data-w="30">30 days</button><button class="winbtn" data-w="60">60 days</button><button class="winbtn" data-w="90">90 days</button><button class="winbtn" data-w="ytd">Year to date</button>
           </span>
-          <span class="hint" id="weekPulseHint"></span></h2>
+          <span class="hint" id="weekPulseHint"></span>
+          <span class="noprint" id="pulseRpt" style="display:inline-flex;gap:5px;margin-left:auto;vertical-align:2px">
+            <button class="winbtn" onclick="openPulseReport(false)" title="A print-ready summary of this window: the tiles above, the pulse tiles, top pieces, converting pieces and the context behind the numbers. Print to PDF, download as Markdown, copy or email from the page that opens.">⎙ Report: this view</button><button class="winbtn" onclick="openPulseReport(true)" title="The same summary for all five windows (7, 30, 60, 90 days and year to date) in one document.">⎙ Report: all views</button>
+          </span></h2>
         <div class="perfgrid" id="weekPulseGrid"></div>
         <div id="weekPulseTop" style="margin-top:14px"></div>
         <div id="weekPulseNote" style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
@@ -1284,6 +1287,8 @@ function boot(data){
   // cards further down the page.
   const head = kpis.filter(Boolean).filter(k=>k.tier!=="also");
   $("#kpis").innerHTML = head.map(tile).join("");
+  // Plain copy of the stock tiles for the pulse report (no markup).
+  window._stocksModel = head.map(k=>({lbl:k.lbl, num:String(k.num==null?"":k.num).replace(/<[^>]+>/g,""), delta:String(k.delta||"").replace(/<[^>]+>/g,""), flag:k.flag||""}));
   // ----- Last 7 days rolling scorecard (weekly pulse, all categories)
   renderWeekPulse(data);
   (function(){
@@ -5339,6 +5344,7 @@ function renderWeekPulse(data, span){
   const clickable={signups:1,unsubs:1,gifts:1};
 
   const LIMIT={visitors:"visitors", spv:"visitors", articles:"articles", raised:"money", gifts:"money"};
+  const _pm=[];
   const cells=TILES.map(t=>{
     // Does this window reach back before the series begins?
     const lim=LIMIT[t.k];
@@ -5406,6 +5412,7 @@ function renderWeekPulse(data, span){
       cls="flat";
       dtxt=`${fmtN(cur.gifts||0)} gift${(cur.gifts||0)===1?"":"s"} in the window · no rate on a base under 20`;
     }
+    _pm.push({k:t.k, lbl:t.lbl, value:t.fmt(now), delta:dtxt, cls});
     const nm=clickable[t.k] && window._weekNames[t.k];
     const canClick = nm && nm.list.length>0 && nm.list.length<=CLICK_MAX;
     const numHtml = canClick
@@ -5471,6 +5478,97 @@ function renderWeekPulse(data, span){
     `clickable — see exactly who. A tile reading &ldquo;—&rdquo; means this window starts before that data does. ` +
     `Social-follower change isn't included: we don't capture daily follower counts, so a delta there would be guesswork.`;
   card.style.display="";
+  renderWeekPulse._model={span, label:LBL[span]||`Last ${span} days`, curStart, curEnd, N,
+    range:(h?h.textContent:""), tiles:_pm,
+    top:tp, topLbl:(span===7?"Top pieces this week":"Top pieces")+" · "+String(tpLbl).replace(/&mdash;/g,"—").replace(/<[^>]+>/g,""),
+    conv:convTop, convLbl:"Most subscriber-converting pieces · "+String(convLbl).replace(/<[^>]+>/g,""),
+    note:(nEl?nEl.textContent:"")};
+}
+
+// ===== Pulse summary report ==============================================
+// One document per window (or all five), built from the same tiles the pulse
+// card shows plus the stock tiles above it and the context a reader needs to
+// judge them. Opens as a print-ready page with Print / PDF, Markdown, copy
+// and email buttons.
+const PULSE_SPANS=[7,30,60,90,"ytd"];
+function pulseReportModel(all){
+  const data=renderWeekPulse._data; if(!data) return null;
+  const cur=renderWeekPulse._win||7;
+  const spans= all ? PULSE_SPANS : [cur];
+  const windows=[];
+  spans.forEach(sp=>{ renderWeekPulse(data, sp); if(renderWeekPulse._model) windows.push(renderWeekPulse._model); });
+  if(all) renderWeekPulse(data, cur);   // put the card back the way it was
+  const mc=data.mailchimp||{}, gt=data.ghost_traffic||{}, db=data.donorbox||{};
+  const gen=String(data.generated_at||"").replace("T"," ").slice(0,16)+" UTC";
+  const asof=(windows[0]||{}).curEnd||"";
+  const context=[
+    `Data refreshed ${gen}. Newsletter figures come from Mailchimp, site traffic from Ghost analytics, giving from Donorbox, citations from the press tracker.`,
+    `Every signup happens on the Ghost form and is synced to Mailchimp, so daily signup counts can differ from Mailchimp's monthly totals by timing.`,
+    `The 2025 signup surge (May to September) was roughly half bots; about 2,400 of those accounts are still on the list, so year-over-year list comparisons are adjusted on the dashboard's YTD table.`,
+    `Norms: each window is set against the average of the trailing year of real data with the window itself excluded, falling back to the same number of days immediately before where no history exists. Money uses the median. A norm built on less than twice the window's history is shown without a percentage. Under 20 gifts, no rate is given.`,
+    `"Active subscribers 30d" counts people who opened at least one email in the last 30 days; Mailchimp does not report per-member opens on A/B split sends, so a window made only of split tests understates it.`,
+  ];
+  const mo=(mc.monthly_campaigns||[]).filter(r=>r.open_pct).slice(-1)[0];
+  if(mo) context.push(`Latest month with sends (${mo.month}): open rate ${mo.open_pct}%, click rate ${mo.click_pct}%${mo.ctor_pct?`, click-to-open ${mo.ctor_pct}%`:""}.`);
+  if(gt.available) context.push(`Site: ${fmtN(gt.visitors_30d||0)} visitors and ${fmtN(gt.pageviews_30d||0)} page views in the last 30 days; ${fmtN(gt.visitors_365d||0)} visitors since Ghost analytics began (${gt.history_start||""}).`);
+  if(db.active_recurring_donors!=null) context.push(`Recurring giving: ${fmtN(db.active_recurring_donors)} active recurring donors, about $${fmtN(Math.round(db.mrr_estimate||0))} a month.`);
+  return {generated:gen, asof, all, stocks:window._stocksModel||[], windows, context,
+          title: all ? "Growth summary · all windows" : `Growth summary · ${(windows[0]||{}).label||""}`};
+}
+function pulseReportMD(m){
+  let o=`# Vital City — ${m.title}\n\n_As of ${m.asof}. Data refreshed ${m.generated}._\n`;
+  if(m.stocks.length){ o+=`\n## At a glance\n`; m.stocks.forEach(k=>{ o+=`- ${k.lbl}: ${k.num}${k.delta?` — ${k.delta}`:""}${k.flag?` (${k.flag})`:""}\n`; }); }
+  m.windows.forEach(w=>{
+    o+=`\n## ${w.label} (${w.curStart} to ${w.curEnd}, ${w.N} days)\n`;
+    w.tiles.forEach(t=>{ o+=`- ${t.lbl}: ${t.value} — ${t.delta}\n`; });
+    if(w.top.length){ o+=`\n**${w.topLbl}**\n`; w.top.forEach((p,i)=>{ o+=`${i+1}. ${p.t} — ${p.v}\n`; }); }
+    if(w.conv.length){ o+=`\n**${w.convLbl}**\n`; w.conv.forEach((p,i)=>{ o+=`${i+1}. ${p.t} — ${p.v}\n`; }); }
+  });
+  o+=`\n## Context\n`+m.context.map(c=>`- ${c}`).join("\n")+`\n`;
+  if(m.windows[0]) o+=`\n_${m.windows[0].note}_\n`;
+  return o;
+}
+function pulseReportHTML(m){
+  const cls=c=>c==="up"?"up":c==="down"?"down":"";
+  let b=`<div class="wm">Vital City</div><h1>${esc(m.title)}</h1><p class="period">As of ${esc(m.asof)} · data refreshed ${esc(m.generated)}</p>`;
+  if(m.stocks.length){ b+=`<h2>At a glance</h2><div class="tiles">`+m.stocks.map(k=>`<div class="tile"><div class="l">${esc(k.lbl)}</div><div class="n">${esc(k.num)}</div><div class="d">${esc(k.delta)}${k.flag?` <b>${esc(k.flag)}</b>`:""}</div></div>`).join("")+`</div>`; }
+  m.windows.forEach(w=>{
+    b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.curStart)} → ${esc(w.curEnd)} · ${w.N} days · vs the ${w.N} days before</span></h2>`;
+    b+=`<table>`+w.tiles.map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}</td></tr>`).join("")+`</table>`;
+    if(w.top.length) b+=`<h3>${esc(w.topLbl)}</h3><ol>`+w.top.map(p=>`<li><span>${esc(p.t)}</span><span class="v">${esc(p.v)}</span></li>`).join("")+`</ol>`;
+    if(w.conv.length) b+=`<h3>${esc(w.convLbl)}</h3><ol>`+w.conv.map(p=>`<li><span>${esc(p.t)}</span><span class="v">${esc(p.v)}</span></li>`).join("")+`</ol>`;
+  });
+  b+=`<h2>Context</h2><ul class="ctx">`+m.context.map(c=>`<li>${esc(c)}</li>`).join("")+`</ul>`;
+  if(m.windows[0]) b+=`<div class="cav">${esc(m.windows[0].note)}</div>`;
+  const md=pulseReportMD(m);
+  const css='body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:#050507;max-width:760px;margin:28px auto;padding:0 24px;line-height:1.5}'
+    +'.wm{font-size:11px;text-transform:uppercase;letter-spacing:.18em;font-weight:700;color:#707175}'
+    +'h1{font-family:Georgia,serif;font-size:30px;margin:4px 0 2px}.period{color:#707175;font-size:13px;margin:0 0 14px}'
+    +'h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid #050507;padding-bottom:4px;margin:24px 0 6px}h2 .sub{font-weight:400;text-transform:none;letter-spacing:0;color:#707175;margin-left:8px}'
+    +'h3{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#707175;margin:14px 0 4px}'
+    +'.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#ddd;border:1px solid #ddd}.tile{background:#fff;padding:8px 10px}.tile .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}.tile .n{font-family:Georgia,serif;font-size:24px;line-height:1.1;margin:2px 0}.tile .d{font-size:10.5px;color:#707175}'
+    +'table{width:100%;border-collapse:collapse;font-size:13px}td{padding:6px 4px;border-bottom:1px solid #ddd;vertical-align:baseline}td.l{color:#707175;width:34%}td.v{font-weight:700;width:16%;font-variant-numeric:tabular-nums}td.n{color:#707175;font-size:11.5px}td.up{color:#3d7a35}td.down{color:#a0432d}'
+    +'ol{padding-left:20px;margin:4px 0;font-size:12.5px}ol li{display:flex;justify-content:space-between;gap:12px;padding:3px 0;border-bottom:1px solid #eee}ol li .v{white-space:nowrap;color:#707175;font-variant-numeric:tabular-nums}'
+    +'.ctx{font-size:11.5px;color:#333;padding-left:18px}.ctx li{margin:3px 0}.cav{font-size:10.5px;color:#707175;margin-top:18px;border-top:1px solid #ddd;padding-top:10px}'
+    +'.bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.bar button{font:inherit;font-size:12px;font-weight:700;padding:7px 12px;border:1.5px solid #050507;background:#fff;border-radius:3px;cursor:pointer}.bar button.p{background:#050507;color:#fff}'
+    +'@media print{.bar{display:none}body{margin:0;max-width:none}}';
+  const subject=`Vital City ${m.title.toLowerCase()} · ${m.asof}`;
+  const script=`<script>const MD=${JSON.stringify(md)};const SUBJ=${JSON.stringify(subject)};const NAME=${JSON.stringify("Vital-City-"+m.title.replace(/[^A-Za-z0-9]+/g,"-")+"-"+m.asof)};
+function dl(){const b=new Blob([MD],{type:"text/markdown;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=NAME+".md";document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),500);}
+function cp(btn){navigator.clipboard.writeText(MD).then(()=>{const o=btn.textContent;btn.textContent="Copied";setTimeout(()=>btn.textContent=o,1400);},()=>prompt("Copy this report:",MD));}
+function em(){if(MD.length<=6000){location.href="mailto:?subject="+encodeURIComponent(SUBJ)+"&body="+encodeURIComponent(MD);return;}
+  dl();const head=MD.split("\\n## Context")[0].split("\\n").slice(0,40).join("\\n");
+  location.href="mailto:?subject="+encodeURIComponent(SUBJ)+"&body="+encodeURIComponent(head+"\\n\\n[The full report is too long for an email body. It has just downloaded as "+NAME+".md; attach it before sending.]");}
+<\/script>`;
+  const bar=`<div class="bar"><button class="p" onclick="window.print()">⎙ Print / save as PDF</button><button onclick="dl()">⬇ Download .md</button><button onclick="cp(this)">⧉ Copy as text</button><button onclick="em()">✉ Email</button></div>`;
+  return `<!doctype html><html><head><meta charset="utf-8"><title>${esc(subject)}</title><style>${css}</style></head><body>${bar}${b}${script}</body></html>`;
+}
+function openPulseReport(all){
+  const m=pulseReportModel(all); if(!m){ alert("The dashboard has not finished loading."); return; }
+  window._pulseReport=m;
+  const w=window.open("","_blank");
+  if(!w){ alert("Allow pop-ups for this page to open the report, or use the Markdown download."); return; }
+  w.document.write(pulseReportHTML(m)); w.document.close(); w.focus();
 }
 
 // ===== Custom date-range report tool =====================================
