@@ -37,9 +37,7 @@
   .jump a{color:var(--vc-charcoal);text-decoration:none;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
   .jump a:hover{color:var(--vc-cerulean)}
   .wrap{max-width:1080px;margin:0 auto;padding:22px 30px 70px}
-  .deckbtn.onebtn{background:var(--vc-white);color:var(--vc-black);border:1.5px solid var(--vc-black);margin-left:10px}
-  .deckbtn.onebtn:hover{background:var(--vc-paper2)}
-  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin-bottom:24px}
+    .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin-bottom:24px}
   .kpi{background:var(--vc-white);padding:13px 14px}
   .kpi .lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;display:flex;align-items:flex-end;min-height:24px}
   .kpi .num{font-weight:900;font-size:26px;line-height:1.08;margin-top:4px;font-variant-numeric:tabular-nums}
@@ -297,9 +295,7 @@ function boot(d){
 </h2>
     <div class="hint">Reach, influence and growth &mdash; every number computed fresh from the live data on each nightly rebuild (as of ${esc((d.funder_facts||{}).asof||d.generated_at)}), never hand-typed. Copy a section or the whole thing.</div>
     <div class="deckcta">
-      <a href="deck.html?print=1" target="_blank" rel="noopener" class="deckbtn">&#8681;&nbsp; Download / print the current deck</a>
-      <a href="onepager.html?print=1" target="_blank" rel="noopener" class="deckbtn onebtn" title="A single Letter page: the numbers, the receipts, the press, who reads and writes it and who funds it, from the same nightly data. Opens with the print-to-PDF dialog; the Word button on the page gives an editable copy.">&#9643;&nbsp; Download / print the one-pager</a>
-      <div class="deckwhy">Opens the presentation deck and its print-to-PDF dialog in one click (prints landscape, one slide per page). The deck is generated from the same nightly data as this page &mdash; <b>whatever you save is current as of the last rebuild</b>, never a stale file. Each version below comes in every format.</div>
+      <div class="deckwhy">The deck and the one-pager are generated from the same nightly data as this page, so <b>whatever you save is current as of the last rebuild</b>, never a stale file. Print opens the print-to-PDF dialog (the deck prints landscape, one slide per page; the one-pager is a single Letter page). PowerPoint and Word are editable copies with every number and sentence as text.</div>
       <div class="vgrid">
         <div class="vhead"><span>Version</span><span>Open</span><span>Print / PDF</span><span>Editable PowerPoint</span><span>Email</span><span>One-pager</span></div>
         ${[
