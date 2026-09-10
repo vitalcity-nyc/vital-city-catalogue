@@ -412,7 +412,7 @@ PIPELINE = [
  {"name":"New America (reporting grants)",
   "date":"2026-07-15","note":"Reporting-grant program that could support a story on the Commission on Government Efficiency. Small and fast by design."},
  {"name":"ABNY Foundation",
-  "date":"2026-07-23","note":"Summer Youth Employment Program application was declined, from a field of 190 applicants. A partnership around convenings and a playbook release was raised separately."},
+  "date":"2026-09-10","note":"FUNDED. The Summer Youth Employment Program application was awarded, from a field of 190 applicants (corrected Sept. 10, 2026; an earlier note here wrongly said declined). A partnership around convenings and a playbook release was raised separately."},
  {"name":"William T. Grant Foundation",
   "date":"2025-03-27","note":"Funder-initiated contact in March 2025. Youth-outcomes research funder. No later record found in this review."},
  {"name":"Education funders (via Charles Sahm)",
