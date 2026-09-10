@@ -1,24 +1,12 @@
 name: tweet-suggester
 
-# Watches vitalcitynyc.org for newly published pieces and DMs Josh 2-3 suggested
-# posts for each one. Effectively event-driven: it polls hourly through the hours
-# Vital City actually publishes, and the seen-list means a run with nothing new
-# exits in seconds without spending anything.
+# UNPLUGGED 2026-09-10. The hourly schedule was removed after every run
+# aborted on an empty ANTHROPIC_API_KEY repo secret. The workflow stays here so
+# it can be run by hand from the Actions tab; to plug it back in, restore the
+# schedule block (it was "0 13-23 * * 1-5", hourly on weekdays through Vital
+# City's publishing hours) and set the ANTHROPIC_API_KEY and Slack secrets.
 #
-# Cadence reasoning: of 474 pieces published since January 2025, 100% went out on
-# a weekday and 96% between 07:00 and 19:00 Eastern. Wednesday and Thursday carry
-# 67% of them, but a Wednesday/Thursday-only schedule would miss the other third.
-# Hourly across the weekday window catches everything within an hour of publication.
-#
-# The repo is public, so Actions minutes are free. The only cost is one Claude call
-# per genuinely new piece, about two cents.
-
 on:
-  schedule:
-    # Hourly, 13:00-23:00 UTC, Mon-Fri. GitHub cron does not observe daylight
-    # saving, so this window is 09:00-19:00 Eastern in summer and 08:00-18:00 in
-    # winter. Both cover the publishing hours above.
-    - cron: "0 13-23 * * 1-5"
   workflow_dispatch:
     inputs:
       days:
