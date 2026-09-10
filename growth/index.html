@@ -5527,50 +5527,64 @@ function pulseInsights(w, data){
   const out=[]; const add=(tone,text)=>out.push({tone,text});
   const pc=t=>t&&t.pct!=null&&!t.thin ? Math.round(t.pct*100) : null;
   const sgn=v=>v>0?"+":"";
+  const fb=(t,v)=> t.k==="raised" ? "$"+Math.round(v).toLocaleString("en-US") : t.k==="spv" ? (+v).toFixed(2) : Math.round(v).toLocaleString("en-US");
   const span=w.span==="ytd"?"the year so far":`this ${w.N}-day window`;
-  const norm=t=>t&&t.normed ? `a typical ${w.N}-day stretch` : `the ${w.N} days before`;
+  // Always name the basis and its figure, exactly as the tile does: a norm
+  // (trailing-year average, this window excluded) or the same number of
+  // days immediately before.
+  const vs=t=> t.base==null ? "" : (t.normed ? ` against a typical ${w.N}-day stretch (about ${fb(t,t.base)})` : ` against the ${w.N} days before (${fb(t,t.base)})`);
   const N=T.net, S=T.signups, U=T.unsubs, V=T.visitors, R=T.spv, G=T.gifts, M=T.raised, A=T.articles, E=T.sends;
   // 1. the list
   if(N){
     const p=pc(N);
-    if(N.now>0 && (p==null || p>=10)) add("good", `The list grew by ${N.value} in ${span}${p!=null?`, ${sgn(p)}${p}% against ${norm(N)}`:""}.`);
-    else if(N.now>0) add("neutral", `The list grew by ${N.value}, about in line with ${norm(N)}${p!=null?` (${sgn(p)}${p}%)`:""}.`);
+    if(N.now>0 && (p==null || p>=10)) add("good", `The list grew by ${N.value} in ${span}${p!=null?`, ${sgn(p)}${p}%${vs(N)}`:""}.`);
+    else if(N.now>0) add("neutral", `The list grew by ${N.value} in ${span}, about in line with${vs(N).replace(/^ against/,"")}${p!=null?` (${sgn(p)}${p}%)`:""}.`);
     else if(N.now<0) add("watch", `The list shrank by ${Math.abs(N.now).toLocaleString("en-US")} in ${span}: unsubscribes outran signups.`);
     else add("neutral", `The list ended ${span} where it started.`);
   }
   if(S&&U){
     const ps=pc(S), pu=pc(U);
-    if(ps!=null&&pu!=null&&ps<=-5&&pu<=-15&&N&&N.now>0) add("neutral", `Signups ran ${Math.abs(ps)}% below ${norm(S)} but unsubscribes fell ${Math.abs(pu)}%, which is why the net figure still reads positive. Growth from fewer departures is real but not the same as growth from new readers.`);
-    else if(ps!=null&&ps>=15) add("good", `New signups (${S.value}) ran ${ps}% above ${norm(S)}.`);
-    else if(ps!=null&&ps<=-15) add("watch", `New signups (${S.value}) ran ${Math.abs(ps)}% below ${norm(S)}.`);
-    if(pu!=null&&pu>=25) add("watch", `Unsubscribes (${U.value}) ran ${pu}% above ${norm(U)}. Worth checking which sends they followed.`);
+    if(ps!=null&&pu!=null&&ps<=-5&&pu<=-15&&N&&N.now>0) add("neutral", `Signups (${S.value}) ran ${Math.abs(ps)}% below their norm (about ${fb(S,S.base)}) while unsubscribes (${U.value}) ran ${Math.abs(pu)}% below theirs (about ${fb(U,U.base)}). That is why the net figure reads positive: fewer departures, not more arrivals.`);
+    else if(ps!=null&&ps>=15) add("good", `New signups: ${S.value}, ${sgn(ps)}${ps}%${vs(S)}.`);
+    else if(ps!=null&&ps<=-15) add("watch", `New signups: ${S.value}, ${ps}%${vs(S)}.`);
+    if(pu!=null&&pu>=25) add("watch", `Unsubscribes: ${U.value}, ${sgn(pu)}${pu}%${vs(U)}. Worth checking which sends they followed.`);
   }
   // 2. traffic and conversion
   if(V){
     const pv=pc(V); const top=(w.top||[])[0];
-    if(pv!=null&&pv>=20) add("good", `Site traffic was strong: ${V.value} visitors, ${sgn(pv)}${pv}% against ${norm(V)}${top?`, led by "${top.t}" (${top.v})`:""}.`);
-    else if(pv!=null&&pv<=-20) add("watch", `Site traffic was soft: ${V.value} visitors, ${pv}% against ${norm(V)}.`);
+    const sinceM=/since (\S+?)(?:\s|$|—)/.exec(w.topLbl||"");
+    if(pv!=null&&pv>=20) add("good", `Site visitors: ${V.value}, ${sgn(pv)}${pv}%${vs(V)}${top?`. The most-read piece${sinceM?` since ${sinceM[1]} (Ghost keeps no list for this exact window)`:""} was "${top.t}" (${top.v})`:""}.`);
+    else if(pv!=null&&pv<=-20) add("watch", `Site visitors: ${V.value}, ${pv}%${vs(V)}.`);
   }
   if(R){
     const pr=pc(R), pv=V?pc(V):null;
-    if(pr!=null&&pr<=-20&&pv!=null&&pv>=10) add("watch", `Traffic grew faster than signups: ${R.value} signups per 1,000 visitors, ${Math.abs(pr)}% below ${norm(R)}. More people arrived without subscribing, so the newsletter prompt and the gated pieces are the lever.`);
-    else if(pr!=null&&pr>=20) add("good", `Conversion improved: ${R.value} signups per 1,000 visitors, ${sgn(pr)}${pr}% against ${norm(R)}.`);
-    else if(pr!=null&&pr<=-20) add("watch", `Conversion slipped: ${R.value} signups per 1,000 visitors, ${pr}% against ${norm(R)}.`);
+    if(pr!=null&&pr<=-20&&pv!=null&&pv>=10) add("watch", `Visitors rose faster than signups: ${R.value} signups per 1,000 visitors, ${pr}%${vs(R)}. More people arrived without subscribing, so the signup prompt and the gated pieces are where to look.`);
+    else if(pr!=null&&pr>=20) add("good", `Signups per 1,000 visitors: ${R.value}, ${sgn(pr)}${pr}%${vs(R)}.`);
+    else if(pr!=null&&pr<=-20) add("watch", `Signups per 1,000 visitors: ${R.value}, ${pr}%${vs(R)}.`);
   }
   // 3. publishing pace and sends
   if(A){ const pa=pc(A);
-    if(pa!=null&&pa>=25) add("good", `Publishing pace was up: ${A.value} new pieces, ${sgn(pa)}${pa}% against ${norm(A)}.`);
-    else if(pa!=null&&pa<=-25) add("watch", `Publishing pace was down: ${A.value} new pieces, ${pa}% against ${norm(A)}. Fewer pieces usually means fewer search landings a few weeks later.`); }
-  if(E&&E.base!=null&&E.now<E.base*0.6&&E.base>=2) add("neutral", `Fewer newsletter sends than usual (${E.value} vs about ${Math.round(E.base)}), which depresses signups and unsubscribes alike.`);
+    if(pa!=null&&pa>=25) add("good", `New pieces published: ${A.value}, ${sgn(pa)}${pa}%${vs(A)}.`);
+    else if(pa!=null&&pa<=-25) add("watch", `New pieces published: ${A.value}, ${pa}%${vs(A)}. Fewer pieces usually means fewer search landings a few weeks later.`); }
+  if(E&&E.base!=null&&E.base>=2&&(E.now<E.base*0.6||E.now>E.base*1.6)){
+    // How many of the comparison period's sends were the same subject going
+    // out again (a resend, or the same issue to two segments)? Those inflate
+    // a raw send count, and a reader deserves to know.
+    const shift=(iso,d)=>{const x=new Date(iso+"T00:00:00Z"); x.setUTCDate(x.getUTCDate()+d); return x.toISOString().slice(0,10);};
+    const pa=shift(w.curStart,-w.N), pb=shift(w.curStart,-1);
+    const rep=(a,b)=>{const seen={}; let n=0; ((data||{}).mailchimp||{}).campaigns.forEach(c=>{const d=String(c.sent||"").slice(0,10); if(d<a||d>b) return; const k=(c.subject||"").trim().toLowerCase(); if(!k) return; if(seen[k]) n++; seen[k]=1;}); return n;};
+    const rp=rep(pa,pb), rc=rep(w.curStart,w.curEnd);
+    add("neutral", `Newsletter sends: ${E.value} in ${span}${vs(E)}${rp||rc?` — of which ${rp} in the earlier period and ${rc} in this one were repeat subjects (resends or the same issue to two segments)`:""}. ${E.now<E.base?"Fewer":"More"} sends mean ${E.now<E.base?"fewer":"more"} signups and unsubscribes alike, so those tiles move for that reason too.`); }
   // 4. money
   if(G&&M){
-    if(G.now<20) add("neutral", `Giving: ${M.value} from ${G.value} gift${G.now===1?"":"s"}. Too few gifts in the window to read as a trend.`);
-    else { const pm=pc(M); if(pm!=null&&pm>=20) add("good", `Giving was strong: ${M.value} from ${G.value} gifts, ${sgn(pm)}${pm}% against the median ${w.N}-day stretch.`);
-           else if(pm!=null&&pm<=-20) add("watch", `Giving was soft: ${M.value} from ${G.value} gifts, ${pm}% against the median ${w.N}-day stretch.`);
-           else add("neutral", `Giving: ${M.value} from ${G.value} gifts, about typical.`); }
+    if(G.now<20) add("neutral", `Giving: ${M.value} from ${G.value} gift${G.now===1?"":"s"}. Under 20 gifts is too few to read as a trend.`);
+    else { const pm=pc(M); if(pm!=null&&pm>=20) add("good", `Giving: ${M.value} from ${G.value} gifts, ${sgn(pm)}${pm}% against the median ${w.N}-day stretch (about ${fb(M,M.base)}).`);
+           else if(pm!=null&&pm<=-20) add("watch", `Giving: ${M.value} from ${G.value} gifts, ${pm}% against the median ${w.N}-day stretch (about ${fb(M,M.base)}).`);
+           else add("neutral", `Giving: ${M.value} from ${G.value} gifts, about typical (median ${fb(M,M.base)}).`); }
   }
   // 5. conversion leaders
-  const c=(w.conv||[])[0]; if(c) add("neutral", `The piece that turned the most readers into subscribers was "${c.t}" (${c.v}).`);
+  const c=(w.conv||[])[0];
+  if(c){ const m=/only complete back to (\S+)/.exec(w.convLbl||""); add("neutral", `The piece that brought in the most subscribers was "${c.t}" (${c.v}${m?`, counted only since ${m[1].replace(/,$/,"")}`:""}).`); }
   if(!out.length) add("neutral", "Nothing in this window moved far enough from its norm to call out.");
   return out;
 }
