@@ -57,6 +57,10 @@
   },
   {
     "name": "Technology",
+    "post_count": 34
+  },
+  {
+    "name": "Education",
     "post_count": 33
   },
   {
@@ -66,10 +70,6 @@
   {
     "name": "Public Health",
     "post_count": 32
-  },
-  {
-    "name": "Education",
-    "post_count": 31
   },
   {
     "name": "data",
@@ -180,6 +180,10 @@
     "post_count": 12
   },
   {
+    "name": "Youth",
+    "post_count": 11
+  },
+  {
     "name": "Climate Change",
     "post_count": 11
   },
@@ -192,12 +196,12 @@
     "post_count": 11
   },
   {
-    "name": "Youth",
+    "name": "Why the Trains Matter",
     "post_count": 10
   },
   {
-    "name": "Why the Trains Matter",
-    "post_count": 10
+    "name": "Artifical Intelligence",
+    "post_count": 9
   },
   {
     "name": "Streets",
@@ -226,10 +230,6 @@
   {
     "name": "Looking Back",
     "post_count": 9
-  },
-  {
-    "name": "Artifical Intelligence",
-    "post_count": 8
   },
   {
     "name": "More Money in More Pockets",

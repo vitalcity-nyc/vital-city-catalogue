@@ -2420,6 +2420,30 @@
   "senior": true
  },
  {
+  "name": "Justin Reich",
+  "post_count": 1,
+  "slugs": [
+   "nyc-public-school-classroom-ai-policy"
+  ],
+  "slug": "reich-justin",
+  "bio": "is an associate professor of digital media at MIT and the host of \u201cThe Homework Machine\u201d podcast.",
+  "url": "https://www.vitalcitynyc.org/author/reich-justin/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Terra Ziporyn",
+  "post_count": 1,
+  "slugs": [
+   "early-school-start-times-harm-nyc"
+  ],
+  "slug": "ziporyn-terra",
+  "bio": ", Ph.D., is the executive director and co-founder of the national nonprofit Start School Later. Her writings on public health include the recent book \u201cEducating the Exhausted: Adolescent Sleep and the Struggle for a Later School Start.\u201d",
+  "url": "https://www.vitalcitynyc.org/author/ziporyn-terra/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Marianna Mitchem",
   "post_count": 1,
   "slugs": [
@@ -4017,14 +4041,14 @@
   "website": null
  },
  {
-  "name": "Samantha J. Simon",
+  "name": "Charles Buckhanan",
   "post_count": 1,
   "slugs": [
-   "the-good-gun-owner"
+   "my-seven-guns-a-personal-inventory"
   ],
-  "slug": "simon-samantha-j",
-  "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
-  "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
+  "slug": "buckhanan-charles",
+  "bio": "is a street outreach worker on Chicago\u2019s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
+  "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
   "twitter": null,
   "website": null
  },
@@ -4041,26 +4065,62 @@
   "website": null
  },
  {
-  "name": "Greg Lickenbrock",
+  "name": "Samantha J. Simon",
   "post_count": 1,
   "slugs": [
-   "the-money-behind-mass-shootings"
+   "the-good-gun-owner"
   ],
-  "slug": "lickenbrock-greg",
-  "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
-  "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
+  "slug": "simon-samantha-j",
+  "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+  "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
   "twitter": null,
   "website": null
  },
  {
-  "name": "Daniel Semenza",
+  "name": "Brian DeLay",
   "post_count": 1,
   "slugs": [
-   "the-80-20-rule-of-gun-supply"
+   "gun-culture-then-and-now"
   ],
-  "slug": "semenza-daniel",
-  "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
-  "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
+  "slug": "delay-brian",
+  "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of \u201cThe Myth of Continuity in American Gun Culture,\u201d and the 2025\u20132026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
+  "url": "https://www.vitalcitynyc.org/author/delay-brian/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Chris Marvin",
+  "post_count": 1,
+  "slugs": [
+   "licensed-to-kill-concealed-carry-training-course"
+  ],
+  "slug": "marvin-chris",
+  "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
+  "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Theodore Roosevelt IV",
+  "post_count": 1,
+  "slugs": [
+   "guns-my-family-and-me"
+  ],
+  "slug": "roosevelt-theodore-iv",
+  "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
+  "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Nina Vinik",
+  "post_count": 1,
+  "slugs": [
+   "breaking-through-with-the-next-generation-on-firearms"
+  ],
+  "slug": "vinik-nina",
+  "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
+  "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
   "twitter": null,
   "website": null
  },
@@ -4089,62 +4149,26 @@
   "website": null
  },
  {
-  "name": "Nina Vinik",
+  "name": "Daniel Semenza",
   "post_count": 1,
   "slugs": [
-   "breaking-through-with-the-next-generation-on-firearms"
+   "the-80-20-rule-of-gun-supply"
   ],
-  "slug": "vinik-nina",
-  "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
-  "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
+  "slug": "semenza-daniel",
+  "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
+  "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
   "twitter": null,
   "website": null
  },
  {
-  "name": "Theodore Roosevelt IV",
+  "name": "Greg Lickenbrock",
   "post_count": 1,
   "slugs": [
-   "guns-my-family-and-me"
+   "the-money-behind-mass-shootings"
   ],
-  "slug": "roosevelt-theodore-iv",
-  "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
-  "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Chris Marvin",
-  "post_count": 1,
-  "slugs": [
-   "licensed-to-kill-concealed-carry-training-course"
-  ],
-  "slug": "marvin-chris",
-  "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
-  "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Brian DeLay",
-  "post_count": 1,
-  "slugs": [
-   "gun-culture-then-and-now"
-  ],
-  "slug": "delay-brian",
-  "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of \u201cThe Myth of Continuity in American Gun Culture,\u201d and the 2025\u20132026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
-  "url": "https://www.vitalcitynyc.org/author/delay-brian/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Charles Buckhanan",
-  "post_count": 1,
-  "slugs": [
-   "my-seven-guns-a-personal-inventory"
-  ],
-  "slug": "buckhanan-charles",
-  "bio": "is a street outreach worker on Chicago\u2019s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
-  "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
+  "slug": "lickenbrock-greg",
+  "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
+  "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
   "twitter": null,
   "website": null
  },
@@ -4498,18 +4522,6 @@
   "website": null
  },
  {
-  "name": "Meryl Chertoff",
-  "post_count": 1,
-  "slugs": [
-   "trumps-executive-orders-have-cities-in-the-crosshairs"
-  ],
-  "slug": "chertoff-meryl",
-  "bio": "is adjunct professor of law at Georgetown University Law Center.",
-  "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Adam Cohen",
   "post_count": 1,
   "slugs": [
@@ -4518,6 +4530,18 @@
   "slug": "cohen-adam",
   "bio": "is author of \u201cNothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
   "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Meryl Chertoff",
+  "post_count": 1,
+  "slugs": [
+   "trumps-executive-orders-have-cities-in-the-crosshairs"
+  ],
+  "slug": "chertoff-meryl",
+  "bio": "is adjunct professor of law at Georgetown University Law Center.",
+  "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
   "twitter": null,
   "website": null
  },

@@ -1,27 +1,40 @@
 {
   "meta": {
-    "generated_at": "2026-09-10T11:04:36.506209+00:00",
+    "generated_at": "2026-09-10T23:09:14.806915+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 912,
-    "total_authors": 507,
+    "total_posts": 914,
+    "total_authors": 509,
     "total_issues": 32,
     "total_topics": 219,
     "date_range": [
       "2021-09-15",
-      "2026-09-09"
+      "2026-09-10"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 2,
+    "new_articles": [
+      {
+        "title": "What a Better Public School AI Policy Would Look Like",
+        "url": "https://www.vitalcitynyc.org/nyc-public-school-classroom-ai-policy/",
+        "published_date": "2026-09-10",
+        "primary_author": null
+      },
+      {
+        "title": "A Simple Change That Could Improve the Lives of Millions of New Yorkers",
+        "url": "https://www.vitalcitynyc.org/early-school-start-times-harm-nyc/",
+        "published_date": "2026-09-10",
+        "primary_author": null
+      }
+    ]
   },
-  "total_pieces": 912,
+  "total_pieces": 914,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 200
+    "2026": 202
   },
   "by_month": {
     "2021-09": 1,
@@ -78,12 +91,12 @@
     "2026-06": 44,
     "2026-07": 22,
     "2026-08": 16,
-    "2026-09": 14
+    "2026-09": 16
   },
   "by_type": [
     [
       "opinion/commentary",
-      737
+      739
     ],
     [
       "q&a",
@@ -173,6 +186,10 @@
     ],
     [
       "Technology",
+      34
+    ],
+    [
+      "Education",
       33
     ],
     [
@@ -182,10 +199,6 @@
     [
       "Public Health",
       32
-    ],
-    [
-      "Education",
-      31
     ],
     [
       "data",
@@ -220,11 +233,11 @@
   "by_credential_pieces": [
     [
       "Academic",
-      224
+      225
     ],
     [
       "Nonprofit / advocacy",
-      112
+      113
     ],
     [
       "Journalist / media",
@@ -270,7 +283,7 @@
   "by_credential_authors": [
     [
       "Academic",
-      159
+      160
     ],
     [
       "Other / unclassified",
@@ -278,7 +291,7 @@
     ],
     [
       "Nonprofit / advocacy",
-      76
+      77
     ],
     [
       "Journalist / media",
@@ -384,17 +397,17 @@
     }
   },
   "wc_stats": {
-    "n": 902,
-    "median": 1614,
-    "mean": 1891,
+    "n": 904,
+    "median": 1616,
+    "mean": 1890,
     "p90": 2839,
     "max": 30332,
     "p10": 909,
-    "p25": 1271,
-    "p75": 2137,
-    "p95": 3836,
+    "p25": 1272,
+    "p75": 2135,
+    "p95": 3832,
     "no_count": 10,
-    "core_1000_2499": 663,
+    "core_1000_2499": 665,
     "under_500": 43,
     "over_5000": 24
   },
@@ -409,7 +422,7 @@
     ],
     [
       "1,000-1,999",
-      529
+      531
     ],
     [
       "2,000-2,999",
@@ -461,12 +474,12 @@
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 172
+        "n": 173
       },
       {
         "floor": 1750,
         "label": "1,750",
-        "n": 106
+        "n": 107
       },
       {
         "floor": 2000,
@@ -540,15 +553,15 @@
     },
     {
       "year": "2026",
-      "n": 195,
-      "p25": 1269,
+      "n": 197,
+      "p25": 1270,
       "median": 1635,
-      "p75": 2381,
+      "p75": 2377,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 771,
+    "1": 773,
     "2": 112,
     "3": 26,
     "4": 1,
@@ -707,34 +720,34 @@
       },
       {
         "year": "2026",
-        "weeks": 36.0,
-        "pieces": 200,
-        "outside_issues": 136,
-        "per_week_all": 5.56,
-        "per_week_outside_issues": 3.78,
+        "weeks": 36.1,
+        "pieces": 202,
+        "outside_issues": 138,
+        "per_week_all": 5.59,
+        "per_week_outside_issues": 3.82,
         "partial": true
       }
     ],
-    "total_weeks": 260.0,
+    "total_weeks": 260.1,
     "all_time_per_week": 3.51,
-    "all_time_per_week_outside_issues": 1.6,
+    "all_time_per_week_outside_issues": 1.61,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.78,
-    "current_per_week_all": 5.56,
+    "current_per_week_outside_issues": 3.82,
+    "current_per_week_all": 5.59,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 496,
       "published_away_from_drop": 63,
       "share_of_issue_pieces": 12.7,
-      "current_year_strict": 3.78,
-      "current_year_loose": 3.94,
-      "all_time_strict": 1.6,
-      "all_time_loose": 1.84,
+      "current_year_strict": 3.82,
+      "current_year_loose": 3.98,
+      "all_time_strict": 1.61,
+      "all_time_loose": 1.85,
       "all_time_all": 3.51
     }
   },
   "rhythm": {
-    "n_dated": 912,
+    "n_dated": 914,
     "by_weekday": [
       {
         "day": "Mon",
@@ -749,12 +762,12 @@
       {
         "day": "Wed",
         "pieces": 440,
-        "share": 48.2
+        "share": 48.1
       },
       {
         "day": "Thu",
-        "pieces": 175,
-        "share": 19.2
+        "pieces": 177,
+        "share": 19.4
       },
       {
         "day": "Fri",
@@ -773,7 +786,7 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 48.2,
+    "top_day_share": 48.1,
     "midweek_share": 85.0,
     "weekend_pieces": 24,
     "by_month": [
@@ -836,9 +849,9 @@
       {
         "month": "September",
         "abbr": "Sep",
-        "pieces": 109,
+        "pieces": 111,
         "occurrences": 6,
-        "per_occurrence": 18.2
+        "per_occurrence": 18.5
       },
       {
         "month": "October",
