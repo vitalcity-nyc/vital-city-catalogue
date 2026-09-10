@@ -5412,7 +5412,8 @@ function renderWeekPulse(data, span){
       cls="flat";
       dtxt=`${fmtN(cur.gifts||0)} gift${(cur.gifts||0)===1?"":"s"} in the window · no rate on a base under 20`;
     }
-    _pm.push({k:t.k, lbl:t.lbl, value:t.fmt(now), delta:dtxt, cls});
+    _pm.push({k:t.k, lbl:t.lbl, value:t.fmt(now), delta:dtxt, cls, now:+now||0, base:(base!=null&&isFinite(base))?+base:null,
+      pct:(base&&isFinite(base)&&base!==0)?(now-base)/Math.abs(base):null, thin:!!(nm7&&nm7.thin), normed:!!nm7, months:nm7?nm7.months:null});
     const nm=clickable[t.k] && window._weekNames[t.k];
     const canClick = nm && nm.list.length>0 && nm.list.length<=CLICK_MAX;
     const numHtml = canClick
@@ -5509,11 +5510,108 @@ function pulseReportModel(all){
     `"Active subscribers 30d" counts people who opened at least one email in the last 30 days; Mailchimp does not report per-member opens on A/B split sends, so a window made only of split tests understates it.`,
   ];
   const mo=(mc.monthly_campaigns||[]).filter(r=>r.open_pct).slice(-1)[0];
-  if(mo) context.push(`Latest month with sends (${mo.month}): open rate ${mo.open_pct}%, click rate ${mo.click_pct}%${mo.ctor_pct?`, click-to-open ${mo.ctor_pct}%`:""}.`);
+  if(mo) context.push(`Latest month with sends (${mo.month}, ${mo.month===String(asof).slice(0,7)?"partial":"full"}): open rate ${mo.open_pct}%, click rate ${mo.click_pct}%${mo.ctor_pct?`, click-to-open ${mo.ctor_pct}%`:""}. Recent sends are often A/B splits, whose per-member opens Mailchimp does not report, so the latest month reads low on clicks.`);
   if(gt.available) context.push(`Site: ${fmtN(gt.visitors_30d||0)} visitors and ${fmtN(gt.pageviews_30d||0)} page views in the last 30 days; ${fmtN(gt.visitors_365d||0)} visitors since Ghost analytics began (${gt.history_start||""}).`);
   if(db.active_recurring_donors!=null) context.push(`Recurring giving: ${fmtN(db.active_recurring_donors)} active recurring donors, about $${fmtN(Math.round(db.mrr_estimate||0))} a month.`);
-  return {generated:gen, asof, all, stocks:window._stocksModel||[], windows, context,
+  windows.forEach(w=>{ w.insights=pulseInsights(w, data); });
+  const model={generated:gen, asof, all, stocks:window._stocksModel||[], windows, context,
           title: all ? "Growth summary · all windows" : `Growth summary · ${(windows[0]||{}).label||""}`};
+  model.benchmarks=pulseBenchmarks(model, data);
+  return model;
+}
+// Rule-based readings of a window: no model, no API call. Each line is a
+// template filled from the tile numbers, so it can only say what the tiles
+// already show, in words. Tone: good / watch / neutral.
+function pulseInsights(w, data){
+  const T={}; (w.tiles||[]).forEach(t=>T[t.k]=t);
+  const out=[]; const add=(tone,text)=>out.push({tone,text});
+  const pc=t=>t&&t.pct!=null&&!t.thin ? Math.round(t.pct*100) : null;
+  const sgn=v=>v>0?"+":"";
+  const span=w.span==="ytd"?"the year so far":`this ${w.N}-day window`;
+  const norm=t=>t&&t.normed ? `a typical ${w.N}-day stretch` : `the ${w.N} days before`;
+  const N=T.net, S=T.signups, U=T.unsubs, V=T.visitors, R=T.spv, G=T.gifts, M=T.raised, A=T.articles, E=T.sends;
+  // 1. the list
+  if(N){
+    const p=pc(N);
+    if(N.now>0 && (p==null || p>=10)) add("good", `The list grew by ${N.value} in ${span}${p!=null?`, ${sgn(p)}${p}% against ${norm(N)}`:""}.`);
+    else if(N.now>0) add("neutral", `The list grew by ${N.value}, about in line with ${norm(N)}${p!=null?` (${sgn(p)}${p}%)`:""}.`);
+    else if(N.now<0) add("watch", `The list shrank by ${Math.abs(N.now).toLocaleString("en-US")} in ${span}: unsubscribes outran signups.`);
+    else add("neutral", `The list ended ${span} where it started.`);
+  }
+  if(S&&U){
+    const ps=pc(S), pu=pc(U);
+    if(ps!=null&&pu!=null&&ps<=-5&&pu<=-15&&N&&N.now>0) add("neutral", `Signups ran ${Math.abs(ps)}% below ${norm(S)} but unsubscribes fell ${Math.abs(pu)}%, which is why the net figure still reads positive. Growth from fewer departures is real but not the same as growth from new readers.`);
+    else if(ps!=null&&ps>=15) add("good", `New signups (${S.value}) ran ${ps}% above ${norm(S)}.`);
+    else if(ps!=null&&ps<=-15) add("watch", `New signups (${S.value}) ran ${Math.abs(ps)}% below ${norm(S)}.`);
+    if(pu!=null&&pu>=25) add("watch", `Unsubscribes (${U.value}) ran ${pu}% above ${norm(U)}. Worth checking which sends they followed.`);
+  }
+  // 2. traffic and conversion
+  if(V){
+    const pv=pc(V); const top=(w.top||[])[0];
+    if(pv!=null&&pv>=20) add("good", `Site traffic was strong: ${V.value} visitors, ${sgn(pv)}${pv}% against ${norm(V)}${top?`, led by "${top.t}" (${top.v})`:""}.`);
+    else if(pv!=null&&pv<=-20) add("watch", `Site traffic was soft: ${V.value} visitors, ${pv}% against ${norm(V)}.`);
+  }
+  if(R){
+    const pr=pc(R), pv=V?pc(V):null;
+    if(pr!=null&&pr<=-20&&pv!=null&&pv>=10) add("watch", `Traffic grew faster than signups: ${R.value} signups per 1,000 visitors, ${Math.abs(pr)}% below ${norm(R)}. More people arrived without subscribing, so the newsletter prompt and the gated pieces are the lever.`);
+    else if(pr!=null&&pr>=20) add("good", `Conversion improved: ${R.value} signups per 1,000 visitors, ${sgn(pr)}${pr}% against ${norm(R)}.`);
+    else if(pr!=null&&pr<=-20) add("watch", `Conversion slipped: ${R.value} signups per 1,000 visitors, ${pr}% against ${norm(R)}.`);
+  }
+  // 3. publishing pace and sends
+  if(A){ const pa=pc(A);
+    if(pa!=null&&pa>=25) add("good", `Publishing pace was up: ${A.value} new pieces, ${sgn(pa)}${pa}% against ${norm(A)}.`);
+    else if(pa!=null&&pa<=-25) add("watch", `Publishing pace was down: ${A.value} new pieces, ${pa}% against ${norm(A)}. Fewer pieces usually means fewer search landings a few weeks later.`); }
+  if(E&&E.base!=null&&E.now<E.base*0.6&&E.base>=2) add("neutral", `Fewer newsletter sends than usual (${E.value} vs about ${Math.round(E.base)}), which depresses signups and unsubscribes alike.`);
+  // 4. money
+  if(G&&M){
+    if(G.now<20) add("neutral", `Giving: ${M.value} from ${G.value} gift${G.now===1?"":"s"}. Too few gifts in the window to read as a trend.`);
+    else { const pm=pc(M); if(pm!=null&&pm>=20) add("good", `Giving was strong: ${M.value} from ${G.value} gifts, ${sgn(pm)}${pm}% against the median ${w.N}-day stretch.`);
+           else if(pm!=null&&pm<=-20) add("watch", `Giving was soft: ${M.value} from ${G.value} gifts, ${pm}% against the median ${w.N}-day stretch.`);
+           else add("neutral", `Giving: ${M.value} from ${G.value} gifts, about typical.`); }
+  }
+  // 5. conversion leaders
+  const c=(w.conv||[])[0]; if(c) add("neutral", `The piece that turned the most readers into subscribers was "${c.t}" (${c.v}).`);
+  if(!out.length) add("neutral", "Nothing in this window moved far enough from its norm to call out.");
+  return out;
+}
+// Static industry context with sources, compared against the live figures.
+// Reviewed June 2026 (see about.html); refresh when the annual reports land.
+function pulseBenchmarks(m, data){
+  const mc=(data||{}).mailchimp||{};
+  // Last three full months of sends (the current month is partial, and the
+  // most recent sends are often A/B splits whose per-member opens Mailchimp
+  // does not report), averaged.
+  const thisMonth=String(m.asof||"").slice(0,7);
+  const full=(mc.monthly_campaigns||[]).filter(r=>r.open_pct&&r.month&&r.month<thisMonth).slice(-3);
+  const avg=k=>{const v=full.map(r=>+r[k]).filter(x=>x>0); return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length*10)/10:null;};
+  const MON=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+  const fm=ym=>{const p=String(ym||"").split("-"); return p.length>1?`${MON[+p[1]-1]} ${p[0]}`:ym;};
+  const lbl=full.length? (full.length>1?`${fm(full[0].month).replace(/ \d{4}$/,"")}–${fm(full[full.length-1].month)} average`:fm(full[0].month)) : "";
+  const mo={open_pct:avg("open_pct"), click_pct:avg("click_pct"), ctor_pct:avg("ctor_pct"), month:lbl};
+  const band=(v,lo,hi)=> v==null?"": (v>hi?"above":v<lo?"below":"within");
+  const rows=[];
+  rows.push({k:"Open rate", vc: mo.open_pct!=null?`${mo.open_pct}% (${mo.month})`:"—",
+    norm:"~28–29% average for nonprofits; ~21% for-profit (M+R Benchmarks 2025). 30–40% counts as solid for media. Inflated everywhere by Apple Mail auto-opens, so treat as a ceiling.",
+    read: mo.open_pct!=null ? (mo.open_pct>=29?"above the nonprofit average":"below the nonprofit average") : ""});
+  rows.push({k:"Click rate", vc: mo.click_pct!=null?`${mo.click_pct}% (${mo.month})`:"—",
+    norm:"~3.3% nonprofit average (M+R 2025); 2.27% all-industry; 3–6% media band (Letterhead / ClickMinded / Brevo 2026 compilations).",
+    read: mo.click_pct!=null ? `${band(mo.click_pct,3,6)} the media band` : ""});
+  rows.push({k:"Click-to-open", vc: mo.ctor_pct!=null?`${mo.ctor_pct}% (${mo.month})`:"—",
+    norm:"5.3–8.6% cross-industry band; the one email metric Apple's auto-opens cannot inflate.",
+    read: mo.ctor_pct!=null ? `${band(mo.ctor_pct,5.3,8.6)} the band` : ""});
+  const w30=(m.windows||[]).find(w=>w.N===30)||(m.windows||[])[0];
+  const U=w30&&w30.tiles.find(t=>t.k==="unsubs"); const subs=mc.total_subscribers;
+  if(U&&subs){ const churn=U.now/(w30.N||30)*30/subs*100;
+    rows.push({k:"Monthly churn", vc:`${churn.toFixed(1)}% of the list (unsubscribes over ${w30.N} days, scaled to a month)`,
+      norm:"Healthy digital-news titles keep monthly churn under ~5% (INMA, 2025).", read: churn<5?"under the line":"over the line"}); }
+  const act=(m.stocks||[]).find(k=>/Active subscribers/i.test(k.lbl));
+  if(act&&subs){ const n=parseInt(String(act.num).replace(/[^0-9]/g,""),10); if(n) rows.push({k:"Active share", vc:`${Math.round(n/subs*100)}% opened at least one email in 30 days`,
+      norm:"Readers who regularly open a newsletter are about twice as likely to still be subscribed a year later (INMA, 2025). No fixed benchmark; the direction is what matters.", read:""}); }
+  rows.push({k:"Site traffic", vc:(m.windows||[]).map(w=>{const V=w.tiles.find(t=>t.k==="visitors"); return V?`${w.label}: ${V.value}`:null;}).filter(Boolean).slice(0,2).join(" · ")||"—",
+    norm:"Publisher search traffic fell by about a third globally in 2025, and small publishers lost more (Chartbeat data via Press Gazette). Across news media, loyal audiences and subscriptions grow while overall traffic shrinks (Reuters Institute Digital News Report 2025).", read:""});
+  rows.push({k:"Paying for news", vc:"Vital City is free; the lever is donors",
+    norm:"Only ~18% of people in wealthy countries (~20% in the US) pay for any online news, and growth is flat (Reuters Institute, 2025).", read:""});
+  return rows;
 }
 function pulseReportMD(m){
   let o=`# Vital City — ${m.title}\n\n_As of ${m.asof}. Data refreshed ${m.generated}._\n`;
@@ -5521,9 +5619,11 @@ function pulseReportMD(m){
   m.windows.forEach(w=>{
     o+=`\n## ${w.label} (${w.curStart} to ${w.curEnd}, ${w.N} days)\n`;
     w.tiles.forEach(t=>{ o+=`- ${t.lbl}: ${t.value} — ${t.delta}\n`; });
+    if((w.insights||[]).length){ o+=`\n**Reading the window**\n`; w.insights.forEach(i=>{ o+=`- ${i.tone==="good"?"▲":i.tone==="watch"?"▼":"•"} ${i.text}\n`; }); }
     if(w.top.length){ o+=`\n**${w.topLbl}**\n`; w.top.forEach((p,i)=>{ o+=`${i+1}. ${p.t} — ${p.v}\n`; }); }
     if(w.conv.length){ o+=`\n**${w.convLbl}**\n`; w.conv.forEach((p,i)=>{ o+=`${i+1}. ${p.t} — ${p.v}\n`; }); }
   });
+  if((m.benchmarks||[]).length){ o+=`\n## Industry context\n`; m.benchmarks.forEach(b=>{ o+=`- ${b.k}: Vital City ${b.vc}${b.read?` — ${b.read}`:""}. Norm: ${b.norm}\n`; }); o+=`\n_Benchmarks are static orientation (last reviewed June 2026), not live data; sectors and methods differ._\n`; }
   o+=`\n## Context\n`+m.context.map(c=>`- ${c}`).join("\n")+`\n`;
   if(m.windows[0]) o+=`\n_${m.windows[0].note}_\n`;
   return o;
@@ -5535,9 +5635,11 @@ function pulseReportHTML(m){
   m.windows.forEach(w=>{
     b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.curStart)} → ${esc(w.curEnd)} · ${w.N} days · vs the ${w.N} days before</span></h2>`;
     b+=`<table>`+w.tiles.map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}</td></tr>`).join("")+`</table>`;
+    if((w.insights||[]).length) b+=`<h3>Reading the window</h3><ul class="ins">`+w.insights.map(i=>`<li class="${i.tone}"><span class="m">${i.tone==="good"?"▲":i.tone==="watch"?"▼":"•"}</span>${esc(i.text)}</li>`).join("")+`</ul>`;
     if(w.top.length) b+=`<h3>${esc(w.topLbl)}</h3><ol>`+w.top.map(p=>`<li><span>${esc(p.t)}</span><span class="v">${esc(p.v)}</span></li>`).join("")+`</ol>`;
     if(w.conv.length) b+=`<h3>${esc(w.convLbl)}</h3><ol>`+w.conv.map(p=>`<li><span>${esc(p.t)}</span><span class="v">${esc(p.v)}</span></li>`).join("")+`</ol>`;
   });
+  if((m.benchmarks||[]).length) b+=`<h2>Industry context</h2><table class="bm">`+m.benchmarks.map(x=>`<tr><td class="l">${esc(x.k)}</td><td class="v">${esc(x.vc)}${x.read?`<div class="r">${esc(x.read)}</div>`:""}</td><td class="n">${esc(x.norm)}</td></tr>`).join("")+`</table><div class="cav" style="margin-top:6px;border:0;padding:0">Benchmarks are static orientation (last reviewed June 2026), not live data; sectors and methods differ. Sources: M+R Benchmarks 2025; Letterhead, ClickMinded and Brevo 2026 email compilations; INMA 2025; Chartbeat via Press Gazette; Reuters Institute Digital News Report 2025.</div>`;
   b+=`<h2>Context</h2><ul class="ctx">`+m.context.map(c=>`<li>${esc(c)}</li>`).join("")+`</ul>`;
   if(m.windows[0]) b+=`<div class="cav">${esc(m.windows[0].note)}</div>`;
   const md=pulseReportMD(m);
@@ -5549,6 +5651,8 @@ function pulseReportHTML(m){
     +'.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#ddd;border:1px solid #ddd}.tile{background:#fff;padding:8px 10px}.tile .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}.tile .n{font-family:Georgia,serif;font-size:24px;line-height:1.1;margin:2px 0}.tile .d{font-size:10.5px;color:#707175}'
     +'table{width:100%;border-collapse:collapse;font-size:13px}td{padding:6px 4px;border-bottom:1px solid #ddd;vertical-align:baseline}td.l{color:#707175;width:34%}td.v{font-weight:700;width:16%;font-variant-numeric:tabular-nums}td.n{color:#707175;font-size:11.5px}td.up{color:#3d7a35}td.down{color:#a0432d}'
     +'ol{padding-left:20px;margin:4px 0;font-size:12.5px}ol li{display:flex;justify-content:space-between;gap:12px;padding:3px 0;border-bottom:1px solid #eee}ol li .v{white-space:nowrap;color:#707175;font-variant-numeric:tabular-nums}'
+    +'.ins{list-style:none;padding:0;margin:4px 0;font-size:12.5px}.ins li{padding:4px 0 4px 20px;position:relative;border-bottom:1px solid #eee}.ins .m{position:absolute;left:2px;font-weight:700}.ins .good .m,.ins li.good .m{color:#3d7a35}.ins li.watch .m{color:#a0432d}.ins li.neutral .m{color:#707175}'
+    +'table.bm td.l{width:16%}table.bm td.v{width:30%;font-weight:600}table.bm td.v .r{font-weight:400;color:#3d7a35;font-size:11px}table.bm td.n{font-size:11px}'
     +'.ctx{font-size:11.5px;color:#333;padding-left:18px}.ctx li{margin:3px 0}.cav{font-size:10.5px;color:#707175;margin-top:18px;border-top:1px solid #ddd;padding-top:10px}'
     +'.bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.bar button{font:inherit;font-size:12px;font-weight:700;padding:7px 12px;border:1.5px solid #050507;background:#fff;border-radius:3px;cursor:pointer}.bar button.p{background:#050507;color:#fff}'
     +'@media print{.bar{display:none}body{margin:0;max-width:none}}';
