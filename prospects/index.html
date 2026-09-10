@@ -149,7 +149,7 @@
   <nav class="hnav"><a href="#" id="lock">Lock</a></nav>
 </header>
 <nav class="jump">
-  <a href="#grants">Grant landscape</a><a href="#fit">What we can show funders</a>
+  <a href="#fit">What we can show funders</a><a href="#grants">Grant landscape</a>
   <a href="#people">Individual prospects</a><a href="#base">The donor base</a><a href="#method">Method</a>
 </nav>
 <div class="wrap">
@@ -252,6 +252,36 @@ function boot(d){
     <td class="why">${esc(p.why)}</td></tr>`;
 
   $("#cards").innerHTML=`
+  <div class="card" id="fit">
+    <h2>The case for funders
+      <button class="exp" id="factsMd">&#8681; Download .md</button>
+      <button class="exp" id="factsAll" style="margin-right:6px">&#9112; Copy all</button>
+</h2>
+    <div class="hint">Reach, influence and growth &mdash; every number computed fresh from the live data on each nightly rebuild (as of ${esc((d.funder_facts||{}).asof||d.generated_at)}), never hand-typed. Copy a section or the whole thing.</div>
+    <div class="deckcta">
+      <div class="deckwhy">The deck and the one-pager are generated from the same nightly data as this page, so <b>whatever you save is current as of the last rebuild</b>, never a stale file. Print opens the print-to-PDF dialog (the deck prints landscape, one slide per page; the one-pager is a single Letter page). PowerPoint and Word are editable copies with every number and sentence as text.</div>
+      <div class="vgrid">
+        <div class="vhead"><span>Version</span><span>Open</span><span>Print / PDF</span><span>Editable PowerPoint</span><span>Email</span><span>One-pager</span></div>
+        ${[
+          ["","General","The full deck, unweighted."],
+          ["abundance","Abundance","Same deck, re-weighted: Just Fix It and permitting lead, housing/state-capacity authors carded, six selected pieces on building and governing."],
+          ["justice","Criminal justice","Rikers and crime-data receipts lead, criminologist bench carded, six selected pieces on safety and justice."],
+          ["civic","Civic / journalism","Civic-governance framing: Mamdani coverage leads, media/civic authors carded, six selected pieces on the civic conversation."]
+        ].map(([v,label,tip])=>{const q=v?`?v=${v}&`:"?";const b=v?`?v=${v}`:"";return `<div class="vrow"><span class="vname" title="${tip}">${label}</span>
+          <a class="exp" href="deck.html${b}" target="_blank" rel="noopener">view</a>
+          <a class="exp" href="deck.html${q}print=1" target="_blank" rel="noopener" title="Opens the deck and its print-to-PDF dialog (landscape, one slide per page).">print</a>
+          <a class="exp" href="deck.html${q}pptx=1" target="_blank" rel="noopener" title="Downloads an editable .pptx built from the same live data — every number and sentence is a text box you can change."><b>PowerPoint</b></a>
+          <a class="exp" href="deck.html${q}email=1" target="_blank" rel="noopener" title="Downloads a self-contained, passphrase-free copy and opens an email draft to attach it to.">email</a>
+          <span style="white-space:nowrap"><a class="exp" href="onepager.html${q}print=1" target="_blank" rel="noopener" title="The same audience weighting on a single Letter page: receipts reordered, that bench's senior contributors named, three selected pieces. Opens the print-to-PDF dialog.">PDF</a> <a class="exp" href="onepager.html${q}docx=1" target="_blank" rel="noopener" title="Downloads the one-pager as an editable Word document with the same sections and numbers."><b>Word</b></a></span></div>`}).join("")}
+      </div>
+    </div>
+    <div id="factsBody"></div>
+    <div style="margin-top:14px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700">Published pieces by topic since January ${new Date().getFullYear()-1}</div>
+    <div class="beats" style="margin-top:6px">${(d.beats||[]).map(([t,n])=>`<span class="beat"><b>${n}</b> ${esc(t)}</span>`).join("")}</div>
+    <div class="ins">Match the pitch to the funder: criminal-justice output for Arnold, Guggenheim, MacArthur and Tow; housing, city-government and economy for the abundance funders &mdash; that trio is the abundance-agenda evidence base; the NYC civic beats for Revson, Kaplan and the community funders. The journalism frame is the weakest pitch Vital City can make &mdash; the analysis is the product. And the new positioning language does something the old one did not: <b>&ldquo;press the case for putting them into practice&rdquo;</b> is an advocacy claim, backed by the receipts above &mdash; which widens the field from research funders to policy-<i>advocacy</i> funders, where most abundance money sits.</div>
+    <div class="src">${esc((d.funder_facts||{}).benchmark_note||"")}</div>
+  </div>
+
   <div class="card" id="grants">
     <h2>Current funders &mdash; renew and grow</h2>
     <div class="hint">The eight institutions named on <a href="https://www.vitalcitynyc.org/about/" target="_blank" rel="noopener">vitalcitynyc.org/about</a> (read Aug 2026), with what the subscriber file shows about each relationship. Reader counts are floors.</div>
@@ -286,36 +316,6 @@ function boot(d){
     <tbody>${journo.concat(other).map(frow).join("")}</tbody></table>
     <div class="ins warn"><b>These are leads to verify, not research.</b> Programs, deadlines and eligibility change; several of these funders work by invitation. Check the funder's own site and current filings before anyone spends time on an approach, and nothing on this page should be pasted into an application.</div>
     <div class="ins"><b>Grant readiness:</b> Vital City is a 501(c)(3) project via fiscal sponsorship by the <b>Fund for the City of New York</b> (EIN 13-2612524). Applications and checks route through the sponsor &mdash; confirm current terms with FCNY before quoting them to a funder.</div>
-  </div>
-
-  <div class="card" id="fit">
-    <h2>The case for funders
-      <button class="exp" id="factsMd">&#8681; Download .md</button>
-      <button class="exp" id="factsAll" style="margin-right:6px">&#9112; Copy all</button>
-</h2>
-    <div class="hint">Reach, influence and growth &mdash; every number computed fresh from the live data on each nightly rebuild (as of ${esc((d.funder_facts||{}).asof||d.generated_at)}), never hand-typed. Copy a section or the whole thing.</div>
-    <div class="deckcta">
-      <div class="deckwhy">The deck and the one-pager are generated from the same nightly data as this page, so <b>whatever you save is current as of the last rebuild</b>, never a stale file. Print opens the print-to-PDF dialog (the deck prints landscape, one slide per page; the one-pager is a single Letter page). PowerPoint and Word are editable copies with every number and sentence as text.</div>
-      <div class="vgrid">
-        <div class="vhead"><span>Version</span><span>Open</span><span>Print / PDF</span><span>Editable PowerPoint</span><span>Email</span><span>One-pager</span></div>
-        ${[
-          ["","General","The full deck, unweighted."],
-          ["abundance","Abundance","Same deck, re-weighted: Just Fix It and permitting lead, housing/state-capacity authors carded, six selected pieces on building and governing."],
-          ["justice","Criminal justice","Rikers and crime-data receipts lead, criminologist bench carded, six selected pieces on safety and justice."],
-          ["civic","Civic / journalism","Civic-governance framing: Mamdani coverage leads, media/civic authors carded, six selected pieces on the civic conversation."]
-        ].map(([v,label,tip])=>{const q=v?`?v=${v}&`:"?";const b=v?`?v=${v}`:"";return `<div class="vrow"><span class="vname" title="${tip}">${label}</span>
-          <a class="exp" href="deck.html${b}" target="_blank" rel="noopener">view</a>
-          <a class="exp" href="deck.html${q}print=1" target="_blank" rel="noopener" title="Opens the deck and its print-to-PDF dialog (landscape, one slide per page).">print</a>
-          <a class="exp" href="deck.html${q}pptx=1" target="_blank" rel="noopener" title="Downloads an editable .pptx built from the same live data — every number and sentence is a text box you can change."><b>PowerPoint</b></a>
-          <a class="exp" href="deck.html${q}email=1" target="_blank" rel="noopener" title="Downloads a self-contained, passphrase-free copy and opens an email draft to attach it to.">email</a>
-          <span style="white-space:nowrap"><a class="exp" href="onepager.html${q}print=1" target="_blank" rel="noopener" title="The same audience weighting on a single Letter page: receipts reordered, that bench's senior contributors named, three selected pieces. Opens the print-to-PDF dialog.">PDF</a> <a class="exp" href="onepager.html${q}docx=1" target="_blank" rel="noopener" title="Downloads the one-pager as an editable Word document with the same sections and numbers."><b>Word</b></a></span></div>`}).join("")}
-      </div>
-    </div>
-    <div id="factsBody"></div>
-    <div style="margin-top:14px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700">Published pieces by topic since January ${new Date().getFullYear()-1}</div>
-    <div class="beats" style="margin-top:6px">${(d.beats||[]).map(([t,n])=>`<span class="beat"><b>${n}</b> ${esc(t)}</span>`).join("")}</div>
-    <div class="ins">Match the pitch to the funder: criminal-justice output for Arnold, Guggenheim, MacArthur and Tow; housing, city-government and economy for the abundance funders &mdash; that trio is the abundance-agenda evidence base; the NYC civic beats for Revson, Kaplan and the community funders. The journalism frame is the weakest pitch Vital City can make &mdash; the analysis is the product. And the new positioning language does something the old one did not: <b>&ldquo;press the case for putting them into practice&rdquo;</b> is an advocacy claim, backed by the receipts above &mdash; which widens the field from research funders to policy-<i>advocacy</i> funders, where most abundance money sits.</div>
-    <div class="src">${esc((d.funder_facts||{}).benchmark_note||"")}</div>
   </div>
 
   <div class="card" id="people">
