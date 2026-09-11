@@ -19,7 +19,9 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir, homedir } from "node:os";
 import { join } from "node:path";
 
-const DASH = "https://vitalcity-nyc.github.io/vital-city-catalogue/growth/index.html";
+// $VC_WEEKLY_URL points the script at another copy of the dashboard (a local
+// preview, for testing layout before a push).
+const DASH = process.env.VC_WEEKLY_URL || "https://vitalcity-nyc.github.io/vital-city-catalogue/growth/index.html";
 const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const OUT = process.env.VC_WEEKLY_OUT || join(homedir(), "Desktop");
 const today = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD, local time

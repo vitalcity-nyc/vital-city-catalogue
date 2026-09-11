@@ -145,6 +145,23 @@
   main .card.ccol > .cardpeek{display:flex}
   /* Time-window toggle row (Signups vs unsubscribes chart) */
   .winrow{display:flex;gap:6px;margin:0 0 10px}
+  .ki-lede{font-size:12.5px;line-height:1.5;margin:0 0 8px}
+  .ki-sum{font-size:13px;line-height:1.55;margin:0 0 12px;padding:10px 12px;background:var(--vc-paper2,#eeeeec);font-weight:600}
+  .ki-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0;border-top:1px solid var(--vc-cloud);border-left:1px solid var(--vc-cloud)}
+  .ki-tile{background:var(--vc-white);padding:12px 14px;display:flex;flex-direction:column;gap:5px;border-right:1px solid var(--vc-cloud);border-bottom:1px solid var(--vc-cloud)}
+  .ki-name{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+  .ki-top{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+  .ki-num{font-family:var(--vc-serif,Georgia,serif);font-size:30px;line-height:1;font-weight:700}
+  .ki-unit{font-size:11px;color:var(--vc-charcoal)}
+  .ki-cmp{font-size:12px;font-weight:700;line-height:1.35}.ki-cmp.good{color:#3d7a35}.ki-cmp.watch{color:#a0432d}
+  .ki-std{font-size:11px;line-height:1.4;background:var(--vc-paper,#f7f7f4);padding:5px 7px;border-left:2px solid var(--vc-cerulean,#217ebe)}
+  .ki-spark{color:var(--vc-black)}.ki-spark svg{display:block;width:100%;height:auto}
+  .ki-read{font-size:11.5px;line-height:1.4;color:var(--vc-charcoal)}
+  .ki-also,.ki-marks{font-size:11.5px;line-height:1.5;margin-top:10px;color:var(--vc-charcoal)}
+  .ki-notes{margin-top:10px;font-size:11.5px;line-height:1.5}.ki-notes p{margin:4px 0}.ki-notes summary{cursor:pointer;font-weight:700}
+  .ki-stay{margin-top:12px;font-size:12px;line-height:1.5}.ki-stay table{border-collapse:collapse;margin-top:4px}.ki-stay td,.ki-stay th{padding:3px 12px 3px 0;text-align:left;border-bottom:1px solid var(--vc-cloud);font-variant-numeric:tabular-nums}
+  .ki-fine{font-size:10.5px;color:var(--vc-charcoal);margin-top:4px}
+  .ki-who{font-size:12px;line-height:1.5;margin:4px 0 10px}.ki-whohd{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;margin-bottom:3px}
   .sc-intro{font-size:12.5px;line-height:1.5;margin:0 0 10px}
   .sc-sum{font-size:12.5px;line-height:1.55;margin:0 0 6px;padding:9px 12px;background:var(--vc-paper2,#eeeeec)}
   .sc-grp{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:var(--vc-charcoal);margin:16px 0 2px}
@@ -589,7 +606,6 @@
       <nav class="secnav" id="jumpNav" aria-label="Dashboard sections">
         <span class="secnav-lbl">Jump to:</span>
         <a href="#sec-glance">At a glance</a>
-        <a href="#scorecard">Scorecard</a>
         <a href="#rangeReport">Reports</a>
         <a href="#bigPicture">Long view</a>
         <a href="#audienceQuality">Who's reading</a>
@@ -610,6 +626,7 @@
       </div>
       <div class="sechead-title" id="sec-glance" style="margin:24px 0 4px">At a glance</div>
       <div style="font-size:12.5px;color:var(--vc-charcoal);margin:0 0 12px;max-width:760px">Two bands. The first is where things stand: list size, the engaged core, the donor base and the recurring income that makes the organization sustainable. Those numbers have no window &mdash; a list does not have a &ldquo;last 7 days.&rdquo; The second band is what moved, and the buttons change its window. Net list change leads it because growing the list is objective one, and only the net number says whether the list is growing.</div>
+      <div class="card" id="scorecard"><h2>Key indicators</h2><div class="hint">Loading…</div></div>
       <div class="kpis" id="kpis"></div>
 
       <div class="card" id="weekPulse" style="display:none">
@@ -625,8 +642,6 @@
         <div id="weekPulseTop" style="margin-top:14px"></div>
         <div id="weekPulseNote" style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
       </div>
-
-      <div class="card" id="scorecard"><h2>Scorecard</h2><div class="hint">Loading…</div></div>
 
 
             <div class="card" id="rangeReport">
@@ -1307,7 +1322,10 @@ function boot(data){
   // and the rest (1-year actives, engaged time, 1-year visitors) have their own
   // cards further down the page.
   const head = kpis.filter(Boolean).filter(k=>k.tier!=="also");
-  $("#kpis").innerHTML = head.map(tile).join("");
+  // The stock tiles are folded into Key indicators (list total in the list
+  // tile, recurring giving in the giving tile, the rest in its "Also today"
+  // line), so they are no longer drawn separately.
+  $("#kpis").innerHTML = ""; $("#kpis").style.display="none";
   // Plain copy of the stock tiles for the pulse report (no markup).
   window._stocksModel = head.map(k=>({lbl:k.lbl, num:String(k.num==null?"":k.num).replace(/<[^>]+>/g,""), delta:String(k.delta||"").replace(/<[^>]+>/g,""), flag:k.flag||""}));
   renderScorecard(data);
@@ -5505,6 +5523,7 @@ function renderWeekPulse(data, span){
   if(tpEl){
     let html="";
     if(rollHtml) html += rollHtml + `<div style="margin-top:14px"></div>`;
+    if(span===7){ const wh=whoHTML(data,"week"); if(wh) html += wh; }
     if(tp.length) html += lbl(span===7?"Top pieces this week":"Top pieces", tpLbl) + olist(tp);
     if(convTop.length) html += `<div style="margin-top:14px"></div>` +
       lbl("Most subscriber-converting pieces", convLbl) + olist(convTop);
@@ -5535,14 +5554,16 @@ function renderWeekPulse(data, span){
 }
 
 
-// ===== Scorecard =========================================================
-// Eight measures to steer by (proposed 2026-09-11 after the team asked for
-// "a handful of things that tell us how we are doing and what to do next").
-// Every measure is on full calendar months, with a 24-month line and ONE
-// comparison: the latest three full months against the average of the twelve
-// months before them, leaving out months the data can't support, plus the
-// direction over the last six months. Readings are fixed sentences chosen by
-// the numbers; no model, no API call.
+// ===== Key indicators (the scorecard) ======================================
+// Ten measures to steer by (Josh and Liz Glazer, Sept. 2026: "the handful of
+// things that will be helpful to all of us as a measure of how we are doing
+// and a diagnostic of what we should do next"). Each is on full calendar
+// months: the latest month, a 24-month line, ONE comparison (the latest three
+// months against the average of the twelve months before them, leaving out
+// months the data can't support), the direction over six months, and a
+// published industry standard wherever a reliable one exists. No
+// year-over-year by default. Readings are fixed sentences chosen by the
+// numbers; no model, no API call.
 const SC_BOT={"2025-05":.53,"2025-06":.53,"2025-07":.53,"2025-08":.53,"2025-09":.53};
 // Months whose signup counts can't support a rate: the 2025 bot surge (even a
 // 53% discount leaves them at three times the clean months) and March 2026,
@@ -5552,6 +5573,9 @@ const SC_MON=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","
 function scAdd(ym,k){const [y,m]=ym.split("-").map(Number); return new Date(Date.UTC(y,m-1+k,1)).toISOString().slice(0,7);}
 function scName(ym,noYear){const [y,m]=ym.split("-").map(Number); return noYear? SC_MON[m-1] : `${SC_MON[m-1]} ${y}`;}
 function scList(a){return a.length>1? a.slice(0,-1).join(", ")+" and "+a[a.length-1] : (a[0]||"");}
+function scSecs(v){ v=Math.round(v||0); const m=Math.floor(v/60), s=v%60; return m?`${m}m ${String(s).padStart(2,"0")}s`:`${s}s`; }
+const SC_LEGEND="In each line, the blue band marks the latest three months and the grey band the months they are compared with. Lines start at zero; gaps are months left out, with the reason in the notes. Dotted lines mark the dated events listed under the tiles.";
+
 function scorecardModel(data){
   const mc=data.mailchimp||{}, ga4=data.ga4||{}, db=data.donorbox||{}, gh=data.ghost||{};
   const act=mc.daily_activity||[];
@@ -5567,50 +5591,81 @@ function scorecardModel(data){
   tw.forEach(w=>{ for(let i=0;i<7;i++){ const m=new Date(Date.parse(w.wk+"T00:00:00Z")+i*86400000).toISOString().slice(0,7); vis[m]=(vis[m]||0)+w.visits/7; } });
   const visStart = tw.length ? scAdd(tw[0].wk.slice(0,7), tw[0].wk.slice(8)==="01"?0:1) : null;
   const cites={}; (data.news_mentions||[]).forEach(x=>{ if(x.own_post||x.roundup||!["media","republication","gov"].includes(x.kind)) return; const m=String(x.published_iso||"").slice(0,7); if(m) cites[m]=(cites[m]||0)+1; });
-  const giving={}, gifts={}; (db.monthly_series||[]).forEach(r=>{giving[r.m]=r.amt; gifts[r.m]=r.gifts;});
+  const giving={}; (db.monthly_series||[]).forEach(r=>{giving[r.m]=r.amt;});
   const pieces={}; (gh.pub_dates||[]).forEach(d=>{const m=String(d).slice(0,7); pieces[m]=(pieces[m]||0)+1;});
+  // GA4 by month and channel (from the nightly pull): time per visit, search share.
+  const chRows=ga4.monthly_channels||[]; const chM={};
+  chRows.forEach(r=>{ const e=chM[r.m]=chM[r.m]||{s:0,eng:0,ch:{}}; e.s+=r.sessions||0; e.eng+=r.eng_secs||0; e.ch[r.ch]=(e.ch[r.ch]||0)+(r.sessions||0); });
+  const chStart = chRows.length ? chRows[0].m : null;
+  // Who joins, by role (contacts database, via the nightly pull).
+  const rf=data.role_flows||{}; const rfm={}; (rf.monthly||[]).forEach(r=>rfm[r.m]=r);
+  const DM=["gov","academic","press","policy"];
   const S=(fn,start)=>months.map(m=>(start&&m<start)?null:fn(m)).map(v=>(v==null||!isFinite(v))?null:v);
   const n0=v=>fmtN(Math.round(v));
+  const avgOf=(fn,idx)=>{const a=idx.map(i=>fn(months[i])).filter(v=>v!=null&&isFinite(v)); return a.length?a.reduce((t,q)=>t+q,0)/a.length:null;};
+  const CUR=[21,22,23], BASE=[...Array(12)].map((_,i)=>9+i);
+  const curLbl=`${scName(months[21],true)}–${scName(full)}`;
+  const churnM=m=>{ const r=ms[m], p=ms[scAdd(m,-1)]; if(!r||!p||!p.cum_subs||r.cum_unsubs==null||p.cum_unsubs==null) return null; return (r.cum_unsubs-p.cum_unsubs)/p.cum_subs*100; };
+  const WAIT="Arrives with the next nightly update.";
+  const pos=(v,refs)=>{ // where a value sits against published reference points
+    if(v==null) return ""; const lo=Math.min(...refs.map(r=>r.v)), hi=Math.max(...refs.map(r=>r.v));
+    return v>hi ? "Vital City is above both." : v<lo ? "Vital City is below both." : "Vital City sits between the two."; };
   const M=[
-   {k:"list", group:"doing", name:"Newsletter list growth", unit:"net change in the list", kind:"stock", good:1,
-    def:"New subscribers minus departures, each month. The line shows the list's size; the list's current total is in At a glance above.",
+   {k:"list", name:"Newsletter list growth", unit:"net change in", kind:"stock", good:1,
+    def:"New subscribers minus departures each month. The line shows the list's size.",
     vals:S(m=>ms[m]?ms[m].cum_subs:null), fmt:n0,
-    note:"About 2,400 bot accounts from the 2025 signup surge are still on the list. The comparison uses monthly growth and leaves out the bot months (May to September 2025), the March 2026 catch-up import and the May 2026 cleanup of about 500 inactive addresses."},
-   {k:"visits", group:"doing", name:"Website visits", unit:"visits in the month", kind:"flow", good:1,
+    extra: mc.total_subscribers ? `${fmtN(mc.total_subscribers)} on the list now` : "",
+    note:"About 2,400 bot accounts from the 2025 signup surge are still on the list. The comparison leaves out the bot months (May to September 2025), the March 2026 catch-up import and the May 2026 cleanup of about 500 inactive addresses.",
+    std:()=>{ const c=avgOf(churnM,CUR); return c==null?"":`Churn: ${c.toFixed(1)}% of the list leaves in a typical month (${curLbl}). Healthy digital-news titles keep monthly churn under about 5% (INMA, 2025).`; }},
+   {k:"visits", name:"Website visits", unit:"visits in", kind:"flow", good:1,
     def:"Visits to vitalcitynyc.org, from Google Analytics.",
-    vals:S(m=>vis[m]||null, visStart), fmt:n0},
-   {k:"click", group:"doing", name:"Newsletter click rate", unit:"of recipients clicked", kind:"rate", good:1,
+    vals:S(m=>vis[m]||null, visStart), fmt:n0,
+    std:()=>{ const p3=avgOf(m=>pieces[m]||0,CUR), pb=avgOf(m=>pieces[m]||0,BASE);
+      return `Context: publisher search traffic fell by about a third in 2025, more for small publishers (Chartbeat via Press Gazette).`+(p3!=null&&pb!=null?` Publishing: ${Math.round(p3)} pieces a month, against ${Math.round(pb)} before.`:""); }},
+   {k:"click", name:"Newsletter click rate", unit:"of recipients clicked,", kind:"rate", good:1,
     def:"Share of newsletter recipients who clicked a link. Apple Mail inflates open rates, so clicks are the honest sign that people read.",
-    vals:S(m=>mcp[m]&&mcp[m].click_pct!=null?+mcp[m].click_pct:null), fmt:v=>(+v).toFixed(1)+"%"},
-   {k:"cites", group:"doing", name:"Press and policy citations", unit:"in the month", kind:"flow", good:1,
-    def:"News stories, government documents and republications citing Vital City, from the press tracker. A floor: only a fixed set of sources is watched.",
-    vals:S(m=>cites[m]||0,"2025-03"), fmt:n0, note:"The tracker's record starts in March 2025."},
-   {k:"giving", group:"doing", name:"Reader giving", unit:"given online in the month", kind:"flow", good:1,
-    def:"Online gifts through Donorbox. Checks, grants and donor-advised-fund gifts are not counted.",
-    vals:S(m=>giving[m]!=null?giving[m]:0,"2025-11"), fmt:v=>"$"+n0(v),
-    note:"Online giving opened in November 2025; December was the matching campaign."},
-   {k:"conv", group:"next", name:"Signups per 1,000 visits", unit:"new subscribers per 1,000 visits", kind:"rate", good:1,
+    vals:S(m=>mcp[m]&&mcp[m].click_pct!=null?+mcp[m].click_pct:null), fmt:v=>(+v).toFixed(1)+"%",
+    std:(x)=>{ const op=avgOf(m=>mcp[m]&&mcp[m].open_pct!=null?+mcp[m].open_pct:null,CUR);
+      return `Industry: nonprofits average about 3.3% clicks and 28–29% opens (M+R Benchmarks 2025); media newsletters run about 3–6% clicks. ${pos(x.cur,[{v:3.3},{v:6}])}`+(op!=null?` Opens: ${op.toFixed(1)}%.`:""); }},
+   {k:"unsub", name:"Unsubscribes per 1,000 emails", unit:"per 1,000 emails delivered,", kind:"rate", good:-1,
+    def:"Readers who leave for every 1,000 newsletter emails delivered: whether sends are wearing people out.",
+    vals:S(m=>{const c=mcp[m]; return c&&c.recipients? c.unsubs/c.recipients*1000 : null;}), fmt:v=>(+v).toFixed(2),
+    std:(x)=>`Industry: about 1.2 per 1,000 emails for media and publishing and 2.6 across all industries (Mailchimp's published averages). ${pos(x.cur,[{v:1.2},{v:2.6}])}`},
+   {k:"conv", name:"Signups per 1,000 visits", unit:"new subscribers per 1,000 visits,", kind:"rate", good:1,
     def:"How well the site turns readers into subscribers.",
     vals:S(m=>{ if(SC_CONV_SKIP.has(m)) return null; const v=vis[m], r=ms[m]; if(!v||!r) return null;
       const s = m>="2026-04" ? (r.ghost_signups||0) : r.new_signups; return s/v*1000; }, visStart), fmt:v=>(+v).toFixed(1),
-    note:"From April 2026 signups are counted on the Ghost form, where they now happen. May to September 2025 (bot signups) and March 2026 (a one-time catch-up import) are left out; they show as gaps in the line."},
-   {k:"unsub", group:"next", name:"Unsubscribes per 1,000 emails", unit:"per 1,000 emails delivered", kind:"rate", good:-1,
-    def:"Readers who leave for every 1,000 newsletter emails delivered: whether sends are wearing people out.",
-    vals:S(m=>{const c=mcp[m]; return c&&c.recipients? c.unsubs/c.recipients*1000 : null;}), fmt:v=>(+v).toFixed(2)},
-   {k:"pieces", group:"next", name:"Pieces published", unit:"in the month", kind:"flow", good:0,
-    def:"New pieces on the site. Output rather than outcome: it feeds search traffic and gives the newsletter something to send.",
-    vals:S(m=>pieces[m]||0), fmt:n0},
+    note:"From April 2026 signups are counted on the Ghost form, where they now happen. May to September 2025 (bot signups) and March 2026 (a one-time catch-up import) are left out; they show as gaps in the line.",
+    std:()=>"No reliable public standard for a free newsletter, so this is compared with Vital City's own recent average."},
+   {k:"dm", name:"Decision-makers joining", unit:"joined in", kind:"flow", good:1, waiting: !rf.available,
+    def:"New subscribers from government, universities, the press, and nonprofit and foundation leadership, as tagged in the contacts database (with .gov and .edu addresses as a fallback).",
+    vals:S(m=>rfm[m]? DM.reduce((t,k)=>t+((rfm[m].join||{})[k]||0),0) : (rf.available?0:null)), fmt:n0,
+    std:()=>{ if(!rf.available) return ""; const t={}; DM.forEach(k=>t[k]=CUR.reduce((a,i)=>a+(((rfm[months[i]]||{}).join||{})[k]||0),0));
+      return `${curLbl}: ${t.gov} government, ${t.academic} academic, ${t.press} press, ${t.policy} nonprofit and foundation leaders. No industry standard; compared with Vital City's own average.`; }},
+   {k:"time", name:"Time spent per visit", unit:"engaged time per visit,", kind:"rate", good:1, waiting: !chRows.length,
+    def:"Average time readers actively spend on the site in a visit, from Google Analytics.",
+    vals:S(m=>chM[m]&&chM[m].s? chM[m].eng/chM[m].s : null, chStart), fmt:scSecs,
+    std:()=>"No reliable public standard across publishers, so this is compared with Vital City's own recent average."},
+   {k:"search", name:"Visits from search", unit:"of visits came from search,", kind:"rate", good:0, waiting: !chRows.length,
+    def:"Share of visits that arrive from search engines. It shows how people find Vital City, and how exposed it is to changes at Google.",
+    vals:S(m=>chM[m]&&chM[m].s? (chM[m].ch["Organic Search"]||0)/chM[m].s*100 : null, chStart), fmt:v=>(+v).toFixed(0)+"%",
+    std:()=>{ if(!chRows.length) return ""; const tot={}; let all=0; CUR.forEach(i=>{const e=chM[months[i]]; if(!e) return; all+=e.s; Object.entries(e.ch).forEach(([c,n])=>tot[c]=(tot[c]||0)+n);});
+      const nm={"Organic Search":"search","Direct":"direct","Email":"email","Organic Social":"social","Referral":"other sites","Unassigned":"unassigned"};
+      const top=Object.entries(tot).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([c,n])=>`${nm[c]||c.toLowerCase()} ${Math.round(n/all*100)}%`);
+      return all?`${curLbl}, where visits came from: ${top.join(", ")}. Publishers broadly are losing search traffic (Chartbeat).`:""; }},
+   {k:"cites", name:"Press and policy citations", unit:"in", kind:"flow", good:1,
+    def:"News stories, government documents and republications citing Vital City, from the press tracker.",
+    vals:S(m=>cites[m]||0,"2025-03"), fmt:n0, note:"The tracker's record starts in March 2025.",
+    std:()=>"No industry standard. A floor: only a fixed set of sources is watched."},
+   {k:"giving", name:"Reader giving", unit:"given online in", kind:"flow", good:1,
+    def:"Online gifts through Donorbox.",
+    vals:S(m=>giving[m]!=null?giving[m]:0,"2025-11"), fmt:v=>"$"+n0(v),
+    note:"Online giving opened in November 2025; the comparison leaves out that month and the December matching campaign.",
+    std:()=>`Online gifts only; checks, grants and donor-advised funds are not counted.`+(db.active_recurring_donors?` ${db.active_recurring_donors} recurring donors give about $${n0(db.mrr_estimate||0)} a month.`:"")},
   ];
-  // Comparison, the same way for every measure (Josh, 2026-09-11: "don't do
-  // year-over-year by default ... compare to recent averages/other trends"):
-  // the latest three full months against the average of the twelve months
-  // before them, leaving out months the data can't support; plus the
-  // direction over the last six usable months.
   const SKIP={ list:new Set([...SC_CONV_SKIP,"2026-05"]), conv:SC_CONV_SKIP, giving:new Set(["2025-11","2025-12"]) };
-  const curI=[21,22,23], baseI=[...Array(12)].map((_,i)=>9+i);
   const avg=a=>a.length?a.reduce((t,q)=>t+q,0)/a.length:null;
   const rng=idx=>idx.length===1? scName(months[idx[0]]) : `${scName(months[idx[0]])} to ${scName(months[idx[idx.length-1]])}`;
-  const curLbl=`${scName(months[21],true)}–${scName(full)}`;
   M.forEach(x=>{
     const v=x.vals; x.now=v[23]; x.nowMonth=full;
     const fi=v.findIndex(q=>q!=null); x.firstMonth= fi>=0 ? months[fi] : full;
@@ -5619,8 +5674,8 @@ function scorecardModel(data){
       ? v.map((q,i)=> (i>0&&q!=null&&v[i-1]!=null&&!skip.has(months[i])) ? q-v[i-1] : null)
       : v.map((q,i)=> skip.has(months[i]) ? null : q);
     if(x.kind==="stock") x.nowNet=series[23];
-    const cIdx=curI.filter(i=>series[i]!=null), bIdx=baseI.filter(i=>series[i]!=null);
-    x.cmpIdx={cur:curI, prev: bIdx.length? bIdx : baseI};
+    const cIdx=CUR.filter(i=>series[i]!=null), bIdx=BASE.filter(i=>series[i]!=null);
+    x.cmpIdx={cur:CUR, prev: bIdx.length? bIdx : BASE};
     x.cur = cIdx.length>=2 ? avg(cIdx.map(i=>series[i])) : null;
     x.base = bIdx.length>=4 ? avg(bIdx.map(i=>series[i])) : null;
     x.pct = (x.cur!=null && x.base) ? (x.cur-x.base)/Math.abs(x.base) : null;
@@ -5630,23 +5685,26 @@ function scorecardModel(data){
       const sl=six.reduce((t,p)=>t+(p[0]-mx)*(p[1]-my),0)/six.reduce((t,p)=>t+(p[0]-mx)**2,0);
       const rel = my ? sl/Math.abs(my) : 0; x.trend = rel>0.04 ? "rising" : rel<-0.04 ? "falling" : "steady"; }
     const skipped=[...skip].filter(m=>m>=months[9]&&m<=months[20]).length;
-    const baseLbl = bIdx.length ? `${rng(bIdx)}${skipped?(x.k==="giving"?" (leaving out the launch month and the December matching campaign)":" (leaving out months the data can't support)"):""}` : "";
+    x.baseText = bIdx.length ? `Compared with ${rng(bIdx)}${skipped?(x.k==="giving"?", leaving out the launch month and the December matching campaign":", leaving out months the data can't support"):""}.` : "";
     const fmtS = q => x.kind==="stock" ? ((q>=0?"+":"−")+fmtN(Math.round(Math.abs(q)))) : x.fmt(q);
     const per = x.kind==="rate" ? "" : " a month";
-    if(x.cur==null || x.base==null){
+    x.unitLine = x.waiting ? "" : `${x.unit} ${scName(full)}`+(x.extra?` · ${x.extra}`:"");
+    if(x.waiting){ x.tone="neutral"; x.cmpShort=WAIT; }
+    else if(x.cur==null || x.base==null){
       x.tone="neutral";
-      x.cmpText = x.cur!=null ? `${curLbl}: ${fmtS(x.cur)}${per} on average. Not enough earlier months to compare with.` : "Not enough usable months to compare.";
+      x.cmpShort = x.cur!=null ? `${curLbl}: ${fmtS(x.cur)}${per} on average. Not enough earlier months to compare with.` : "Not enough usable months to compare.";
     } else if(x.kind==="stock"){
       x.tone = x.cur<0 ? "watch" : (x.base>0 && x.cur>x.base*1.05) ? "good" : (x.base>0 && x.cur<x.base*0.95) ? "watch" : "flat";
-      x.cmpText = `${curLbl}: the list grew by ${fmtS(x.cur)} a month on average, against ${fmtS(x.base)} a month over ${baseLbl}.`;
+      x.cmpShort = `${curLbl}: ${fmtS(x.cur)} a month, against ${fmtS(x.base)} a month before.`;
     } else {
       const pc=Math.round(x.pct*100);
       x.tone = Math.abs(x.pct)<0.05 ? "flat" : (x.good===0 ? "neutral" : ((x.pct>0)===(x.good>0) ? "good" : "watch"));
-      x.cmpText = `${curLbl}: ${fmtS(x.cur)}${per} on average, against ${fmtS(x.base)}${per} over ${baseLbl}: ${Math.abs(x.pct)<0.05?"about the same":(pc>0?"up ":"down ")+Math.abs(pc)+"%"}.`;
+      x.cmpShort = `${curLbl}: ${fmtS(x.cur)}${per} on average, ${Math.abs(x.pct)<0.05?"about the same as":(pc>0?"up "+pc+"% on":"down "+Math.abs(pc)+"% on")} the months before (${fmtS(x.base)}).`;
     }
-    x.trendText = !x.trend ? "" : x.kind==="stock"
+    x.trendText = (!x.trend||x.waiting) ? "" : x.kind==="stock"
       ? `Monthly growth over the last six months: ${x.trend==="rising"?"speeding up":x.trend==="falling"?"slowing":"steady"}.`
-      : `Over the last six months: ${x.trend}.`;
+      : `Last six months: ${x.trend}.`;
+    x.stdText = x.waiting ? "" : (x.std ? x.std(x) : "");
   });
   const B=Object.fromEntries(M.map(x=>[x.k,x]));
   const T=k=>B[k]&&B[k].tone;
@@ -5654,85 +5712,130 @@ function scorecardModel(data){
     list:  {good:"The list is growing faster than it had been.", watch:"The list is growing more slowly than it had been.", flat:"The list is growing at its usual pace."},
     visits:{good:"More visits than the site's recent average.", watch:"Fewer visits than the site's recent average. Check whether one big piece carried the earlier months, or whether search traffic fell.", flat:"Visits are in line with the recent average."},
     click: {good:"Recipients are clicking more than they had been.", watch:"Recipients are clicking less than they had been. Look at what each newsletter leads with and how many links it carries.", flat:"Clicking is in line with the recent average."},
-    cites: {good:"Cited more often than over the past year.", watch:"Cited less often than over the past year. Worth checking which kinds of pieces drew citations.", flat:"Cited about as often as over the past year."},
     unsub: {good:"Fewer readers leave per email than over the past year.", watch:"More readers leave per email than over the past year. Check send frequency and the appeal emails.", flat:"Readers leave at about their usual rate."},
-    giving:{good:"Online giving is running above its level since the December campaign.", watch:"Online giving is running below its level since the December campaign.", flat:"Online giving is holding at its level since the December campaign."},
     conv:  {good:"The site is turning more of its visitors into subscribers than it had been.", watch:"The site converts fewer visitors than it had been. Check the signup form and where the prompts appear.", flat:"The site converts visitors at its usual rate."},
-    pieces:{},
+    dm:    {good:"More decision-makers are joining than usual.", watch:"Fewer decision-makers are joining than usual. Check whether outreach to government and universities has paused.", flat:"Decision-makers are joining at the usual pace."},
+    time:  {good:"Readers are spending more time per visit than they had been.", watch:"Readers are spending less time per visit than they had been.", flat:"Time per visit is in line with the recent average."},
+    cites: {good:"Cited more often than over the past year.", watch:"Cited less often than over the past year. Worth checking which kinds of pieces drew citations.", flat:"Cited about as often as over the past year."},
+    giving:{good:"Online giving is running above its level since the December campaign.", watch:"Online giving is running below its level since the December campaign.", flat:"Online giving is holding at its level since the December campaign."},
   };
-  M.forEach(x=>{ x.reading=(R[x.k]&&R[x.k][x.tone])||""; });
+  M.forEach(x=>{ x.reading = x.waiting ? "" : ((R[x.k]&&R[x.k][x.tone])||""); });
   if(B.list && B.list.cur!=null && B.list.cur<0) B.list.reading="The list shrank over the last three months: departures outran signups.";
   if(B.conv && B.conv.tone==="watch" && T("visits")==="good")
     B.conv.reading="Visits are up but a smaller share of visitors subscribe. The next gain is on the page: signup prompts on the most-read pieces, and more gated pieces.";
-  if(B.pieces && B.pieces.pct!=null){
-    const pc=B.pieces;
-    pc.reading=(pc.pct>0.05?"Publishing more than the recent average":pc.pct<-0.05?"Publishing less than the recent average":"Publishing at the usual pace")+
-      (T("visits")==="good"&&pc.pct>0.05?", and visits rose with it.":T("visits")==="watch"&&pc.pct<-0.05?", and visits fell with it.":".");
-  }
-  if(B.giving && db.active_recurring_donors) B.giving.reading=(B.giving.reading?B.giving.reading+" ":"")+`${db.active_recurring_donors} recurring donors give about $${n0(db.mrr_estimate||0)} a month.`;
+  if(B.search && B.search.pct!=null && !B.search.waiting)
+    B.search.reading = B.search.pct>0.05 ? "Search is bringing a larger share of visits than it had been." : B.search.pct<-0.05 ? "Search is bringing a smaller share of visits than it had been." : "Search's share of visits is steady.";
   const better=M.filter(x=>x.tone==="good").map(x=>x.name.toLowerCase());
   const worse=M.filter(x=>x.tone==="watch").map(x=>x.name.toLowerCase());
   const summary=[];
   if(better.length) summary.push(`Better than their recent average: ${scList(better)}.`);
   if(worse.length) summary.push(`Worse than their recent average: ${scList(worse)}.`);
-  const first=M.find(x=>x.group==="next"&&x.tone==="watch") || M.find(x=>x.tone==="watch");
+  const order=["conv","dm","click","unsub","list","visits","time","cites","giving"];
+  const first=order.map(k=>B[k]).find(x=>x&&x.tone==="watch");
   if(first) summary.push(`Where to look first: ${first.name.toLowerCase()}. ${first.reading}`);
-  return {full, months, measures:M, summary,
-    lede:`Eight measures, on full calendar months. Each line shows the last 24 months. The comparison sets the latest three months (${curLbl}) against the average of the twelve months before them, leaving out months the data can't support, and says which way the measure has moved over the last six months.`};
+  // Dated events to mark on the lines.
+  const items=((data.initiatives||{}).items)||[];
+  const marks=items.filter(it=>it.from>=months[0]&&it.from<=full).map((it,i)=>({n:i+1, idx:months.indexOf(it.from), label:it.label,
+    when: it.to&&it.to!==it.from ? `${scName(it.from,it.from.slice(0,4)===it.to.slice(0,4))}–${scName(it.to)}` : scName(it.from)}));
+  // "Also today": the two stock tiles the indicators don't already carry.
+  const st=window._stocksModel||[]; const pick=re=>st.find(k=>re.test(k.lbl));
+  const act30=pick(/Active subscribers/i), soc=pick(/Social followers/i);
+  const also=[act30?`${act30.num} active subscribers in the last 30 days (${act30.delta})`:"", soc?`${soc.num} social followers (${soc.delta})`:""].filter(Boolean).join(" · ");
+  return {full, months, measures:M, summary, marks, also: also?`Also today: ${also}.`:"",
+    lede:`Ten measures, on full calendar months. Each shows the latest month and a 24-month line, compares the latest three months (${curLbl}) with the months before them, gives the direction over the last six months, and sets the figure against a published industry standard where a reliable one exists.`};
 }
 function scNowText(x){
+  if(x.waiting) return "—";
   if(x.kind==="stock") return x.nowNet==null ? "—" : (x.nowNet>=0?"+":"−")+fmtN(Math.round(Math.abs(x.nowNet)));
   return x.now!=null ? x.fmt(x.now) : "—";
 }
-function scSpark(x, w, h){
-  w=w||230; h=h||44;
+function scSpark(x, w, h, marks){
+  w=w||230; h=h||42;
   const v=x.vals, n=v.length; const pts=v.map((q,i)=>q==null?null:[i,q]).filter(Boolean); if(pts.length<2) return "";
-  const max=Math.max(...pts.map(p=>p[1]))||1; const X=i=>4+i*(w-8)/(n-1); const Y=q=>h-4-(q/max)*(h-10);
+  const max=Math.max(...pts.map(p=>p[1]))||1; const X=i=>4+i*(w-8)/(n-1); const Y=q=>h-4-(q/max)*(h-12);
   const segs=[]; let cur=[]; v.forEach((q,i)=>{ if(q==null){ if(cur.length) segs.push(cur); cur=[]; } else cur.push(`${X(i).toFixed(1)},${Y(q).toFixed(1)}`); }); if(cur.length) segs.push(cur);
   const band=(idx,fill)=>{const a=Math.min(...idx), b=Math.max(...idx); return `<rect x="${(X(a)-3).toFixed(1)}" y="0" width="${(X(b)-X(a)+6).toFixed(1)}" height="${h}" fill="${fill}"/>`;};
+  const mk=(marks||[]).filter(m=>m.idx>=0).map(m=>`<line x1="${X(m.idx).toFixed(1)}" y1="8" x2="${X(m.idx).toFixed(1)}" y2="${h-4}" stroke="#8a8a8a" stroke-width="0.8" stroke-dasharray="2 2"/><text x="${(X(m.idx)+1.5).toFixed(1)}" y="7" font-size="7" fill="#707175">${m.n}</text>`).join("");
   const last=pts[pts.length-1];
   return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="${esc(x.name)}, monthly">`+
-    band(x.cmpIdx.prev,"rgba(112,113,117,.16)")+band(x.cmpIdx.cur,"rgba(33,126,190,.18)")+
+    band(x.cmpIdx.prev,"rgba(112,113,117,.14)")+band(x.cmpIdx.cur,"rgba(33,126,190,.18)")+mk+
     `<line x1="4" y1="${h-4}" x2="${w-4}" y2="${h-4}" stroke="#cfcfcf" stroke-width="1"/>`+
     segs.map(sg=>`<polyline points="${sg.join(" ")}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>`).join("")+
     `<circle cx="${X(last[0]).toFixed(1)}" cy="${Y(last[1]).toFixed(1)}" r="2.6" fill="#217ebe"/></svg>`;
 }
-function scRowHTML(x, w){
-  return `<div class="sc-row">
-    <div class="sc-name"><b>${esc(x.name)}</b><div class="sc-def">${esc(x.def)}</div></div>
-    <div class="sc-now"><div class="sc-n">${esc(scNowText(x))}</div><div class="sc-u">${esc(x.unit)}, ${esc(scName(x.nowMonth))}</div></div>
-    <div class="sc-spark">${scSpark(x,w)}<div class="sc-axis"><span>${esc(scName(x.firstMonth))}</span><span>${esc(scName(x.nowMonth))}</span></div></div>
-    <div class="sc-read"><div class="sc-cmp ${x.tone}">${esc(x.cmpText)}${x.trendText?` <span class="sc-tr">${esc(x.trendText)}</span>`:""}</div>${x.reading?`<div class="sc-why">${esc(x.reading)}</div>`:""}${x.note?`<div class="sc-note">${esc(x.note)}</div>`:""}</div>
+function kiTileHTML(x, w, marks, h, noRead){
+  const spark=x.waiting?"":scSpark(x,w,h||42,marks);
+  const readTxt=[x.trendText, noRead?"":x.reading].filter(Boolean).join(" ");
+  return `<div class="ki-tile">
+    <div class="ki-name">${esc(x.name)}</div>
+    <div class="ki-top"><span class="ki-num">${esc(scNowText(x))}</span><span class="ki-unit">${esc(x.unitLine)}</span></div>
+    <div class="ki-cmp ${x.tone}">${esc(x.cmpShort)}</div>
+    ${x.stdText?`<div class="ki-std">${esc(x.stdText)}</div>`:""}
+    ${spark?`<div class="ki-spark">${spark}<div class="sc-axis"><span>${esc(scName(x.firstMonth))}</span><span>${esc(scName(x.nowMonth))}</span></div></div>`:""}
+    ${readTxt?`<div class="ki-read">${esc(readTxt)}</div>`:""}
   </div>`;
 }
-const SC_LEGEND="In each line, the blue band marks the latest three months and the grey band the twelve months they are compared with. Lines start at zero; gaps are months left out, with the reason in the note.";
-function scBodyHTML(sc, w){
-  const grp=(g,t)=>`<div class="sc-grp">${t}</div>`+sc.measures.filter(x=>x.group===g).map(x=>scRowHTML(x,w)).join("");
-  return `<p class="sc-intro">${esc(sc.lede)}</p>`+
-    (sc.summary.length?`<div class="sc-sum">${sc.summary.map(esc).join("<br>")}</div>`:"")+
-    grp("doing","How we're doing")+grp("next","What to look at next")+
-    `<div class="sc-legend">${esc(SC_LEGEND)}</div>`;
+// Do new subscribers stay? Ghost-era signups by how they arrived, matched to
+// the contacts database (engagement_extras.channel_ltv, built nightly).
+function kiStayHTML(data){
+  const cl=((data.engagement_extras||{}).channel_ltv)||{};
+  const rows=(cl.channels||[]).filter(r=>r.stayed_pct!=null&&r.matched>=10);
+  if(!rows.length) return "";
+  const start=((data.ghost_signup_attribution||{}).coverage_start)||"";
+  return `<div class="ki-stay"><b>Do new subscribers stay?</b> Signups since ${esc(start)} by how they arrived, and the share still subscribed today.
+    <table><tr><th>Arrived from</th><th>Signups</th><th>Still subscribed</th><th>Became donors</th></tr>${rows.map(r=>`<tr><td>${esc(r.source)}</td><td>${fmtN(r.signups)}</td><td>${r.stayed_pct}%</td><td>${fmtN(r.donors)}</td></tr>`).join("")}</table>
+    <div class="ki-fine">Event registrations are added to the list outside Ghost, so they aren't in this table yet.</div></div>`;
+}
+function kiBodyHTML(sc, w, opts){
+  opts=opts||{};
+  const marks=sc.marks||[];
+  const notes=sc.measures.map(x=>`<p><b>${esc(x.name)}.</b> ${esc(x.def)} ${esc(x.baseText||"")} ${esc(x.note||"")}</p>`).join("")+`<p>${esc(SC_LEGEND)}</p>`;
+  return (opts.noLede?"":`<p class="ki-lede">${esc(sc.lede)}</p>`)+
+    (sc.summary.length?`<div class="ki-sum">${sc.summary.map(esc).join("<br>")}</div>`:"")+
+    `<div class="ki-grid">${sc.measures.map(x=>kiTileHTML(x,w,marks,opts.sparkH,opts.noRead)).join("")}</div>`+
+    (sc.also?`<div class="ki-also">${esc(sc.also)}</div>`:"")+
+    (marks.length?`<div class="ki-marks"><b>Marked on the lines:</b> ${marks.map(k=>`${k.n}. ${esc(k.when)}: ${esc(k.label)}`).join(" · ")}</div>`:"")+
+    (opts.stay||"")+
+    (opts.noNotes ? "" : (opts.printNotes ? `<div class="ki-notes"><b>Notes and sources</b>${notes}</div>` : `<details class="ki-notes"><summary>Notes and sources</summary>${notes}</details>`));
 }
 function renderScorecard(data){
   const el=document.getElementById("scorecard"); if(!el) return;
   try{
     const sc=scorecardModel(data); window._scorecard=sc;
-    el.innerHTML=`<h2>Scorecard · month by month <span class="hint">the tiles above say where things stand; these eight say which way they are moving</span></h2>`+scBodyHTML(sc,230);
-  }catch(e){ el.innerHTML=`<h2>Scorecard</h2><div class="hint">The scorecard could not be built from this data: ${esc(e.message)}</div>`; }
+    el.innerHTML=`<h2>Key indicators <span class="hint">the ten measures to steer by · monthly · compared with the months before and with industry standards</span></h2>`+kiBodyHTML(sc,230,{stay:kiStayHTML(data)});
+  }catch(e){ el.innerHTML=`<h2>Key indicators</h2><div class="hint">The indicators could not be built from this data: ${esc(e.message)}</div>`; }
 }
-function scReportMD(sc){
-  let o=`\n## Scorecard\n\n_${sc.lede}_\n\n`;
-  sc.summary.forEach(l=>{ o+=`${l}\n\n`; });
-  [["doing","How we're doing"],["next","What to look at next"]].forEach(([g,t])=>{
-    o+=`**${t}**\n\n`;
-    sc.measures.filter(x=>x.group===g).forEach(x=>{
-      o+=`- **${x.name}: ${scNowText(x)}** ${x.unit}, ${scName(x.nowMonth)}. ${x.cmpText}${x.trendText?` ${x.trendText}`:""}${x.reading?` ${x.reading}`:""}${x.note?` _${x.note}_`:""}\n`;
-      const last12=x.vals.slice(12).map(q=>q==null?"—":x.fmt(q));
-      o+=`  - Last 12 months, ${scName(sc.months[12])} to ${scName(sc.full)}: ${last12.join(" · ")}\n`;
-    });
-    o+=`\n`;
+function scReportMD(sc, data){
+  let o=`\n## Key indicators\n\n_${sc.lede}_\n\n`;
+  sc.summary.forEach(l=>{ o+=`**${l}**\n\n`; });
+  sc.measures.forEach(x=>{
+    o+=`- **${x.name}: ${scNowText(x)}** ${x.unitLine}. ${x.cmpShort}${x.stdText?` ${x.stdText}`:""}${x.trendText?` ${x.trendText}`:""}${x.reading?` ${x.reading}`:""}\n`;
   });
+  if(sc.also) o+=`\n${sc.also}\n`;
+  if((sc.marks||[]).length) o+=`\nMarked on the lines: ${sc.marks.map(k=>`${k.n}. ${k.when}: ${k.label}`).join("; ")}.\n`;
+  const cl=(((data||{}).engagement_extras||{}).channel_ltv)||{};
+  const rows=(cl.channels||[]).filter(r=>r.stayed_pct!=null&&r.matched>=10);
+  if(rows.length) o+=`\n**Do new subscribers stay?** ${rows.map(r=>`${r.source}: ${fmtN(r.signups)} signups, ${r.stayed_pct}% still subscribed`).join("; ")}.\n`;
+  o+=`\n_Notes: ${sc.measures.map(x=>`${x.name}: ${x.baseText||""} ${x.note||""}`.trim()).join(" ")} ${SC_LEGEND}_\n`;
   return o;
+}
+// Who joined and who left, by role (contacts database via the nightly pull).
+function whoHTML(data, which){
+  const rf=data.role_flows||{}; if(!rf.available) return "";
+  const w=(rf[which]||{}); const lab=rf.labels||{}; const keys=rf.keys||[];
+  const line=(side,verb)=>{ const s=w[side]||{}; if(!s.total&&s.total!==0) return "";
+    const parts=keys.filter(k=>k!=="other"&&(s.counts||{})[k]).map(k=>`${s.counts[k]} ${lab[k].toLowerCase()}`);
+    const nb=(s.notable||[]).slice(0,8).map(p=>`${p.n}${p.org?` (${p.org})`:` (${p.role.toLowerCase()})`}`);
+    return `<div><b>${fmtN(s.total)} ${verb}</b>${parts.length?`: ${parts.join(", ")}, and ${fmtN((s.counts||{}).other||0)} others`:""}.${nb.length?` Notable: ${nb.join("; ")}.`:""}</div>`; };
+  const period = which==="week" ? "this week" : "the last 30 days";
+  return `<div class="ki-who"><div class="ki-whohd">Who joined and who left, ${period} (${esc((w.join||{}).from||"")} to ${esc((w.join||{}).to||"")})</div>${line("join","joined")}${line("leave","left")}<div class="ki-fine">Roles come from the contacts database. Notable means a Wikipedia-notable person or a government address.</div></div>`;
+}
+function whoMD(data, which){
+  const d=document.createElement("div"); d.innerHTML=whoHTML(data,which); const t=d.innerText.trim();
+  return t ? `\n**${t.split("\n")[0]}**\n\n${t.split("\n").slice(1).map(l=>"- "+l).join("\n")}\n` : "";
+}
+function kiNotesHTML(sc){
+  return `<p>${esc(sc.lede)}</p>`+sc.measures.map(x=>`<p><b>${esc(x.name)}.</b> ${esc(x.def)} ${esc(x.baseText||"")} ${esc(x.note||"")}</p>`).join("")+`<p>${esc(SC_LEGEND)}</p>`;
 }
 
 // ===== Pulse summary report ==============================================
@@ -5767,6 +5870,7 @@ function pulseReportModel(all){
           title: all ? "Growth summary · all windows" : `Growth summary · ${(windows[0]||{}).label||""}`};
   model.benchmarks=pulseBenchmarks(model, data);
   try{ model.scorecard=scorecardModel(data); }catch(e){ model.scorecard=null; }
+  model.data=data;
   return model;
 }
 // Rule-based readings of a window: no model, no API call. Each line is a
@@ -5882,8 +5986,7 @@ function pulseBenchmarks(m, data){
 }
 function pulseReportMD(m){
   let o=`# Vital City — ${m.title}\n\n_As of ${m.asof}. Data refreshed ${m.generated}._\n`;
-  if(m.stocks.length){ o+=`\n## At a glance\n`; m.stocks.forEach(k=>{ o+=`- ${k.lbl}: ${k.num}${k.delta?` — ${k.delta}`:""}${k.flag?` (${k.flag})`:""}\n`; }); }
-  if(m.scorecard) o+=scReportMD(m.scorecard);
+  if(m.scorecard) o+=scReportMD(m.scorecard, m.data);
   m.windows.forEach(w=>{
     o+=`\n## ${w.label} (${w.curStart} to ${w.curEnd}, ${w.N} days)\n`;
     w.tiles.forEach(t=>{ o+=`- ${t.lbl}: ${t.value} — ${t.delta}\n`; });
@@ -5895,6 +5998,9 @@ function pulseReportMD(m){
     if(w.top.length){ o+=`\n**${w.topLbl}**\n`; w.top.forEach((p,i)=>{ o+=`${i+1}. ${p.t} — ${p.v}\n`; }); }
     if(w.conv.length){ o+=`\n**${w.convLbl}**\n`; w.conv.forEach((p,i)=>{ o+=`${i+1}. ${p.t} — ${p.v}\n`; }); }
   });
+  if(m.data){ const w=whoMD(m.data,"week")+whoMD(m.data,"month"); if(w) o+=`
+## Who is joining and leaving
+`+w; }
   if((m.benchmarks||[]).length){ o+=`\n## Industry context\n`; m.benchmarks.forEach(b=>{ o+=`- ${b.k}: Vital City ${b.vc}${b.read?` — ${b.read}`:""}. Norm: ${b.norm}\n`; }); o+=`\n_Benchmarks are static orientation (last reviewed June 2026), not live data; sectors and methods differ._\n`; }
   o+=`\n## Context\n`+m.context.map(c=>`- ${c}`).join("\n")+`\n`;
   if(m.windows[0]) o+=`\n_${m.windows[0].note}_\n`;
@@ -5903,8 +6009,7 @@ function pulseReportMD(m){
 function pulseReportHTML(m){
   const cls=c=>c==="up"?"up":c==="down"?"down":"";
   let b=`<div class="wm">Vital City</div><h1>${esc(m.title)}</h1><p class="period">As of ${esc(m.asof)} · data refreshed ${esc(m.generated)}</p>`;
-  if(m.stocks.length){ b+=`<h2>At a glance</h2><div class="tiles">`+m.stocks.map(k=>`<div class="tile"><div class="l">${esc(k.lbl)}</div><div class="n">${esc(k.num)}</div><div class="d">${esc(k.delta)}${k.flag?` <b>${esc(k.flag)}</b>`:""}</div></div>`).join("")+`</div>`; }
-  if(m.scorecard) b+=`<h2>Scorecard</h2>`+scBodyHTML(m.scorecard,170)+`<div class="pb"></div>`;
+  if(m.scorecard) b+=`<h2>Key indicators</h2>`+kiBodyHTML(m.scorecard,168,{noNotes:true,sparkH:28,noRead:true,noLede:true})+`<div class="pb"></div>`;
   m.windows.forEach(w=>{
     b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.curStart)} → ${esc(w.curEnd)} · ${w.N} days · vs the ${w.N} days before</span></h2>`;
     b+=`<table>`+w.tiles.map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}</td></tr>`).join("")+`</table>`;
@@ -5918,7 +6023,9 @@ function pulseReportHTML(m){
     if(w.top.length) b+=`<h3>${esc(w.topLbl)}</h3><ol>`+w.top.map(p=>`<li><span>${esc(p.t)}</span><span class="v">${esc(p.v)}</span></li>`).join("")+`</ol>`;
     if(w.conv.length) b+=`<h3>${esc(w.convLbl)}</h3><ol>`+w.conv.map(p=>`<li><span>${esc(p.t)}</span><span class="v">${esc(p.v)}</span></li>`).join("")+`</ol>`;
   });
+  if(m.data){ const w=whoHTML(m.data,"week")+whoHTML(m.data,"month")+kiStayHTML(m.data); if(w) b+=`<h2>Who is joining and leaving</h2>`+w; }
   if((m.benchmarks||[]).length) b+=`<h2>Industry context</h2><table class="bm">`+m.benchmarks.map(x=>`<tr><td class="l">${esc(x.k)}</td><td class="v">${esc(x.vc)}${x.read?`<div class="r">${esc(x.read)}</div>`:""}</td><td class="n">${esc(x.norm)}</td></tr>`).join("")+`</table><div class="cav" style="margin-top:6px;border:0;padding:0">Benchmarks are static orientation (last reviewed June 2026), not live data; sectors and methods differ. Sources: M+R Benchmarks 2025; Letterhead, ClickMinded and Brevo 2026 email compilations; INMA 2025; Chartbeat via Press Gazette; Reuters Institute Digital News Report 2025.</div>`;
+  if(m.scorecard) b+=`<h2>Notes on the key indicators</h2><div class="ki-notes">`+kiNotesHTML(m.scorecard)+`</div>`;
   b+=`<h2>Context</h2><ul class="ctx">`+m.context.map(c=>`<li>${esc(c)}</li>`).join("")+`</ul>`;
   if(m.windows[0]) b+=`<div class="cav">${esc(m.windows[0].note)}</div>`;
   const md=pulseReportMD(m);
@@ -5931,6 +6038,12 @@ function pulseReportHTML(m){
     +'table{width:100%;border-collapse:collapse;font-size:13px}td{padding:6px 4px;border-bottom:1px solid #ddd;vertical-align:baseline}td.l{color:#707175;width:34%}td.v{font-weight:700;width:16%;font-variant-numeric:tabular-nums}td.n{color:#707175;font-size:11.5px}td.up{color:#3d7a35}td.down{color:#a0432d}'
     +'ol{padding-left:20px;margin:4px 0;font-size:12.5px}ol li{display:flex;justify-content:space-between;gap:12px;padding:3px 0;border-bottom:1px solid #eee}ol li .v{white-space:nowrap;color:#707175;font-variant-numeric:tabular-nums}'
     +'.ins{list-style:none;padding:0;margin:4px 0;font-size:12.5px}.ins li{padding:4px 0 4px 20px;position:relative;border-bottom:1px solid #eee}.ins .m{position:absolute;left:2px;font-weight:700}.ins .good .m,.ins li.good .m{color:#3d7a35}.ins li.watch .m{color:#a0432d}.ins li.neutral .m{color:#707175}'
+    +'.ki-lede{font-size:10.5px;color:#333;margin:2px 0 5px;line-height:1.4}.ki-sum{font-size:11px;line-height:1.45;margin:0 0 7px;padding:6px 9px;background:#f1f1ef;font-weight:700}'
+    +'.ki-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid #ddd;border-left:1px solid #ddd}.ki-tile{background:#fff;padding:6px 8px;break-inside:avoid;border-right:1px solid #ddd;border-bottom:1px solid #ddd}'
+    +'.ki-name{font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:800}.ki-top{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;margin:1px 0}.ki-num{font-family:Georgia,serif;font-size:19px;font-weight:700;line-height:1}.ki-unit{font-size:8px;color:#707175}'
+    +'.ki-cmp{font-size:9px;font-weight:700;line-height:1.28}.ki-cmp.good{color:#3d7a35}.ki-cmp.watch{color:#a0432d}.ki-std{font-size:8px;line-height:1.3;background:#f7f7f4;border-left:2px solid #217ebe;padding:2px 5px;margin:2px 0}'
+    +'.ki-spark{color:#050507}.ki-spark svg{width:100%;height:auto;display:block}.ki-spark .sc-axis{font-size:7.5px}.ki-read{font-size:8.5px;color:#555;line-height:1.28}.ki-also,.ki-marks{font-size:9.5px;color:#555;margin-top:6px;line-height:1.4}'
+    +'.ki-notes p{font-size:10px;color:#444;margin:3px 0}.ki-stay table{border-collapse:collapse;font-size:11px;width:auto}.ki-stay td,.ki-stay th{padding:3px 12px 3px 0;border-bottom:1px solid #ddd;text-align:left}.ki-fine{font-size:9.5px;color:#707175;margin-top:4px}.ki-who{font-size:11.5px;line-height:1.5;margin:6px 0}.ki-whohd{font-weight:700;margin-bottom:2px}'
     +'.sc-intro{font-size:12px;color:#333;margin:4px 0 8px}.sc-sum{font-size:12.5px;line-height:1.5;margin:0 0 8px;padding:8px 10px;background:#f1f1ef}'
     +'.sc-grp{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#707175;margin:12px 0 2px}'
     +'.sc-row{display:grid;grid-template-columns:1.25fr .8fr 180px 1.55fr;gap:10px;align-items:start;padding:7px 0;border-top:1px solid #ddd;break-inside:avoid}'
@@ -5942,7 +6055,7 @@ function pulseReportHTML(m){
     +'table.bm td.l{width:16%}table.bm td.v{width:30%;font-weight:600}table.bm td.v .r{font-weight:400;color:#3d7a35;font-size:11px}table.bm td.n{font-size:11px}'
     +'.ctx{font-size:11.5px;color:#333;padding-left:18px}.ctx li{margin:3px 0}.cav{font-size:10.5px;color:#707175;margin-top:18px;border-top:1px solid #ddd;padding-top:10px}'
     +'.bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.bar button{font:inherit;font-size:12px;font-weight:700;padding:7px 12px;border:1.5px solid #050507;background:#fff;border-radius:3px;cursor:pointer}.bar button.p{background:#050507;color:#fff}'
-    +'@media print{.bar{display:none}body{margin:0;max-width:none}}';
+    +'@media print{.bar{display:none}body{margin:0;max-width:none}h1{font-size:24px;margin:2px 0}.period{margin:0 0 8px}}';
   const subject=`Vital City ${m.title.toLowerCase()} · ${m.asof}`;
   const script=`<script>const MD=${JSON.stringify(md)};const SUBJ=${JSON.stringify(subject)};const NAME=${JSON.stringify("Vital-City-"+m.title.replace(/[^A-Za-z0-9]+/g,"-")+"-"+m.asof)};
 function dl(){const b=new Blob([MD],{type:"text/markdown;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=NAME+".md";document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),500);}

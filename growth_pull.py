@@ -852,18 +852,22 @@ def build_engagement_extras(mc, signup_attr, donorbox):
         chan = {}     # source label → {signups, donors, total_amt, gifts}
         for em, info in src_email.items():
             src = info.get("source") or "(unknown)"
-            chan.setdefault(src, {"signups": 0, "donors": 0, "total_amt": 0.0, "gifts": 0})
+            chan.setdefault(src, {"signups": 0, "donors": 0, "total_amt": 0.0, "gifts": 0, "matched": 0, "left": 0})
             chan[src]["signups"] += 1
             p = em_to_person.get(em)
+            if p:
+                chan[src]["matched"] += 1
+                if p.get("unsub"): chan[src]["left"] += 1
             if p and p.get("don"):
                 chan[src]["donors"]    += 1
                 chan[src]["total_amt"] += float(p.get("damt") or 0)
                 chan[src]["gifts"]     += int(p.get("dcnt") or 0)
         # Roll up tiny channels (<5 signups) into "Other" to keep the chart readable
         chan_rows = []   # renamed from `rows` to avoid shadowing the engagement tuples list above
-        other = {"signups": 0, "donors": 0, "total_amt": 0.0, "gifts": 0}
+        other = {"signups": 0, "donors": 0, "total_amt": 0.0, "gifts": 0, "matched": 0, "left": 0}
         for src, d in chan.items():
             if d["signups"] < 5:
+                other["matched"] += d["matched"]; other["left"] += d["left"]
                 other["signups"] += d["signups"]
                 other["donors"]  += d["donors"]
                 other["total_amt"] += d["total_amt"]
@@ -877,6 +881,8 @@ def build_engagement_extras(mc, signup_attr, donorbox):
                 "total_raised":round(d["total_amt"], 2),
                 "ltv_per_signup": round(d["total_amt"] / d["signups"], 2) if d["signups"] else 0,
                 "ltv_per_donor":  round(d["total_amt"] / d["donors"], 2)  if d["donors"]  else 0,
+                "matched": d["matched"], "left": d["left"],
+                "stayed_pct": round(100 * (1 - d["left"] / d["matched"]), 1) if d["matched"] else None,
             })
         if other["signups"] > 0:
             chan_rows.append({
@@ -887,6 +893,8 @@ def build_engagement_extras(mc, signup_attr, donorbox):
                 "total_raised":round(other["total_amt"], 2),
                 "ltv_per_signup": round(other["total_amt"] / other["signups"], 2) if other["signups"] else 0,
                 "ltv_per_donor":  round(other["total_amt"] / other["donors"], 2)  if other["donors"]  else 0,
+                "matched": other["matched"], "left": other["left"],
+                "stayed_pct": round(100 * (1 - other["left"] / other["matched"]), 1) if other["matched"] else None,
             })
         chan_rows.sort(key=lambda r: -r["signups"])
         # Totals row for context
@@ -1030,6 +1038,95 @@ def build_engagement_extras(mc, signup_attr, donorbox):
             out["policy_history"] = []
 
     return out
+
+
+# Dated initiatives and data events, marked on the scorecard's lines so a change
+# in a trend can be read against what was happening. Only dates with a record
+# behind them (Josh's email with Liz Glazer and Anthony Esguerra, and the
+# project notes); no internal counts here, since this file is public. Content
+# gating is missing on purpose: nothing on record dates its start.
+INITIATIVES = [
+    {"from": "2025-05", "to": "2025-09", "label": "Bot signup surge (about half of new signups)", "kind": "data"},
+    {"from": "2025-11", "to": "2025-12", "label": "End-of-year fundraising drive; online giving opens Nov. 12", "kind": "fundraising"},
+    {"from": "2026-03", "label": "Site moves from Prismic to Ghost; one-time catch-up import of signups into Mailchimp", "kind": "site"},
+    {"from": "2026-04", "label": "Pages found missing from Google's index after the move; re-indexing requested", "kind": "site"},
+    {"from": "2026-04", "to": "2026-05", "label": "University and law-school faculty outreach emails", "kind": "outreach"},
+    {"from": "2026-04", "label": "Gopnik and Sampson event (Apr. 27)", "kind": "event"},
+    {"from": "2026-05", "label": "Subject-line A/B tests begin (May 7); inactive addresses removed from the list", "kind": "newsletter"},
+    {"from": "2026-05", "to": "2026-06", "label": "Spring fundraising drive (May 12 to June 13)", "kind": "fundraising"},
+    {"from": "2026-06", "label": "Rent-freeze webinar; registrants added to the list", "kind": "event"},
+]
+
+ROLE_BUCKETS = [
+    ("gov", "Government", {"current nyc.gov", "city gov", "state gov", "fed gov", "judge"}),
+    ("academic", "Academic", {"academic"}),
+    ("press", "Press", {"journalist"}),
+    ("policy", "Nonprofit and foundation leaders", {"nonprofit leadership", "foundation leadership"}),
+]
+
+
+def _role_bucket(p):
+    t = set(p.get("types") or [])
+    for key, _lbl, tags in ROLE_BUCKETS:
+        if t & tags:
+            return key
+    if p.get("press"):
+        return "press"
+    dom = (p.get("e") or "").split("@")[-1].lower()
+    if dom.endswith(".gov") or ".gov." in dom:
+        return "gov"
+    if dom.endswith(".edu"):
+        return "academic"
+    return "other"
+
+
+def build_role_flows():
+    """Who joins and who leaves, by role, from people.json (the fused contacts
+    dataset): monthly counts for the scorecard's decision-makers line, and the
+    last 7 and 30 days with the notable names (Wikipedia-notable people and
+    government addresses) for the weekly report. Roles come from the contacts
+    database's own tags, falling back to .gov and .edu email domains."""
+    pj = PRIV / "people.json"
+    if not pj.exists():
+        return {"available": False, "reason": "no people.json yet"}
+    people = json.loads(pj.read_text())
+    keys = [k for k, _, _ in ROLE_BUCKETS] + ["other"]
+    labels = {k: l for k, l, _ in ROLE_BUCKETS}
+    labels["other"] = "Everyone else"
+    monthly, joins, leaves = {}, [], []
+
+    def bump(m, kind, b):
+        e = monthly.setdefault(m, {"join": {k: 0 for k in keys}, "leave": {k: 0 for k in keys}})
+        e[kind][b] += 1
+
+    for p in people:
+        b = _role_bucket(p)
+        s = str(p.get("since") or "")[:10]
+        if len(s) == 10:
+            bump(s[:7], "join", b); joins.append((s, b, p))
+        u = str(p.get("udate") or "")[:10]
+        if p.get("unsub") and len(u) == 10:
+            bump(u[:7], "leave", b); leaves.append((u, b, p))
+    last = max([d for d, _, _ in joins] + [d for d, _, _ in leaves] or [""])
+
+    def win(rows, days):
+        if not last:
+            return {"counts": {k: 0 for k in keys}, "total": 0, "notable": []}
+        a = (datetime.strptime(last, "%Y-%m-%d") - timedelta(days=days - 1)).strftime("%Y-%m-%d")
+        sel = [(d, b, p) for d, b, p in rows if a <= d <= last]
+        counts = {k: 0 for k in keys}
+        for _d, b, _p in sel:
+            counts[b] += 1
+        notable = [{"n": p.get("n") or "", "org": p.get("inst") or "", "role": labels[b],
+                    "date": d, "wiki": bool(p.get("wiki"))}
+                   for d, b, p in sorted(sel, key=lambda x: x[0], reverse=True)
+                   if (p.get("wiki") or b == "gov") and p.get("n")][:25]
+        return {"from": a, "to": last, "counts": counts, "total": len(sel), "notable": notable}
+
+    return {"available": True, "as_of": last, "labels": labels, "keys": keys,
+            "monthly": [{"m": m, **monthly[m]} for m in sorted(monthly)],
+            "week": {"join": win(joins, 7), "leave": win(leaves, 7)},
+            "month": {"join": win(joins, 30), "leave": win(leaves, 30)}}
 
 
 def build_lifecycle(mc):
@@ -1329,6 +1426,36 @@ def _ga4_weekly_traffic(prop, token, start_date="2025-01-01"):
         v = row["metricValues"]
         e[0] += int(v[0]["value"]); e[1] += int(v[1]["value"])
     return [{"wk": k, "visits": wk[k][0], "pageviews": wk[k][1]} for k in sorted(wk)]
+
+
+def _ga4_monthly_channels(prop, token, start_date="2024-09-01"):
+    """Sessions, engaged sessions, engaged seconds and page views by calendar
+    month and GA4 default channel group (Organic Search, Direct, Email, Organic
+    Social, Referral ...). Feeds the scorecard's time-per-visit and search-share
+    lines, and answers "how do people get to us" over time rather than as a
+    30-day snapshot."""
+    body = {
+        "dateRanges": [{"startDate": start_date, "endDate": "today"}],
+        "dimensions": [{"name": "yearMonth"}, {"name": "sessionDefaultChannelGroup"}],
+        "metrics": [{"name": "sessions"}, {"name": "engagedSessions"},
+                    {"name": "userEngagementDuration"}, {"name": "screenPageViews"}],
+        "limit": 10000,
+    }
+    req = urllib.request.Request(
+        f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+        data=json.dumps(body).encode(),
+        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        rep = json.loads(r.read())
+    rows = []
+    for row in rep.get("rows") or []:
+        ym = row["dimensionValues"][0]["value"]
+        ch = row["dimensionValues"][1]["value"] or "(other)"
+        v = [float(x["value"]) for x in row["metricValues"]]
+        rows.append({"m": f"{ym[:4]}-{ym[4:6]}", "ch": ch, "sessions": int(v[0]), "engaged": int(v[1]),
+                     "eng_secs": int(v[2]), "views": int(v[3])})
+    rows.sort(key=lambda r: (r["m"], -r["sessions"]))
+    return rows
 
 
 def _ga4_story_weekly(prop, token, days=300, top=120):
@@ -2069,6 +2196,10 @@ def pull_ga4():
         except Exception as e:
             log(f"  ga4 weekly traffic failed: {e}"); traffic_weekly = []
         try:
+            monthly_channels = _ga4_monthly_channels(prop, token, "2024-09-01")
+        except Exception as e:
+            log(f"  ga4 monthly channels failed: {e}"); monthly_channels = []
+        try:
             story_weekly = _ga4_story_weekly(prop, token)
         except Exception as e:
             log(f"  ga4 story weekly failed: {e}"); story_weekly = {"pages": [], "rows": []}
@@ -2102,6 +2233,7 @@ def pull_ga4():
             "top_pages_alltime": top_alltime,
             "by_year": by_year, "returning": returning,
             "traffic_weekly": traffic_weekly,
+            "monthly_channels": monthly_channels,
             "story_weekly": story_weekly,
             "piece_benchmarks": piece_benchmarks,
             "piece_index": piece_index,
@@ -4934,6 +5066,13 @@ def main():
                 f"{n_lc} w/ newsletter clicks")
     except Exception as e:
         log(f"  piece index enrichment failed: {e}")
+
+    try:
+        out["role_flows"] = build_role_flows()
+    except Exception as e:
+        log(f"  role flows failed: {e}")
+        out["role_flows"] = {"available": False, "reason": str(e)}
+    out["initiatives"] = {"available": True, "items": INITIATIVES}
 
     # ---- Never let a missing credential erase good data -------------------
     # Every credential-gated section emits {"available": false, "reason": ...}
