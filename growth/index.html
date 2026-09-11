@@ -5512,7 +5512,9 @@ function renderWeekPulse(data, span){
     top:tp, topLbl:(span===7?"Top pieces this week":"Top pieces")+" · "+String(tpLbl).replace(/&mdash;/g,"—").replace(/<[^>]+>/g,""),
     conv:convTop, convLbl:"Most subscriber-converting pieces · "+String(convLbl).replace(/<[^>]+>/g,""),
     roll4: roll4 ? {now:roll4.now, week:roll4.week, pts:roll4.pts.map(p=>({end:p.end, lbl:r4md(p.end), s:Math.round(p.s), u:Math.round(p.u)}))} : null,
-    note:(nEl?nEl.textContent:"")};
+    // The card's footnote, minus the line about clicking numbers, which means
+    // nothing in a printed or emailed report.
+    note:(nEl?nEl.textContent:"").replace(/\s*Underlined numbers are clickable[^.]*\.\s*/," ").trim()};
 }
 
 // ===== Pulse summary report ==============================================
@@ -5642,10 +5644,13 @@ function pulseBenchmarks(m, data){
   rows.push({k:"Click-to-open", vc: mo.ctor_pct!=null?`${mo.ctor_pct}% (${mo.month})`:"—",
     norm:"5.3–8.6% cross-industry band; the one email metric Apple's auto-opens cannot inflate.",
     read: mo.ctor_pct!=null ? `${band(mo.ctor_pct,5.3,8.6)} the band` : ""});
-  const w30=(m.windows||[]).find(w=>w.N===30)||(m.windows||[])[0];
-  const U=w30&&w30.tiles.find(t=>t.k==="unsubs"); const subs=mc.total_subscribers;
-  if(U&&subs){ const churn=U.now/(w30.N||30)*30/subs*100;
-    rows.push({k:"Monthly churn", vc:`${churn.toFixed(1)}% of the list (unsubscribes over ${w30.N} days, scaled to a month)`,
+  // Churn from the actual last 30 days of the daily series, whatever window
+  // the report covers (scaling a single week up to a month is too noisy).
+  const dact=mc.daily_activity||[]; const subs=mc.total_subscribers;
+  const lastD=dact.map(r=>r.d).filter(Boolean).sort().pop();
+  if(lastD&&subs){ const from=new Date(Date.parse(lastD+"T00:00:00Z")-29*86400000).toISOString().slice(0,10);
+    const u30=dact.reduce((acc,r)=> (r.d>=from&&r.d<=lastD) ? acc+(+r.unsubs||0) : acc, 0); const churn=u30/subs*100;
+    rows.push({k:"Monthly churn", vc:`${churn.toFixed(1)}% of the list (${u30.toLocaleString("en-US")} unsubscribes in the 30 days to ${lastD})`,
       norm:"Healthy digital-news titles keep monthly churn under ~5% (INMA, 2025).", read: churn<5?"under the line":"over the line"}); }
   const act=(m.stocks||[]).find(k=>/Active subscribers/i.test(k.lbl));
   if(act&&subs){ const n=parseInt(String(act.num).replace(/[^0-9]/g,""),10); if(n) rows.push({k:"Active share", vc:`${Math.round(n/subs*100)}% opened at least one email in 30 days`,
