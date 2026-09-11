@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-09-10T23:09:14.806915+00:00",
+    "generated_at": "2026-09-11T11:04:33.081235+00:00",
     "site": "https://www.vitalcitynyc.org",
     "total_posts": 914,
     "total_authors": 509,
@@ -11,21 +11,8 @@
       "2026-09-10"
     ],
     "first_run": false,
-    "new_article_count": 2,
-    "new_articles": [
-      {
-        "title": "What a Better Public School AI Policy Would Look Like",
-        "url": "https://www.vitalcitynyc.org/nyc-public-school-classroom-ai-policy/",
-        "published_date": "2026-09-10",
-        "primary_author": null
-      },
-      {
-        "title": "A Simple Change That Could Improve the Lives of Millions of New Yorkers",
-        "url": "https://www.vitalcitynyc.org/early-school-start-times-harm-nyc/",
-        "published_date": "2026-09-10",
-        "primary_author": null
-      }
-    ]
+    "new_article_count": 0,
+    "new_articles": []
   },
   "total_pieces": 914,
   "by_year": {
