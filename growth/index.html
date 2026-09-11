@@ -5574,7 +5574,7 @@ function scAdd(ym,k){const [y,m]=ym.split("-").map(Number); return new Date(Date
 function scName(ym,noYear){const [y,m]=ym.split("-").map(Number); return noYear? SC_MON[m-1] : `${SC_MON[m-1]} ${y}`;}
 function scList(a){return a.length>1? a.slice(0,-1).join(", ")+" and "+a[a.length-1] : (a[0]||"");}
 function scSecs(v){ v=Math.round(v||0); const m=Math.floor(v/60), s=v%60; return m?`${m}m ${String(s).padStart(2,"0")}s`:`${s}s`; }
-const SC_LEGEND="In each line, the blue band marks the latest three months and the grey band the months they are compared with. Lines start at zero; gaps are months left out, with the reason in the notes. Dotted lines mark the dated events listed under the tiles.";
+const SC_LEGEND="In each line, the blue band marks the latest three months and the grey band the months they are compared with. Lines start at zero; gaps are months left out, with the reason in the notes. Dotted lines mark the months of the dated events listed under the tiles.";
 
 function scorecardModel(data){
   const mc=data.mailchimp||{}, ga4=data.ga4||{}, db=data.donorbox||{}, gh=data.ghost||{};
@@ -5642,9 +5642,10 @@ function scorecardModel(data){
     vals:S(m=>rfm[m]? DM.reduce((t,k)=>t+((rfm[m].join||{})[k]||0),0) : (rf.available?0:null)), fmt:n0,
     std:()=>{ if(!rf.available) return ""; const t={}; DM.forEach(k=>t[k]=CUR.reduce((a,i)=>a+(((rfm[months[i]]||{}).join||{})[k]||0),0));
       return `${curLbl}: ${t.gov} government, ${t.academic} academic, ${t.press} press, ${t.policy} nonprofit and foundation leaders. No industry standard; compared with Vital City's own average.`; }},
-   {k:"time", name:"Time spent per visit", unit:"engaged time per visit,", kind:"rate", good:1, waiting: !chRows.length,
+   {k:"time", name:"Time spent per visit", unit:"engaged time per visit,", kind:"rate", good:1, waiting: !chRows.length, minBase:3,
     def:"Average time readers actively spend on the site in a visit, from Google Analytics.",
-    vals:S(m=>chM[m]&&chM[m].s? chM[m].eng/chM[m].s : null, chStart), fmt:scSecs,
+    vals:S(m=>chM[m]&&chM[m].s? chM[m].eng/chM[m].s : null, chStart&&chStart>"2026-03"?chStart:"2026-03"), fmt:scSecs,
+    note:"Google Analytics records engaged time differently on the new site: time per visit fell by about half at the March 2026 move to Ghost while visits held steady, so earlier months aren't comparable and are left off the line.",
     std:()=>"No reliable public standard across publishers, so this is compared with Vital City's own recent average."},
    {k:"search", name:"Visits from search", unit:"of visits came from search,", kind:"rate", good:0, waiting: !chRows.length,
     def:"Share of visits that arrive from search engines. It shows how people find Vital City, and how exposed it is to changes at Google.",
@@ -5677,7 +5678,7 @@ function scorecardModel(data){
     const cIdx=CUR.filter(i=>series[i]!=null), bIdx=BASE.filter(i=>series[i]!=null);
     x.cmpIdx={cur:CUR, prev: bIdx.length? bIdx : BASE};
     x.cur = cIdx.length>=2 ? avg(cIdx.map(i=>series[i])) : null;
-    x.base = bIdx.length>=4 ? avg(bIdx.map(i=>series[i])) : null;
+    x.base = bIdx.length>=(x.minBase||4) ? avg(bIdx.map(i=>series[i])) : null;
     x.pct = (x.cur!=null && x.base) ? (x.cur-x.base)/Math.abs(x.base) : null;
     const six=series.map((q,i)=>q==null?null:[i,q]).filter(Boolean).slice(-6);
     x.trend=null;
@@ -5755,7 +5756,7 @@ function scSpark(x, w, h, marks){
   const max=Math.max(...pts.map(p=>p[1]))||1; const X=i=>4+i*(w-8)/(n-1); const Y=q=>h-4-(q/max)*(h-12);
   const segs=[]; let cur=[]; v.forEach((q,i)=>{ if(q==null){ if(cur.length) segs.push(cur); cur=[]; } else cur.push(`${X(i).toFixed(1)},${Y(q).toFixed(1)}`); }); if(cur.length) segs.push(cur);
   const band=(idx,fill)=>{const a=Math.min(...idx), b=Math.max(...idx); return `<rect x="${(X(a)-3).toFixed(1)}" y="0" width="${(X(b)-X(a)+6).toFixed(1)}" height="${h}" fill="${fill}"/>`;};
-  const mk=(marks||[]).filter(m=>m.idx>=0).map(m=>`<line x1="${X(m.idx).toFixed(1)}" y1="8" x2="${X(m.idx).toFixed(1)}" y2="${h-4}" stroke="#8a8a8a" stroke-width="0.8" stroke-dasharray="2 2"/><text x="${(X(m.idx)+1.5).toFixed(1)}" y="7" font-size="7" fill="#707175">${m.n}</text>`).join("");
+  const mk=(marks||[]).filter(m=>m.idx>=0).map(m=>`<line x1="${X(m.idx).toFixed(1)}" y1="4" x2="${X(m.idx).toFixed(1)}" y2="${h-4}" stroke="#8a8a8a" stroke-width="0.8" stroke-dasharray="2 2"/>`).join("");
   const last=pts[pts.length-1];
   return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="${esc(x.name)}, monthly">`+
     band(x.cmpIdx.prev,"rgba(112,113,117,.14)")+band(x.cmpIdx.cur,"rgba(33,126,190,.18)")+mk+
@@ -5777,13 +5778,20 @@ function kiTileHTML(x, w, marks, h, noRead){
 }
 // Do new subscribers stay? Ghost-era signups by how they arrived, matched to
 // the contacts database (engagement_extras.channel_ltv, built nightly).
+const KI_SRC={"AcademicOutreach":"University outreach emails","ReengagementCampaign":"Re-engagement campaign","(unknown)":"Unknown",
+  "Vital City Newsletter Contacts":"Newsletter contacts","newsletter":"Newsletter","Other (small channels)":"Other small sources"};
+function kiSrc(s){ return KI_SRC[s]||s; }
+function kiStayRows(data){
+  const cl=((data.engagement_extras||{}).channel_ltv)||{};
+  return (cl.channels||[]).filter(r=>r.stayed_pct!=null&&r.matched>=10);
+}
 function kiStayHTML(data){
   const cl=((data.engagement_extras||{}).channel_ltv)||{};
   const rows=(cl.channels||[]).filter(r=>r.stayed_pct!=null&&r.matched>=10);
   if(!rows.length) return "";
   const start=((data.ghost_signup_attribution||{}).coverage_start)||"";
   return `<div class="ki-stay"><b>Do new subscribers stay?</b> Signups since ${esc(start)} by how they arrived, and the share still subscribed today.
-    <table><tr><th>Arrived from</th><th>Signups</th><th>Still subscribed</th><th>Became donors</th></tr>${rows.map(r=>`<tr><td>${esc(r.source)}</td><td>${fmtN(r.signups)}</td><td>${r.stayed_pct}%</td><td>${fmtN(r.donors)}</td></tr>`).join("")}</table>
+    <table><tr><th>Arrived from</th><th>Signups</th><th>Still subscribed</th><th>Became donors</th></tr>${rows.map(r=>`<tr><td>${esc(kiSrc(r.source))}</td><td>${fmtN(r.signups)}</td><td>${Math.round(r.stayed_pct)}%</td><td>${fmtN(r.donors)}</td></tr>`).join("")}</table>
     <div class="ki-fine">Event registrations are added to the list outside Ghost, so they aren't in this table yet.</div></div>`;
 }
 function kiBodyHTML(sc, w, opts){
@@ -5794,7 +5802,7 @@ function kiBodyHTML(sc, w, opts){
     (sc.summary.length?`<div class="ki-sum">${sc.summary.map(esc).join("<br>")}</div>`:"")+
     `<div class="ki-grid">${sc.measures.map(x=>kiTileHTML(x,w,marks,opts.sparkH,opts.noRead)).join("")}</div>`+
     (sc.also?`<div class="ki-also">${esc(sc.also)}</div>`:"")+
-    (marks.length?`<div class="ki-marks"><b>Marked on the lines:</b> ${marks.map(k=>`${k.n}. ${esc(k.when)}: ${esc(k.label)}`).join(" · ")}</div>`:"")+
+    (marks.length?`<div class="ki-marks"><b>Dotted lines mark:</b> ${marks.map(k=>`${esc(k.when)}: ${esc(k.label)}`).join(" · ")}</div>`:"")+
     (opts.stay||"")+
     (opts.noNotes ? "" : (opts.printNotes ? `<div class="ki-notes"><b>Notes and sources</b>${notes}</div>` : `<details class="ki-notes"><summary>Notes and sources</summary>${notes}</details>`));
 }
@@ -5812,10 +5820,10 @@ function scReportMD(sc, data){
     o+=`- **${x.name}: ${scNowText(x)}** ${x.unitLine}. ${x.cmpShort}${x.stdText?` ${x.stdText}`:""}${x.trendText?` ${x.trendText}`:""}${x.reading?` ${x.reading}`:""}\n`;
   });
   if(sc.also) o+=`\n${sc.also}\n`;
-  if((sc.marks||[]).length) o+=`\nMarked on the lines: ${sc.marks.map(k=>`${k.n}. ${k.when}: ${k.label}`).join("; ")}.\n`;
+  if((sc.marks||[]).length) o+=`\nDotted lines mark: ${sc.marks.map(k=>`${k.when}: ${k.label}`).join("; ")}.\n`;
   const cl=(((data||{}).engagement_extras||{}).channel_ltv)||{};
   const rows=(cl.channels||[]).filter(r=>r.stayed_pct!=null&&r.matched>=10);
-  if(rows.length) o+=`\n**Do new subscribers stay?** ${rows.map(r=>`${r.source}: ${fmtN(r.signups)} signups, ${r.stayed_pct}% still subscribed`).join("; ")}.\n`;
+  if(rows.length) o+=`\n**Do new subscribers stay?** ${rows.map(r=>`${kiSrc(r.source)}: ${fmtN(r.signups)} signups, ${Math.round(r.stayed_pct)}% still subscribed`).join("; ")}.\n`;
   o+=`\n_Notes: ${sc.measures.map(x=>`${x.name}: ${x.baseText||""} ${x.note||""}`.trim()).join(" ")} ${SC_LEGEND}_\n`;
   return o;
 }
@@ -5831,8 +5839,14 @@ function whoHTML(data, which){
   return `<div class="ki-who"><div class="ki-whohd">Who joined and who left, ${period} (${esc((w.join||{}).from||"")} to ${esc((w.join||{}).to||"")})</div>${line("join","joined")}${line("leave","left")}<div class="ki-fine">Roles come from the contacts database. Notable means a Wikipedia-notable person or a government address.</div></div>`;
 }
 function whoMD(data, which){
-  const d=document.createElement("div"); d.innerHTML=whoHTML(data,which); const t=d.innerText.trim();
-  return t ? `\n**${t.split("\n")[0]}**\n\n${t.split("\n").slice(1).map(l=>"- "+l).join("\n")}\n` : "";
+  const rf=data.role_flows||{}; if(!rf.available) return "";
+  const w=(rf[which]||{}); const lab=rf.labels||{}; const keys=rf.keys||[];
+  const line=(side,verb)=>{ const s=w[side]||{}; if(s.total==null) return "";
+    const parts=keys.filter(k=>k!=="other"&&(s.counts||{})[k]).map(k=>`${s.counts[k]} ${lab[k].toLowerCase()}`);
+    const nb=(s.notable||[]).slice(0,8).map(p=>`${p.n}${p.org?` (${p.org})`:` (${p.role.toLowerCase()})`}`);
+    return `- **${fmtN(s.total)} ${verb}**${parts.length?`: ${parts.join(", ")}, and ${fmtN((s.counts||{}).other||0)} others`:""}.${nb.length?` Notable: ${nb.join("; ")}.`:""}\n`; };
+  const period = which==="week" ? "this week" : "the last 30 days";
+  return `\n**Who joined and who left, ${period} (${(w.join||{}).from||""} to ${(w.join||{}).to||""})**\n\n`+line("join","joined")+line("leave","left");
 }
 function kiNotesHTML(sc){
   return `<p>${esc(sc.lede)}</p>`+sc.measures.map(x=>`<p><b>${esc(x.name)}.</b> ${esc(x.def)} ${esc(x.baseText||"")} ${esc(x.note||"")}</p>`).join("")+`<p>${esc(SC_LEGEND)}</p>`;
