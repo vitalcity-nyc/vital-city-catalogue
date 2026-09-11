@@ -231,11 +231,15 @@ def build(growth, people, run_date):
     signP = sum(1 for p in people if inwin(p.get("since"), p7))
     unsub7 = sum(1 for p in people if p.get("unsub") and inwin(p.get("udate"), l7))
     unsubP = sum(1 for p in people if p.get("unsub") and inwin(p.get("udate"), p7))
-    wk = Counter()
-    for p in people:
-        x = d(p.get("since"))
-        if x and 0 <= (run_date - x).days <= 56: wk[x.isocalendar()[:2]] += 1
-    avg_wk = round(st.mean(list(wk.values()))) if wk else 0
+    # Four-week rolling average, per week: each point is the 28 days ending on
+    # that date, divided by four. Eight points, a week apart, so the direction
+    # shows. Same people dataset as the weekly counts above.
+    def r4(end):
+        win = (end - timedelta(days=27), end)
+        s = sum(1 for p in people if inwin(p.get("since"), win))
+        u = sum(1 for p in people if p.get("unsub") and inwin(p.get("udate"), win))
+        return {"end": end, "s": s / 4, "u": u / 4}
+    roll4 = [r4(run_date - timedelta(days=7 * k)) for k in range(7, -1, -1)]
 
     # Email campaigns sent in the window
     camps = [c for c in mc.get("campaigns", []) if inwin(c.get("sent", ""), l7)]
@@ -327,8 +331,15 @@ def build(growth, people, run_date):
     lines += broader_trends(g, run_date)
 
     lines.append("## Newsletter list")
-    lines.append(f"- **New signups: {sign7}** — {delta(sign7, signP)}; ~{avg_wk}/week is the 8-week average.")
-    lines.append(f"- **Unsubscribes: {unsub7}** (vs {unsubP} prior week) → **net {('+' if sign7-unsub7>=0 else '')}{sign7-unsub7}**.\n")
+    r = roll4[-1]
+    lines.append(f"- **New signups: {sign7}** — {delta(sign7, signP)}; four-week average **{round(r['s'])} a week**.")
+    lines.append(f"- **Unsubscribes: {unsub7}** (vs {unsubP} prior week); four-week average **{round(r['u'])} a week**. "
+                 f"Net this week: **{('+' if sign7-unsub7>=0 else '')}{sign7-unsub7}**.")
+    lines.append("- **Four-week rolling average, by week** *(each figure is the 28 days ending that date, divided by four)*:\n")
+    lines.append("| Week ending | " + " | ".join(x["end"].strftime("%b %-d") for x in roll4) + " |")
+    lines.append("|---|" + "---:|" * len(roll4))
+    lines.append("| Signups | " + " | ".join(str(round(x["s"])) for x in roll4) + " |")
+    lines.append("| Unsubscribes | " + " | ".join(str(round(x["u"])) for x in roll4) + " |\n")
 
     lines.append("## Notable joins & departures")
     lines.append("*Wikipedia-notable people or government inboxes, this week.*")

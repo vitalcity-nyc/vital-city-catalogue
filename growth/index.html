@@ -145,6 +145,11 @@
   main .card.ccol > .cardpeek{display:flex}
   /* Time-window toggle row (Signups vs unsubscribes chart) */
   .winrow{display:flex;gap:6px;margin:0 0 10px}
+  .r4sum{font-size:12.5px;margin:0 0 6px;line-height:1.5}
+  .r4tab{border-collapse:collapse;font-size:11.5px;font-variant-numeric:tabular-nums}
+  .r4tab th,.r4tab td{padding:3px 9px;text-align:right;border-bottom:1px solid var(--vc-cloud);white-space:nowrap}
+  .r4tab th{font-weight:700;color:var(--vc-charcoal);font-size:10.5px}
+  .r4tab th:first-child,.r4tab td.rl{text-align:left;color:var(--vc-charcoal);padding-left:0}
   .winbtn{font:inherit;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
           padding:4px 10px;border:1px solid var(--vc-cloud);background:var(--vc-white);
           color:var(--vc-charcoal);cursor:pointer;border-radius:999px}
@@ -5458,8 +5463,29 @@ function renderWeekPulse(data, span){
   });
   const convTop=Object.values(conv).sort((a,b)=>b.n-a.n).slice(0,5)
     .map(p=>({t:p.t, v:p.n+" signup"+(p.n===1?"":"s")}));
+  // Four-week rolling average of signups and unsubscribes (7-day view only).
+  // Each point is the 28 days ending on that date, divided by four, so it is
+  // a per-week figure that smooths out one odd week. Same Mailchimp daily
+  // series the tiles use.
+  let roll4=null;
+  if(span===7){
+    const firstAct=firstOf(act,"d");
+    const r4=end=>({end, s:sumField(act,"d","subs",shift(end,-27),end)/4, u:sumField(act,"d","unsubs",shift(end,-27),end)/4});
+    const pts=[]; for(let k=7;k>=0;k--){ const e=shift(curEnd,-7*k); if(firstAct && shift(e,-27)<firstAct) continue; pts.push(r4(e)); }
+    if(pts.length) roll4={now:pts[pts.length-1], pts, week:{s:cur.signups, u:cur.unsubs}};
+  }
+  const r4md=iso=>new Date(iso+"T00:00:00Z").toLocaleDateString("en-US",{month:"short",day:"numeric",timeZone:"UTC"});
+  const rollHtml = roll4 ? (
+    lbl("Four-week rolling average","signups and unsubscribes per week; each figure covers the 28 days ending that date") +
+    `<div class="r4sum">Signups: <b>${Math.round(roll4.now.s)}</b> a week over the last four weeks (this week: ${fmtN(roll4.week.s)}). ` +
+    `Unsubscribes: <b>${Math.round(roll4.now.u)}</b> a week (this week: ${fmtN(roll4.week.u)}).</div>` +
+    `<div style="overflow-x:auto"><table class="r4tab"><tr><th>Week ending</th>${roll4.pts.map(p=>`<th>${r4md(p.end)}</th>`).join("")}</tr>` +
+    `<tr><td class="rl">Signups</td>${roll4.pts.map(p=>`<td>${Math.round(p.s)}</td>`).join("")}</tr>` +
+    `<tr><td class="rl">Unsubscribes</td>${roll4.pts.map(p=>`<td>${Math.round(p.u)}</td>`).join("")}</tr></table></div>`
+  ) : "";
   if(tpEl){
     let html="";
+    if(rollHtml) html += rollHtml + `<div style="margin-top:14px"></div>`;
     if(tp.length) html += lbl(span===7?"Top pieces this week":"Top pieces", tpLbl) + olist(tp);
     if(convTop.length) html += `<div style="margin-top:14px"></div>` +
       lbl("Most subscriber-converting pieces", convLbl) + olist(convTop);
@@ -5483,6 +5509,7 @@ function renderWeekPulse(data, span){
     range:(h?h.textContent:""), tiles:_pm,
     top:tp, topLbl:(span===7?"Top pieces this week":"Top pieces")+" · "+String(tpLbl).replace(/&mdash;/g,"—").replace(/<[^>]+>/g,""),
     conv:convTop, convLbl:"Most subscriber-converting pieces · "+String(convLbl).replace(/<[^>]+>/g,""),
+    roll4: roll4 ? {now:roll4.now, week:roll4.week, pts:roll4.pts.map(p=>({end:p.end, lbl:r4md(p.end), s:Math.round(p.s), u:Math.round(p.u)}))} : null,
     note:(nEl?nEl.textContent:"")};
 }
 
@@ -5633,6 +5660,10 @@ function pulseReportMD(m){
   m.windows.forEach(w=>{
     o+=`\n## ${w.label} (${w.curStart} to ${w.curEnd}, ${w.N} days)\n`;
     w.tiles.forEach(t=>{ o+=`- ${t.lbl}: ${t.value} — ${t.delta}\n`; });
+    if(w.roll4){ const r=w.roll4;
+      o+=`\n**Four-week rolling average** (per week; each figure covers the 28 days ending that date)\n`;
+      o+=`- Signups: ${Math.round(r.now.s)} a week (this week: ${r.week.s})\n- Unsubscribes: ${Math.round(r.now.u)} a week (this week: ${r.week.u})\n`;
+      o+=`- Week ending ${r.pts.map(p=>p.lbl).join(", ")}: signups ${r.pts.map(p=>p.s).join(" → ")}; unsubscribes ${r.pts.map(p=>p.u).join(" → ")}\n`; }
     if((w.insights||[]).length){ o+=`\n**Reading the window**\n`; w.insights.forEach(i=>{ o+=`- ${i.tone==="good"?"▲":i.tone==="watch"?"▼":"•"} ${i.text}\n`; }); }
     if(w.top.length){ o+=`\n**${w.topLbl}**\n`; w.top.forEach((p,i)=>{ o+=`${i+1}. ${p.t} — ${p.v}\n`; }); }
     if(w.conv.length){ o+=`\n**${w.convLbl}**\n`; w.conv.forEach((p,i)=>{ o+=`${i+1}. ${p.t} — ${p.v}\n`; }); }
@@ -5649,6 +5680,12 @@ function pulseReportHTML(m){
   m.windows.forEach(w=>{
     b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.curStart)} → ${esc(w.curEnd)} · ${w.N} days · vs the ${w.N} days before</span></h2>`;
     b+=`<table>`+w.tiles.map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}</td></tr>`).join("")+`</table>`;
+    if(w.roll4){ const r=w.roll4;
+      b+=`<h3>Four-week rolling average · per week, each figure the 28 days ending that date</h3>`+
+        `<p class="r4">Signups: <b>${Math.round(r.now.s)}</b> a week over the last four weeks (this week: ${r.week.s}). Unsubscribes: <b>${Math.round(r.now.u)}</b> a week (this week: ${r.week.u}).</p>`+
+        `<table class="r4t"><tr><td class="l">Week ending</td>${r.pts.map(p=>`<td>${esc(p.lbl)}</td>`).join("")}</tr>`+
+        `<tr><td class="l">Signups</td>${r.pts.map(p=>`<td>${p.s}</td>`).join("")}</tr>`+
+        `<tr><td class="l">Unsubscribes</td>${r.pts.map(p=>`<td>${p.u}</td>`).join("")}</tr></table>`; }
     if((w.insights||[]).length) b+=`<h3>Reading the window</h3><ul class="ins">`+w.insights.map(i=>`<li class="${i.tone}"><span class="m">${i.tone==="good"?"▲":i.tone==="watch"?"▼":"•"}</span>${esc(i.text)}</li>`).join("")+`</ul>`;
     if(w.top.length) b+=`<h3>${esc(w.topLbl)}</h3><ol>`+w.top.map(p=>`<li><span>${esc(p.t)}</span><span class="v">${esc(p.v)}</span></li>`).join("")+`</ol>`;
     if(w.conv.length) b+=`<h3>${esc(w.convLbl)}</h3><ol>`+w.conv.map(p=>`<li><span>${esc(p.t)}</span><span class="v">${esc(p.v)}</span></li>`).join("")+`</ol>`;
@@ -5666,6 +5703,7 @@ function pulseReportHTML(m){
     +'table{width:100%;border-collapse:collapse;font-size:13px}td{padding:6px 4px;border-bottom:1px solid #ddd;vertical-align:baseline}td.l{color:#707175;width:34%}td.v{font-weight:700;width:16%;font-variant-numeric:tabular-nums}td.n{color:#707175;font-size:11.5px}td.up{color:#3d7a35}td.down{color:#a0432d}'
     +'ol{padding-left:20px;margin:4px 0;font-size:12.5px}ol li{display:flex;justify-content:space-between;gap:12px;padding:3px 0;border-bottom:1px solid #eee}ol li .v{white-space:nowrap;color:#707175;font-variant-numeric:tabular-nums}'
     +'.ins{list-style:none;padding:0;margin:4px 0;font-size:12.5px}.ins li{padding:4px 0 4px 20px;position:relative;border-bottom:1px solid #eee}.ins .m{position:absolute;left:2px;font-weight:700}.ins .good .m,.ins li.good .m{color:#3d7a35}.ins li.watch .m{color:#a0432d}.ins li.neutral .m{color:#707175}'
+    +'.r4{font-size:12.5px;margin:2px 0 6px}table.r4t{font-size:11.5px}table.r4t td{text-align:right;padding:3px 5px;font-variant-numeric:tabular-nums}table.r4t td.l{text-align:left;width:auto;white-space:nowrap}table.r4t tr:first-child td{color:#707175;font-size:10.5px}'
     +'table.bm td.l{width:16%}table.bm td.v{width:30%;font-weight:600}table.bm td.v .r{font-weight:400;color:#3d7a35;font-size:11px}table.bm td.n{font-size:11px}'
     +'.ctx{font-size:11.5px;color:#333;padding-left:18px}.ctx li{margin:3px 0}.cav{font-size:10.5px;color:#707175;margin-top:18px;border-top:1px solid #ddd;padding-top:10px}'
     +'.bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.bar button{font:inherit;font-size:12px;font-weight:700;padding:7px 12px;border:1.5px solid #050507;background:#fff;border-radius:3px;cursor:pointer}.bar button.p{background:#050507;color:#fff}'
