@@ -5397,7 +5397,9 @@ function renderWeekPulse(data, span){
       : `vs prior ${N} days`;
     const d=now-base;
     let cls="flat", dtxt;
-    if(Math.abs(d)<(t.dec?0.05:0.5)){ dtxt=`typical ${(span==="ytd")?"stretch":N+"-day stretch"} ${baseLbl}`; }
+    if(Math.abs(d)<(t.dec?0.05:0.5)){ dtxt = nm7
+        ? `in line with the ${nm7.months}-mo ${nm7.median?"median":"norm"} (~${t.fmt===fmtMoney?fmtMoney(nm7.val):fmtN(Math.round(nm7.val))}/${unit})`
+        : `same as the prior ${N} days (${t.fmt(was)})`; }
     else {
       const up=d>0, good = t.neutral ? null : (t.goodDown ? !up : up);
       cls = good===null ? "flat" : (good ? "up" : "down");

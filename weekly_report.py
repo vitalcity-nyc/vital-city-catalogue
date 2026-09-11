@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Vital City — weekly growth report.
 
+RETIRED 2026-09-11. The Thursday report is now produced by the growth
+dashboard's own 7-day report (dashboard_weekly.mjs, launchd label
+com.vitalcity.dashboard-weekly). This file is kept for reference only;
+nothing schedules it.
+
 Fetches the published (encrypted) dashboard data, decrypts it, and writes a
 Markdown summary of the last 7 days to the Desktop. Runs locally (it writes to
 ~/Desktop), scheduled via launchd each Friday morning.
