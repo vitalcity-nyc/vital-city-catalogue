@@ -145,6 +145,19 @@
   main .card.ccol > .cardpeek{display:flex}
   /* Time-window toggle row (Signups vs unsubscribes chart) */
   .winrow{display:flex;gap:6px;margin:0 0 10px}
+  .sc-intro{font-size:12.5px;line-height:1.5;margin:0 0 10px}
+  .sc-sum{font-size:12.5px;line-height:1.55;margin:0 0 6px;padding:9px 12px;background:var(--vc-paper2,#eeeeec)}
+  .sc-grp{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:var(--vc-charcoal);margin:16px 0 2px}
+  .sc-row{display:grid;grid-template-columns:minmax(170px,1.25fr) 140px 240px minmax(230px,1.7fr);gap:16px;align-items:start;padding:11px 0;border-top:1px solid var(--vc-cloud)}
+  .sc-name b{font-size:13px}.sc-def{font-size:11px;color:var(--vc-charcoal);line-height:1.4;margin-top:3px}
+  .sc-n{font-family:var(--vc-serif,Georgia,serif);font-size:25px;line-height:1.05}.sc-u{font-size:10.5px;color:var(--vc-charcoal);margin-top:3px}
+  .sc-spark{color:var(--vc-black)}.sc-spark svg{display:block;max-width:100%;height:auto}
+  .sc-axis{display:flex;justify-content:space-between;font-size:9.5px;color:var(--vc-charcoal);margin-top:1px}
+  .sc-cmp{font-size:12px;font-weight:700;line-height:1.4}.sc-cmp.good{color:#3d7a35}.sc-cmp.watch{color:#a0432d}
+  .sc-tr{font-weight:400;color:var(--vc-black)}
+  .sc-why{font-size:12px;line-height:1.45;margin-top:3px}.sc-note{font-size:10.5px;color:var(--vc-charcoal);margin-top:4px;line-height:1.4}
+  .sc-legend{font-size:10.5px;color:var(--vc-charcoal);margin-top:12px;line-height:1.5}
+  @media(max-width:900px){.sc-row{grid-template-columns:1fr 1fr}.sc-spark,.sc-read{grid-column:1/-1}}
   .r4sum{font-size:12.5px;margin:0 0 6px;line-height:1.5}
   .r4tab{border-collapse:collapse;font-size:11.5px;font-variant-numeric:tabular-nums}
   .r4tab th,.r4tab td{padding:3px 9px;text-align:right;border-bottom:1px solid var(--vc-cloud);white-space:nowrap}
@@ -575,6 +588,7 @@
            which the old mid-page version skipped entirely. -->
       <nav class="secnav" id="jumpNav" aria-label="Dashboard sections">
         <span class="secnav-lbl">Jump to:</span>
+        <a href="#sec-scorecard">Scorecard</a>
         <a href="#sec-glance">At a glance</a>
         <a href="#rangeReport">Reports</a>
         <a href="#bigPicture">Long view</a>
@@ -594,6 +608,8 @@
           <li><b>Who reads matters more than how many.</b> Vital City exists to move policy, so a few hundred mayors, commissioners, council staffers, funders and reporters reading closely can count for more than tens of thousands of casual visitors.</li>
         </ul>
       </div>
+      <div class="sechead-title" id="sec-scorecard" style="margin:24px 0 4px">Scorecard</div>
+      <div class="card" id="scorecard"><h2>Scorecard</h2><div class="hint">Loading…</div></div>
       <div class="sechead-title" id="sec-glance" style="margin:24px 0 4px">At a glance</div>
       <div style="font-size:12.5px;color:var(--vc-charcoal);margin:0 0 12px;max-width:760px">Two bands. The first is where things stand: list size, the engaged core, the donor base and the recurring income that makes the organization sustainable. Those numbers have no window &mdash; a list does not have a &ldquo;last 7 days.&rdquo; The second band is what moved, and the buttons change its window. Net list change leads it because growing the list is objective one, and only the net number says whether the list is growing.</div>
       <div class="kpis" id="kpis"></div>
@@ -1294,6 +1310,7 @@ function boot(data){
   $("#kpis").innerHTML = head.map(tile).join("");
   // Plain copy of the stock tiles for the pulse report (no markup).
   window._stocksModel = head.map(k=>({lbl:k.lbl, num:String(k.num==null?"":k.num).replace(/<[^>]+>/g,""), delta:String(k.delta||"").replace(/<[^>]+>/g,""), flag:k.flag||""}));
+  renderScorecard(data);
   // ----- Last 7 days rolling scorecard (weekly pulse, all categories)
   renderWeekPulse(data);
   (function(){
@@ -2628,7 +2645,7 @@ function cardPeek(id, d){
 // deeper/secondary cards start folded to shorten the scroll. Per-device memory.
 function setupCardCollapse(data){
   const KEY = "vc_growth_cards_collapsed";
-  const OPEN = new Set(["weekPulse","bigPicture","audienceQuality","growthChart","fundraising","perf"]);
+  const OPEN = new Set(["scorecard","weekPulse","bigPicture","audienceQuality","growthChart","fundraising","perf"]);
   const cards = [...document.querySelectorAll("main .card")].filter(c=>c.id && c.querySelector(":scope > h2"));
   let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){}
   const collapsed = new Set(Array.isArray(saved) ? saved : cards.filter(c=>!OPEN.has(c.id)).map(c=>c.id));
@@ -5517,6 +5534,202 @@ function renderWeekPulse(data, span){
     note:(nEl?nEl.textContent:"").replace(/\s*Underlined numbers are clickable[^.]*\.\s*/," ").trim()};
 }
 
+
+// ===== Scorecard =========================================================
+// Eight measures to steer by (proposed 2026-09-11 after the team asked for
+// "a handful of things that tell us how we are doing and what to do next").
+// Every measure is on full calendar months, with a 24-month line and ONE
+// comparison: the latest three full months against the average of the twelve
+// months before them, leaving out months the data can't support, plus the
+// direction over the last six months. Readings are fixed sentences chosen by
+// the numbers; no model, no API call.
+const SC_BOT={"2025-05":.53,"2025-06":.53,"2025-07":.53,"2025-08":.53,"2025-09":.53};
+// Months whose signup counts can't support a rate: the 2025 bot surge (even a
+// 53% discount leaves them at three times the clean months) and March 2026,
+// when a one-time catch-up import landed in Mailchimp.
+const SC_CONV_SKIP=new Set(["2025-05","2025-06","2025-07","2025-08","2025-09","2026-03"]);
+const SC_MON=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+function scAdd(ym,k){const [y,m]=ym.split("-").map(Number); return new Date(Date.UTC(y,m-1+k,1)).toISOString().slice(0,7);}
+function scName(ym,noYear){const [y,m]=ym.split("-").map(Number); return noYear? SC_MON[m-1] : `${SC_MON[m-1]} ${y}`;}
+function scList(a){return a.length>1? a.slice(0,-1).join(", ")+" and "+a[a.length-1] : (a[0]||"");}
+function scorecardModel(data){
+  const mc=data.mailchimp||{}, ga4=data.ga4||{}, db=data.donorbox||{}, gh=data.ghost||{};
+  const act=mc.daily_activity||[];
+  const lastDay=act.map(r=>r.d).filter(Boolean).sort().pop() || new Date().toISOString().slice(0,10);
+  const nextDay=new Date(Date.parse(lastDay+"T00:00:00Z")+86400000).toISOString().slice(0,10);
+  const full = nextDay.slice(8,10)==="01" ? lastDay.slice(0,7) : scAdd(lastDay.slice(0,7),-1);
+  const months=[]; for(let k=23;k>=0;k--) months.push(scAdd(full,-k));
+  const ms={}; (mc.monthly_signups||[]).forEach(r=>ms[r.month]=r);
+  const mcp={}; (mc.monthly_campaigns||[]).forEach(r=>mcp[r.month]=r);
+  // Visits: each GA4 weekly total is spread evenly over its seven days and then
+  // summed by calendar month, so a month with five Mondays doesn't read as a jump.
+  const vis={}; const tw=(ga4.traffic_weekly||[]).filter(w=>w.wk&&w.visits!=null);
+  tw.forEach(w=>{ for(let i=0;i<7;i++){ const m=new Date(Date.parse(w.wk+"T00:00:00Z")+i*86400000).toISOString().slice(0,7); vis[m]=(vis[m]||0)+w.visits/7; } });
+  const visStart = tw.length ? scAdd(tw[0].wk.slice(0,7), tw[0].wk.slice(8)==="01"?0:1) : null;
+  const cites={}; (data.news_mentions||[]).forEach(x=>{ if(x.own_post||x.roundup||!["media","republication","gov"].includes(x.kind)) return; const m=String(x.published_iso||"").slice(0,7); if(m) cites[m]=(cites[m]||0)+1; });
+  const giving={}, gifts={}; (db.monthly_series||[]).forEach(r=>{giving[r.m]=r.amt; gifts[r.m]=r.gifts;});
+  const pieces={}; (gh.pub_dates||[]).forEach(d=>{const m=String(d).slice(0,7); pieces[m]=(pieces[m]||0)+1;});
+  const S=(fn,start)=>months.map(m=>(start&&m<start)?null:fn(m)).map(v=>(v==null||!isFinite(v))?null:v);
+  const n0=v=>fmtN(Math.round(v));
+  const M=[
+   {k:"list", group:"doing", name:"Newsletter list", unit:"subscribers", kind:"stock", good:1,
+    def:"People on the email list at the end of the month.",
+    vals:S(m=>ms[m]?ms[m].cum_subs:null), fmt:n0,
+    note:"About 2,400 bot accounts from the 2025 signup surge are still on the list. The comparison uses monthly growth and leaves out the bot months (May to September 2025), the March 2026 catch-up import and the May 2026 cleanup of about 500 inactive addresses."},
+   {k:"visits", group:"doing", name:"Website visits", unit:"visits in the month", kind:"flow", good:1,
+    def:"Visits to vitalcitynyc.org, from Google Analytics.",
+    vals:S(m=>vis[m]||null, visStart), fmt:n0},
+   {k:"click", group:"doing", name:"Newsletter click rate", unit:"of recipients clicked", kind:"rate", good:1,
+    def:"Share of newsletter recipients who clicked a link. Apple Mail inflates open rates, so clicks are the honest sign that people read.",
+    vals:S(m=>mcp[m]&&mcp[m].click_pct!=null?+mcp[m].click_pct:null), fmt:v=>(+v).toFixed(1)+"%"},
+   {k:"cites", group:"doing", name:"Press and policy citations", unit:"in the month", kind:"flow", good:1,
+    def:"News stories, government documents and republications citing Vital City, from the press tracker. A floor: only a fixed set of sources is watched.",
+    vals:S(m=>cites[m]||0,"2025-03"), fmt:n0, note:"The tracker's record starts in March 2025."},
+   {k:"giving", group:"doing", name:"Reader giving", unit:"given online in the month", kind:"flow", good:1,
+    def:"Online gifts through Donorbox. Checks, grants and donor-advised-fund gifts are not counted.",
+    vals:S(m=>giving[m]!=null?giving[m]:0,"2025-11"), fmt:v=>"$"+n0(v),
+    note:"Online giving opened in November 2025; December was the matching campaign."},
+   {k:"conv", group:"next", name:"Signups per 1,000 visits", unit:"new subscribers per 1,000 visits", kind:"rate", good:1,
+    def:"How well the site turns readers into subscribers.",
+    vals:S(m=>{ if(SC_CONV_SKIP.has(m)) return null; const v=vis[m], r=ms[m]; if(!v||!r) return null;
+      const s = m>="2026-04" ? (r.ghost_signups||0) : r.new_signups; return s/v*1000; }, visStart), fmt:v=>(+v).toFixed(1),
+    note:"From April 2026 signups are counted on the Ghost form, where they now happen. May to September 2025 (bot signups) and March 2026 (a one-time catch-up import) are left out; they show as gaps in the line."},
+   {k:"unsub", group:"next", name:"Unsubscribes per 1,000 emails", unit:"per 1,000 emails delivered", kind:"rate", good:-1,
+    def:"Readers who leave for every 1,000 newsletter emails delivered: whether sends are wearing people out.",
+    vals:S(m=>{const c=mcp[m]; return c&&c.recipients? c.unsubs/c.recipients*1000 : null;}), fmt:v=>(+v).toFixed(2)},
+   {k:"pieces", group:"next", name:"Pieces published", unit:"in the month", kind:"flow", good:0,
+    def:"New pieces on the site. Output rather than outcome: it feeds search traffic and gives the newsletter something to send.",
+    vals:S(m=>pieces[m]||0), fmt:n0},
+  ];
+  // Comparison, the same way for every measure (Josh, 2026-09-11: "don't do
+  // year-over-year by default ... compare to recent averages/other trends"):
+  // the latest three full months against the average of the twelve months
+  // before them, leaving out months the data can't support; plus the
+  // direction over the last six usable months.
+  const SKIP={ list:new Set([...SC_CONV_SKIP,"2026-05"]), conv:SC_CONV_SKIP, giving:new Set(["2025-11","2025-12"]) };
+  const curI=[21,22,23], baseI=[...Array(12)].map((_,i)=>9+i);
+  const avg=a=>a.length?a.reduce((t,q)=>t+q,0)/a.length:null;
+  const rng=idx=>idx.length===1? scName(months[idx[0]]) : `${scName(months[idx[0]])} to ${scName(months[idx[idx.length-1]])}`;
+  const curLbl=`${scName(months[21],true)}–${scName(full)}`;
+  M.forEach(x=>{
+    const v=x.vals; x.now=v[23]; x.nowMonth=full;
+    const fi=v.findIndex(q=>q!=null); x.firstMonth= fi>=0 ? months[fi] : full;
+    const skip=SKIP[x.k]||new Set();
+    const series = x.kind==="stock"
+      ? v.map((q,i)=> (i>0&&q!=null&&v[i-1]!=null&&!skip.has(months[i])) ? q-v[i-1] : null)
+      : v.map((q,i)=> skip.has(months[i]) ? null : q);
+    const cIdx=curI.filter(i=>series[i]!=null), bIdx=baseI.filter(i=>series[i]!=null);
+    x.cmpIdx={cur:curI, prev: bIdx.length? bIdx : baseI};
+    x.cur = cIdx.length>=2 ? avg(cIdx.map(i=>series[i])) : null;
+    x.base = bIdx.length>=4 ? avg(bIdx.map(i=>series[i])) : null;
+    x.pct = (x.cur!=null && x.base) ? (x.cur-x.base)/Math.abs(x.base) : null;
+    const six=series.map((q,i)=>q==null?null:[i,q]).filter(Boolean).slice(-6);
+    x.trend=null;
+    if(six.length>=4){ const mx=avg(six.map(p=>p[0])), my=avg(six.map(p=>p[1]));
+      const sl=six.reduce((t,p)=>t+(p[0]-mx)*(p[1]-my),0)/six.reduce((t,p)=>t+(p[0]-mx)**2,0);
+      const rel = my ? sl/Math.abs(my) : 0; x.trend = rel>0.04 ? "rising" : rel<-0.04 ? "falling" : "steady"; }
+    const skipped=[...skip].filter(m=>m>=months[9]&&m<=months[20]).length;
+    const baseLbl = bIdx.length ? `${rng(bIdx)}${skipped?(x.k==="giving"?" (leaving out the launch month and the December matching campaign)":" (leaving out months the data can't support)"):""}` : "";
+    const fmtS = q => x.kind==="stock" ? ((q>=0?"+":"−")+fmtN(Math.round(Math.abs(q)))) : x.fmt(q);
+    const per = x.kind==="rate" ? "" : " a month";
+    if(x.cur==null || x.base==null){
+      x.tone="neutral";
+      x.cmpText = x.cur!=null ? `${curLbl}: ${fmtS(x.cur)}${per} on average. Not enough earlier months to compare with.` : "Not enough usable months to compare.";
+    } else if(x.kind==="stock"){
+      x.tone = x.cur<0 ? "watch" : (x.base>0 && x.cur>x.base*1.05) ? "good" : (x.base>0 && x.cur<x.base*0.95) ? "watch" : "flat";
+      x.cmpText = `${curLbl}: the list grew by ${fmtS(x.cur)} a month on average, against ${fmtS(x.base)} a month over ${baseLbl}.`;
+    } else {
+      const pc=Math.round(x.pct*100);
+      x.tone = Math.abs(x.pct)<0.05 ? "flat" : (x.good===0 ? "neutral" : ((x.pct>0)===(x.good>0) ? "good" : "watch"));
+      x.cmpText = `${curLbl}: ${fmtS(x.cur)}${per} on average, against ${fmtS(x.base)}${per} over ${baseLbl}: ${Math.abs(x.pct)<0.05?"about the same":(pc>0?"up ":"down ")+Math.abs(pc)+"%"}.`;
+    }
+    x.trendText = !x.trend ? "" : x.kind==="stock"
+      ? `Monthly growth over the last six months: ${x.trend==="rising"?"speeding up":x.trend==="falling"?"slowing":"steady"}.`
+      : `Over the last six months: ${x.trend}.`;
+  });
+  const B=Object.fromEntries(M.map(x=>[x.k,x]));
+  const T=k=>B[k]&&B[k].tone;
+  const R={
+    list:  {good:"The list is growing faster than it had been.", watch:"The list is growing more slowly than it had been.", flat:"The list is growing at its usual pace."},
+    visits:{good:"More visits than the site's recent average.", watch:"Fewer visits than the site's recent average. Check whether one big piece carried the earlier months, or whether search traffic fell.", flat:"Visits are in line with the recent average."},
+    click: {good:"Recipients are clicking more than they had been.", watch:"Recipients are clicking less than they had been. Look at what each newsletter leads with and how many links it carries.", flat:"Clicking is in line with the recent average."},
+    cites: {good:"Cited more often than over the past year.", watch:"Cited less often than over the past year. Worth checking which kinds of pieces drew citations.", flat:"Cited about as often as over the past year."},
+    unsub: {good:"Fewer readers leave per email than over the past year.", watch:"More readers leave per email than over the past year. Check send frequency and the appeal emails.", flat:"Readers leave at about their usual rate."},
+    giving:{good:"Online giving is running above its level since the December campaign.", watch:"Online giving is running below its level since the December campaign.", flat:"Online giving is holding at its level since the December campaign."},
+    conv:  {good:"The site is turning more of its visitors into subscribers than it had been.", watch:"The site converts fewer visitors than it had been. Check the signup form and where the prompts appear.", flat:"The site converts visitors at its usual rate."},
+    pieces:{},
+  };
+  M.forEach(x=>{ x.reading=(R[x.k]&&R[x.k][x.tone])||""; });
+  if(B.list && B.list.cur!=null && B.list.cur<0) B.list.reading="The list shrank over the last three months: departures outran signups.";
+  if(B.conv && B.conv.tone==="watch" && T("visits")==="good")
+    B.conv.reading="Visits are up but a smaller share of visitors subscribe. The next gain is on the page: signup prompts on the most-read pieces, and more gated pieces.";
+  if(B.pieces && B.pieces.pct!=null){
+    const pc=B.pieces;
+    pc.reading=(pc.pct>0.05?"Publishing more than the recent average":pc.pct<-0.05?"Publishing less than the recent average":"Publishing at the usual pace")+
+      (T("visits")==="good"&&pc.pct>0.05?", and visits rose with it.":T("visits")==="watch"&&pc.pct<-0.05?", and visits fell with it.":".");
+  }
+  if(B.giving && db.active_recurring_donors) B.giving.reading=(B.giving.reading?B.giving.reading+" ":"")+`${db.active_recurring_donors} recurring donors give about $${n0(db.mrr_estimate||0)} a month.`;
+  const better=M.filter(x=>x.tone==="good").map(x=>x.name.toLowerCase());
+  const worse=M.filter(x=>x.tone==="watch").map(x=>x.name.toLowerCase());
+  const summary=[];
+  if(better.length) summary.push(`Better than their recent average: ${scList(better)}.`);
+  if(worse.length) summary.push(`Worse than their recent average: ${scList(worse)}.`);
+  const first=M.find(x=>x.group==="next"&&x.tone==="watch") || M.find(x=>x.tone==="watch");
+  if(first) summary.push(`Where to look first: ${first.name.toLowerCase()}. ${first.reading}`);
+  return {full, months, measures:M, summary,
+    lede:`Eight measures, on full calendar months. Each line shows the last 24 months. The comparison sets the latest three months (${curLbl}) against the average of the twelve months before them, leaving out months the data can't support, and says which way the measure has moved over the last six months.`};
+}
+function scSpark(x, w, h){
+  w=w||230; h=h||44;
+  const v=x.vals, n=v.length; const pts=v.map((q,i)=>q==null?null:[i,q]).filter(Boolean); if(pts.length<2) return "";
+  const max=Math.max(...pts.map(p=>p[1]))||1; const X=i=>4+i*(w-8)/(n-1); const Y=q=>h-4-(q/max)*(h-10);
+  const segs=[]; let cur=[]; v.forEach((q,i)=>{ if(q==null){ if(cur.length) segs.push(cur); cur=[]; } else cur.push(`${X(i).toFixed(1)},${Y(q).toFixed(1)}`); }); if(cur.length) segs.push(cur);
+  const band=(idx,fill)=>{const a=Math.min(...idx), b=Math.max(...idx); return `<rect x="${(X(a)-3).toFixed(1)}" y="0" width="${(X(b)-X(a)+6).toFixed(1)}" height="${h}" fill="${fill}"/>`;};
+  const last=pts[pts.length-1];
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="${esc(x.name)}, monthly">`+
+    band(x.cmpIdx.prev,"rgba(112,113,117,.16)")+band(x.cmpIdx.cur,"rgba(33,126,190,.18)")+
+    `<line x1="4" y1="${h-4}" x2="${w-4}" y2="${h-4}" stroke="#cfcfcf" stroke-width="1"/>`+
+    segs.map(sg=>`<polyline points="${sg.join(" ")}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>`).join("")+
+    `<circle cx="${X(last[0]).toFixed(1)}" cy="${Y(last[1]).toFixed(1)}" r="2.6" fill="#217ebe"/></svg>`;
+}
+function scRowHTML(x, w){
+  return `<div class="sc-row">
+    <div class="sc-name"><b>${esc(x.name)}</b><div class="sc-def">${esc(x.def)}</div></div>
+    <div class="sc-now"><div class="sc-n">${x.now!=null?esc(x.fmt(x.now)):"—"}</div><div class="sc-u">${esc(x.unit)}, ${esc(scName(x.nowMonth))}</div></div>
+    <div class="sc-spark">${scSpark(x,w)}<div class="sc-axis"><span>${esc(scName(x.firstMonth))}</span><span>${esc(scName(x.nowMonth))}</span></div></div>
+    <div class="sc-read"><div class="sc-cmp ${x.tone}">${esc(x.cmpText)}${x.trendText?` <span class="sc-tr">${esc(x.trendText)}</span>`:""}</div>${x.reading?`<div class="sc-why">${esc(x.reading)}</div>`:""}${x.note?`<div class="sc-note">${esc(x.note)}</div>`:""}</div>
+  </div>`;
+}
+const SC_LEGEND="In each line, the blue band marks the latest three months and the grey band the twelve months they are compared with. Lines start at zero; gaps are months left out, with the reason in the note.";
+function scBodyHTML(sc, w){
+  const grp=(g,t)=>`<div class="sc-grp">${t}</div>`+sc.measures.filter(x=>x.group===g).map(x=>scRowHTML(x,w)).join("");
+  return `<p class="sc-intro">${esc(sc.lede)}</p>`+
+    (sc.summary.length?`<div class="sc-sum">${sc.summary.map(esc).join("<br>")}</div>`:"")+
+    grp("doing","How we're doing")+grp("next","What to look at next")+
+    `<div class="sc-legend">${esc(SC_LEGEND)}</div>`;
+}
+function renderScorecard(data){
+  const el=document.getElementById("scorecard"); if(!el) return;
+  try{
+    const sc=scorecardModel(data); window._scorecard=sc;
+    el.innerHTML=`<h2>Scorecard <span class="hint">the handful of measures to steer by · monthly · latest three months against the twelve before</span></h2>`+scBodyHTML(sc,230);
+  }catch(e){ el.innerHTML=`<h2>Scorecard</h2><div class="hint">The scorecard could not be built from this data: ${esc(e.message)}</div>`; }
+}
+function scReportMD(sc){
+  let o=`\n## Scorecard\n\n_${sc.lede}_\n\n`;
+  sc.summary.forEach(l=>{ o+=`${l}\n\n`; });
+  [["doing","How we're doing"],["next","What to look at next"]].forEach(([g,t])=>{
+    o+=`**${t}**\n\n`;
+    sc.measures.filter(x=>x.group===g).forEach(x=>{
+      o+=`- **${x.name}: ${x.now!=null?x.fmt(x.now):"—"}** ${x.unit}, ${scName(x.nowMonth)}. ${x.cmpText}${x.trendText?` ${x.trendText}`:""}${x.reading?` ${x.reading}`:""}${x.note?` _${x.note}_`:""}\n`;
+      const last12=x.vals.slice(12).map(q=>q==null?"—":x.fmt(q));
+      o+=`  - Last 12 months, ${scName(sc.months[12])} to ${scName(sc.full)}: ${last12.join(" · ")}\n`;
+    });
+    o+=`\n`;
+  });
+  return o;
+}
+
 // ===== Pulse summary report ==============================================
 // One document per window (or all five), built from the same tiles the pulse
 // card shows plus the stock tiles above it and the context a reader needs to
@@ -5548,6 +5761,7 @@ function pulseReportModel(all){
   const model={generated:gen, asof, all, stocks:window._stocksModel||[], windows, context,
           title: all ? "Growth summary · all windows" : `Growth summary · ${(windows[0]||{}).label||""}`};
   model.benchmarks=pulseBenchmarks(model, data);
+  try{ model.scorecard=scorecardModel(data); }catch(e){ model.scorecard=null; }
   return model;
 }
 // Rule-based readings of a window: no model, no API call. Each line is a
@@ -5663,6 +5877,7 @@ function pulseBenchmarks(m, data){
 }
 function pulseReportMD(m){
   let o=`# Vital City — ${m.title}\n\n_As of ${m.asof}. Data refreshed ${m.generated}._\n`;
+  if(m.scorecard) o+=scReportMD(m.scorecard);
   if(m.stocks.length){ o+=`\n## At a glance\n`; m.stocks.forEach(k=>{ o+=`- ${k.lbl}: ${k.num}${k.delta?` — ${k.delta}`:""}${k.flag?` (${k.flag})`:""}\n`; }); }
   m.windows.forEach(w=>{
     o+=`\n## ${w.label} (${w.curStart} to ${w.curEnd}, ${w.N} days)\n`;
@@ -5683,6 +5898,7 @@ function pulseReportMD(m){
 function pulseReportHTML(m){
   const cls=c=>c==="up"?"up":c==="down"?"down":"";
   let b=`<div class="wm">Vital City</div><h1>${esc(m.title)}</h1><p class="period">As of ${esc(m.asof)} · data refreshed ${esc(m.generated)}</p>`;
+  if(m.scorecard) b+=`<h2>Scorecard</h2>`+scBodyHTML(m.scorecard,170)+`<div class="pb"></div>`;
   if(m.stocks.length){ b+=`<h2>At a glance</h2><div class="tiles">`+m.stocks.map(k=>`<div class="tile"><div class="l">${esc(k.lbl)}</div><div class="n">${esc(k.num)}</div><div class="d">${esc(k.delta)}${k.flag?` <b>${esc(k.flag)}</b>`:""}</div></div>`).join("")+`</div>`; }
   m.windows.forEach(w=>{
     b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.curStart)} → ${esc(w.curEnd)} · ${w.N} days · vs the ${w.N} days before</span></h2>`;
@@ -5710,6 +5926,13 @@ function pulseReportHTML(m){
     +'table{width:100%;border-collapse:collapse;font-size:13px}td{padding:6px 4px;border-bottom:1px solid #ddd;vertical-align:baseline}td.l{color:#707175;width:34%}td.v{font-weight:700;width:16%;font-variant-numeric:tabular-nums}td.n{color:#707175;font-size:11.5px}td.up{color:#3d7a35}td.down{color:#a0432d}'
     +'ol{padding-left:20px;margin:4px 0;font-size:12.5px}ol li{display:flex;justify-content:space-between;gap:12px;padding:3px 0;border-bottom:1px solid #eee}ol li .v{white-space:nowrap;color:#707175;font-variant-numeric:tabular-nums}'
     +'.ins{list-style:none;padding:0;margin:4px 0;font-size:12.5px}.ins li{padding:4px 0 4px 20px;position:relative;border-bottom:1px solid #eee}.ins .m{position:absolute;left:2px;font-weight:700}.ins .good .m,.ins li.good .m{color:#3d7a35}.ins li.watch .m{color:#a0432d}.ins li.neutral .m{color:#707175}'
+    +'.sc-intro{font-size:12px;color:#333;margin:4px 0 8px}.sc-sum{font-size:12.5px;line-height:1.5;margin:0 0 8px;padding:8px 10px;background:#f1f1ef}'
+    +'.sc-grp{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#707175;margin:12px 0 2px}'
+    +'.sc-row{display:grid;grid-template-columns:1.25fr .8fr 180px 1.55fr;gap:10px;align-items:start;padding:7px 0;border-top:1px solid #ddd;break-inside:avoid}'
+    +'.sc-name b{font-size:12px}.sc-def{font-size:10px;color:#707175;line-height:1.35;margin-top:2px}.sc-n{font-family:Georgia,serif;font-size:19px;line-height:1.05}.sc-u{font-size:9.5px;color:#707175;margin-top:2px}'
+    +'.sc-spark{color:#050507}.sc-axis{display:flex;justify-content:space-between;font-size:8.5px;color:#707175}.sc-cmp{font-size:11px;font-weight:700}.sc-cmp.good{color:#3d7a35}.sc-cmp.watch{color:#a0432d}'
+    +'.sc-tr{font-weight:400;color:#050507}.sc-why{font-size:11px;line-height:1.4;margin-top:2px}.sc-note{font-size:9.5px;color:#707175;margin-top:2px;line-height:1.35}.sc-legend{font-size:9.5px;color:#707175;margin-top:8px}'
+    +'@media print{.pb{break-after:page}}'
     +'.r4{font-size:12.5px;margin:2px 0 6px}table.r4t{font-size:11.5px}table.r4t td{text-align:right;padding:3px 5px;font-variant-numeric:tabular-nums}table.r4t td.l{text-align:left;width:auto;white-space:nowrap}table.r4t tr:first-child td{color:#707175;font-size:10.5px}'
     +'table.bm td.l{width:16%}table.bm td.v{width:30%;font-weight:600}table.bm td.v .r{font-weight:400;color:#3d7a35;font-size:11px}table.bm td.n{font-size:11px}'
     +'.ctx{font-size:11.5px;color:#333;padding-left:18px}.ctx li{margin:3px 0}.cav{font-size:10.5px;color:#707175;margin-top:18px;border-top:1px solid #ddd;padding-top:10px}'
