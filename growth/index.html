@@ -588,8 +588,8 @@
            which the old mid-page version skipped entirely. -->
       <nav class="secnav" id="jumpNav" aria-label="Dashboard sections">
         <span class="secnav-lbl">Jump to:</span>
-        <a href="#sec-scorecard">Scorecard</a>
         <a href="#sec-glance">At a glance</a>
+        <a href="#scorecard">Scorecard</a>
         <a href="#rangeReport">Reports</a>
         <a href="#bigPicture">Long view</a>
         <a href="#audienceQuality">Who's reading</a>
@@ -608,8 +608,6 @@
           <li><b>Who reads matters more than how many.</b> Vital City exists to move policy, so a few hundred mayors, commissioners, council staffers, funders and reporters reading closely can count for more than tens of thousands of casual visitors.</li>
         </ul>
       </div>
-      <div class="sechead-title" id="sec-scorecard" style="margin:24px 0 4px">Scorecard</div>
-      <div class="card" id="scorecard"><h2>Scorecard</h2><div class="hint">Loading…</div></div>
       <div class="sechead-title" id="sec-glance" style="margin:24px 0 4px">At a glance</div>
       <div style="font-size:12.5px;color:var(--vc-charcoal);margin:0 0 12px;max-width:760px">Two bands. The first is where things stand: list size, the engaged core, the donor base and the recurring income that makes the organization sustainable. Those numbers have no window &mdash; a list does not have a &ldquo;last 7 days.&rdquo; The second band is what moved, and the buttons change its window. Net list change leads it because growing the list is objective one, and only the net number says whether the list is growing.</div>
       <div class="kpis" id="kpis"></div>
@@ -627,6 +625,8 @@
         <div id="weekPulseTop" style="margin-top:14px"></div>
         <div id="weekPulseNote" style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
       </div>
+
+      <div class="card" id="scorecard"><h2>Scorecard</h2><div class="hint">Loading…</div></div>
 
 
             <div class="card" id="rangeReport">
@@ -5572,8 +5572,8 @@ function scorecardModel(data){
   const S=(fn,start)=>months.map(m=>(start&&m<start)?null:fn(m)).map(v=>(v==null||!isFinite(v))?null:v);
   const n0=v=>fmtN(Math.round(v));
   const M=[
-   {k:"list", group:"doing", name:"Newsletter list", unit:"subscribers", kind:"stock", good:1,
-    def:"People on the email list at the end of the month.",
+   {k:"list", group:"doing", name:"Newsletter list growth", unit:"net change in the list", kind:"stock", good:1,
+    def:"New subscribers minus departures, each month. The line shows the list's size; the list's current total is in At a glance above.",
     vals:S(m=>ms[m]?ms[m].cum_subs:null), fmt:n0,
     note:"About 2,400 bot accounts from the 2025 signup surge are still on the list. The comparison uses monthly growth and leaves out the bot months (May to September 2025), the March 2026 catch-up import and the May 2026 cleanup of about 500 inactive addresses."},
    {k:"visits", group:"doing", name:"Website visits", unit:"visits in the month", kind:"flow", good:1,
@@ -5618,6 +5618,7 @@ function scorecardModel(data){
     const series = x.kind==="stock"
       ? v.map((q,i)=> (i>0&&q!=null&&v[i-1]!=null&&!skip.has(months[i])) ? q-v[i-1] : null)
       : v.map((q,i)=> skip.has(months[i]) ? null : q);
+    if(x.kind==="stock") x.nowNet=series[23];
     const cIdx=curI.filter(i=>series[i]!=null), bIdx=baseI.filter(i=>series[i]!=null);
     x.cmpIdx={cur:curI, prev: bIdx.length? bIdx : baseI};
     x.cur = cIdx.length>=2 ? avg(cIdx.map(i=>series[i])) : null;
@@ -5679,6 +5680,10 @@ function scorecardModel(data){
   return {full, months, measures:M, summary,
     lede:`Eight measures, on full calendar months. Each line shows the last 24 months. The comparison sets the latest three months (${curLbl}) against the average of the twelve months before them, leaving out months the data can't support, and says which way the measure has moved over the last six months.`};
 }
+function scNowText(x){
+  if(x.kind==="stock") return x.nowNet==null ? "—" : (x.nowNet>=0?"+":"−")+fmtN(Math.round(Math.abs(x.nowNet)));
+  return x.now!=null ? x.fmt(x.now) : "—";
+}
 function scSpark(x, w, h){
   w=w||230; h=h||44;
   const v=x.vals, n=v.length; const pts=v.map((q,i)=>q==null?null:[i,q]).filter(Boolean); if(pts.length<2) return "";
@@ -5695,7 +5700,7 @@ function scSpark(x, w, h){
 function scRowHTML(x, w){
   return `<div class="sc-row">
     <div class="sc-name"><b>${esc(x.name)}</b><div class="sc-def">${esc(x.def)}</div></div>
-    <div class="sc-now"><div class="sc-n">${x.now!=null?esc(x.fmt(x.now)):"—"}</div><div class="sc-u">${esc(x.unit)}, ${esc(scName(x.nowMonth))}</div></div>
+    <div class="sc-now"><div class="sc-n">${esc(scNowText(x))}</div><div class="sc-u">${esc(x.unit)}, ${esc(scName(x.nowMonth))}</div></div>
     <div class="sc-spark">${scSpark(x,w)}<div class="sc-axis"><span>${esc(scName(x.firstMonth))}</span><span>${esc(scName(x.nowMonth))}</span></div></div>
     <div class="sc-read"><div class="sc-cmp ${x.tone}">${esc(x.cmpText)}${x.trendText?` <span class="sc-tr">${esc(x.trendText)}</span>`:""}</div>${x.reading?`<div class="sc-why">${esc(x.reading)}</div>`:""}${x.note?`<div class="sc-note">${esc(x.note)}</div>`:""}</div>
   </div>`;
@@ -5712,7 +5717,7 @@ function renderScorecard(data){
   const el=document.getElementById("scorecard"); if(!el) return;
   try{
     const sc=scorecardModel(data); window._scorecard=sc;
-    el.innerHTML=`<h2>Scorecard <span class="hint">the handful of measures to steer by · monthly · latest three months against the twelve before</span></h2>`+scBodyHTML(sc,230);
+    el.innerHTML=`<h2>Scorecard · month by month <span class="hint">the tiles above say where things stand; these eight say which way they are moving</span></h2>`+scBodyHTML(sc,230);
   }catch(e){ el.innerHTML=`<h2>Scorecard</h2><div class="hint">The scorecard could not be built from this data: ${esc(e.message)}</div>`; }
 }
 function scReportMD(sc){
@@ -5721,7 +5726,7 @@ function scReportMD(sc){
   [["doing","How we're doing"],["next","What to look at next"]].forEach(([g,t])=>{
     o+=`**${t}**\n\n`;
     sc.measures.filter(x=>x.group===g).forEach(x=>{
-      o+=`- **${x.name}: ${x.now!=null?x.fmt(x.now):"—"}** ${x.unit}, ${scName(x.nowMonth)}. ${x.cmpText}${x.trendText?` ${x.trendText}`:""}${x.reading?` ${x.reading}`:""}${x.note?` _${x.note}_`:""}\n`;
+      o+=`- **${x.name}: ${scNowText(x)}** ${x.unit}, ${scName(x.nowMonth)}. ${x.cmpText}${x.trendText?` ${x.trendText}`:""}${x.reading?` ${x.reading}`:""}${x.note?` _${x.note}_`:""}\n`;
       const last12=x.vals.slice(12).map(q=>q==null?"—":x.fmt(q));
       o+=`  - Last 12 months, ${scName(sc.months[12])} to ${scName(sc.full)}: ${last12.join(" · ")}\n`;
     });
@@ -5877,8 +5882,8 @@ function pulseBenchmarks(m, data){
 }
 function pulseReportMD(m){
   let o=`# Vital City — ${m.title}\n\n_As of ${m.asof}. Data refreshed ${m.generated}._\n`;
-  if(m.scorecard) o+=scReportMD(m.scorecard);
   if(m.stocks.length){ o+=`\n## At a glance\n`; m.stocks.forEach(k=>{ o+=`- ${k.lbl}: ${k.num}${k.delta?` — ${k.delta}`:""}${k.flag?` (${k.flag})`:""}\n`; }); }
+  if(m.scorecard) o+=scReportMD(m.scorecard);
   m.windows.forEach(w=>{
     o+=`\n## ${w.label} (${w.curStart} to ${w.curEnd}, ${w.N} days)\n`;
     w.tiles.forEach(t=>{ o+=`- ${t.lbl}: ${t.value} — ${t.delta}\n`; });
@@ -5898,8 +5903,8 @@ function pulseReportMD(m){
 function pulseReportHTML(m){
   const cls=c=>c==="up"?"up":c==="down"?"down":"";
   let b=`<div class="wm">Vital City</div><h1>${esc(m.title)}</h1><p class="period">As of ${esc(m.asof)} · data refreshed ${esc(m.generated)}</p>`;
-  if(m.scorecard) b+=`<h2>Scorecard</h2>`+scBodyHTML(m.scorecard,170)+`<div class="pb"></div>`;
   if(m.stocks.length){ b+=`<h2>At a glance</h2><div class="tiles">`+m.stocks.map(k=>`<div class="tile"><div class="l">${esc(k.lbl)}</div><div class="n">${esc(k.num)}</div><div class="d">${esc(k.delta)}${k.flag?` <b>${esc(k.flag)}</b>`:""}</div></div>`).join("")+`</div>`; }
+  if(m.scorecard) b+=`<h2>Scorecard</h2>`+scBodyHTML(m.scorecard,170)+`<div class="pb"></div>`;
   m.windows.forEach(w=>{
     b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.curStart)} → ${esc(w.curEnd)} · ${w.N} days · vs the ${w.N} days before</span></h2>`;
     b+=`<table>`+w.tiles.map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}</td></tr>`).join("")+`</table>`;
